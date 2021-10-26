@@ -223,6 +223,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dependencies\ImGUI\imgui.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_demo.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_draw.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_tables.cpp" />
+    <ClCompile Include="Dependencies\ImGUI\imgui_widgets.cpp" />
     <ClCompile Include="Glad\glad.c" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Math\Color.cpp" />
@@ -232,15 +239,25 @@
     <ClCompile Include="Source\RenderingAPI\OpenGL\OpenGLBuffers.cpp" />
     <ClCompile Include="Source\RenderingAPI\OpenGL\OpenGLWindow.cpp" />
     <ClCompile Include="Source\RenderingAPI\OpenGL\Shader\OpenGLShader.cpp" />
-    <ClCompile Include="Source\RenderingAPI\OpenGL\Textures\Texture.cpp" />
+    <ClCompile Include="Source\RenderingAPI\OpenGL\Textures\OpenGLTexture.cpp" />
     <ClCompile Include="Source\RenderingSystem\Buffer.cpp" />
     <ClCompile Include="Source\RenderingSystem\RenderingSystem.cpp" />
     <ClCompile Include="Source\RenderingSystem\Shader.cpp" />
+    <ClCompile Include="Source\RenderingSystem\Textures.cpp" />
     <ClCompile Include="Source\RenderingSystem\WindowsWindow.cpp" />
     <ClCompile Include="Source\ThirdParty\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Content\Shaders\Default\DefaultVertexShader.GLSL" />
+    <ClInclude Include="Dependencies\ImGUI\imconfig.h" />
+    <ClInclude Include="Dependencies\ImGUI\imgui.h" />
+    <ClInclude Include="Dependencies\ImGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="Dependencies\ImGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="Dependencies\ImGUI\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Dependencies\ImGUI\imgui_internal.h" />
+    <ClInclude Include="Dependencies\ImGUI\imstb_rectpack.h" />
+    <ClInclude Include="Dependencies\ImGUI\imstb_textedit.h" />
+    <ClInclude Include="Dependencies\ImGUI\imstb_truetype.h" />
     <ClInclude Include="Source\Main.h" />
     <ClInclude Include="Source\Math\Color.h" />
     <ClInclude Include="Source\Math\Vec2.h" />
@@ -249,10 +266,11 @@
     <ClInclude Include="Source\RenderingAPI\OpenGL\OpenGLBuffers.h" />
     <ClInclude Include="Source\RenderingAPI\OpenGL\OpenGLWindow.h" />
     <ClInclude Include="Source\RenderingAPI\OpenGL\Shader\OpenGLShader.h" />
-    <ClInclude Include="Source\RenderingAPI\OpenGL\Textures\Texture.h" />
+    <ClInclude Include="Source\RenderingAPI\OpenGL\Textures\OpenGLTexture.h" />
     <ClInclude Include="Source\RenderingSystem\RenderingSystem.h" />
     <ClInclude Include="Source\RenderingSystem\Buffers.h" />
     <ClInclude Include="Source\RenderingSystem\Shader.h" />
+    <ClInclude Include="Source\RenderingSystem\Textures.h" />
     <ClInclude Include="Source\RenderingSystem\WindowsWindow.h" />
     <ClInclude Include="Source\Systems\Systems.h" />
     <ClInclude Include="Source\ThirdParty\stb_image.h" />
@@ -264,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="C:\Users\balaj\Downloads\SampleTex.png" />
+    <Image Include="Content\Textures\Checkerboard.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Shaders\Default\DefaultFragmentShader.GLSL" />

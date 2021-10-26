@@ -71,20 +71,13 @@ void KREngine::OpenGLVertexArray::UnBindBuffer()
 	glBindVertexArray( 0 );
 }
 
-//void KREngine::OpenGLVertexArray::removethislater()
-//{
-//	( glEnableVertexAttribArray( 0 ) );
-//	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, sizeof( float ) * 2, 0 );	
-//}
-
 void KREngine::OpenGLVertexArray::BindBufferLayout()
 {
 	uint8 index{ 0 };
 	for ( const BufferElement& bufferElement : BufferLayout.GetElements() )
-	{
-	
+	{	
 		glEnableVertexAttribArray( index );
-		glVertexAttribPointer( index, bufferElement.GetComponentCount(), ShaderDataTypeToGLEnum( bufferElement.Type ), bufferElement.bNormalized, sizeof( float ) * 2, reinterpret_cast< void* >( bufferElement.Offset ) );
+		glVertexAttribPointer( index, bufferElement.GetComponentCount(), ShaderDataTypeToGLEnum( bufferElement.Type ), bufferElement.bNormalized, BufferLayout.GetStride(), reinterpret_cast< void* >( bufferElement.Offset ) );
 		index++;
 	}
 }

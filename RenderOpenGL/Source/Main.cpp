@@ -2,6 +2,8 @@
 
 
 #include "Main.h"
+
+
 #include "utility/Pch.h"
 
 
@@ -14,16 +16,27 @@
 int main( void )
 {
 	KREngine::RenderingSystem::GetInstance()->Init();
-	while(true)
+
+	
+
+	
+	while ( true )
 	{
+
+
+
 		
 		{
 			UTimerLog("Rendering Loop");
 			KREngine::RenderingSystem::GetInstance()->Run();
 		}
 	}
+
+
+
+	//glfwTerminate();
 	KREngine::RenderingSystem::GetInstance()->Stop();
-   
+	
    
 }
 
