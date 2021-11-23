@@ -4,75 +4,95 @@
 #include <GLFW/glfw3.h>
 
 #include "../utility/Enums.h"
+#include "Math/Vec2.h"
 
 
-class WindowsProperties
+namespace KREngine
 {
+	class TESTCLASS
+	{
+
+	};
+	class WindowsProperties
+	{
 	
 	
 	public:
-		WindowsProperties(){};
-		WindowsProperties( ERenderingAPI renderingAPI, const int32 Height, const int32 Width, std::string&& screenTitle ) : API( renderingAPI ), WindowHeight( Height ), WindowWidth( Width )
-			, ScreenTitle( std::move( screenTitle ) )
+		WindowsProperties() = default;
+		~WindowsProperties()
 		{
-		};
+			Moniter = nullptr;
+		}
+		WindowsProperties(ERenderingAPI renderingAPI, const float Height, const float Width,
+		                  std::string&& screenTitle);;
 
-	static WindowsProperties DefaultOpenGl()
-	{
-		WindowsProperties window_properties( ERenderingAPI::OpenGL , 800, 600, "OpenGL");
-		return window_properties;
-	}
+		WindowsProperties(const WindowsProperties& Other)
+		{
+			this->API = Other.API;
+			this->WindowHeight = Other.WindowHeight;
+			this->WindowWidth = Other.WindowWidth;
+			this->ScreenTitle = Other.ScreenTitle;
+			this->Moniter = Other.Moniter;
+		}
+		static WindowsProperties DefaultOpenGl();
 
-	ERenderingAPI GetAPI() const
-	{
-		return API;
-	}
-	int32 GetHeight() const
-	{
-		return WindowHeight;
-	}
-	int32 GetWidth() const
-	{
-		return WindowWidth;
-	}
-	const std::string& GetTitle() const 
-	{
-		return ScreenTitle;
-	}
-private:
-	ERenderingAPI API {ERenderingAPI::OpenGL};
-	int32 WindowHeight =1080;
-	int32 WindowWidth = 720;
-	std::string ScreenTitle = "Renderer";
-	GLFWmonitor* Moniter = nullptr;
-private:
+		ERenderingAPI GetAPI() const;
+
+		float GetHeight() const;
+
+		float GetWidth() const;
+
+		const std::string& GetTitle() const;
+
+		bool IsOpen() const;
+		void OnCloseClicked()
+		{
+			BIsOpen = false;
+		}
+		void SetWidthHeight( float width, float height );
+	private:
+		ERenderingAPI API {ERenderingAPI::OpenGL};
+		float WindowHeight =1080;
+		float WindowWidth = 720;
+		std::string ScreenTitle = "Renderer";
+		GLFWmonitor* Moniter = nullptr;
+
+		bool BIsOpen = true;
+	private:
 	
-};
+	};
 
-class WindowsWindow
-{
-public:
-	virtual ~WindowsWindow() = default;
+	class WindowsWindow
+	{
+	public:
+		~WindowsWindow() = default;
 
-	WindowsWindow();;
-	WindowsWindow( WindowsProperties& windowProperties );
+		WindowsWindow();
+		WindowsWindow( WindowsProperties& windowProperties );
 	
 
-	GLFWwindow* GetCurrentWindow();
-	void static WindowResizeEvent( GLFWwindow* window, int width, int height );
-private:
-	WindowsProperties* Properties = nullptr;
-	/* Current active window */
-	GLFWwindow* CurrentWindow = nullptr;
+		GLFWwindow* GetCurrentWindow() const;
+		void static WindowResizeEvent( GLFWwindow* window, int width, int height );
+		void static WindowCloseEvent( GLFWwindow* window );
 
 
-//Function:
-private:
-	void Init();
+		WindowsProperties* Properties = nullptr;
+
+		bool IsActive() const;
+	private:
+
+		/* Current active window */
+		GLFWwindow* CurrentWindow = nullptr;
+
+
+		//Function:
+	private:
+		void Init();
 	
 	
 	
-};
+	};
+}
 
 
 

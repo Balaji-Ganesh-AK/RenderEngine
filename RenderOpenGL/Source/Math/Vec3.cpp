@@ -1,7 +1,8 @@
 #include "Vec3.h"
+#include "glm/detail/_noise.hpp"
 
 
-namespace Engine
+namespace KREngine
 {
 	vec3::vec3() :x( 0.0f ), y( 0.0f ), z( 0.0f )
 	{
@@ -204,6 +205,13 @@ namespace Engine
 	float vec3::Dot( const vec3& other ) const
 	{
 		return x * other.x + y * other.y + z * other.z;
+	}
+
+	glm::vec3 vec3::AsGLMVec3() const
+	{
+		/*const vec3 tempVec3 = Normalize();
+		return glm::vec3( tempVec3.x, tempVec3.y, tempVec3.z );*/
+		return glm::vec3( x, y, z );
 	}
 
 	vec3 operator+( vec3 left, const vec3& right )

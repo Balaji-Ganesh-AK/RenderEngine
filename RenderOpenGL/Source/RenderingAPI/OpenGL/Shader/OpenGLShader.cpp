@@ -1,5 +1,8 @@
 #include "OpenGLShader.h"
 
+#include <glad/glad.h>
+
+
 namespace KREngine
 {
 	OpenGLShader::OpenGLShader( const std::string& vertexShader, const std::string& fragShader )
@@ -32,6 +35,12 @@ namespace KREngine
 	{
 		glUniform4f( location, vector4.x, vector4.y, vector4.w, vector4.z );
 	}
+
+	void OpenGLShader::SetUniformMat4(const std::string& location, const glm::mat4& matrix)
+	{
+		glUniformMatrix4fv( glGetUniformLocation( RendererID, location.c_str() ), 1, GL_FALSE, &matrix[0][0] );
+	}
+
 	unsigned OpenGLShader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 	{
 		{

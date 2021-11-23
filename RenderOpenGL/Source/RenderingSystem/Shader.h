@@ -1,5 +1,6 @@
 #pragma once
 #include "../utility/Pch.h"
+#include "glm/fwd.hpp"
 
 namespace KREngine
 {
@@ -14,11 +15,12 @@ namespace KREngine
 	public:
 		virtual ~FShader() = default;
 
-		static FShader* CreateShader( const std::string& vertexFilePath , const std::string& fragFilePath);
+		static FShader* CreateShader(  std::filesystem::path& vertexFilePath,  std::filesystem::path& fragFilePath );
 
 		virtual void BindShader() =0;
 		virtual void UnBindShader() =0 ;
 		virtual void SetUniform4f( const std::string& location, KREngine::vec4 vector4 ) = 0;
+		virtual void SetUniformMat4( const std::string& location, const glm::mat4& matrix ) = 0;
 		virtual void SetUniform4f( int location, vec4 vector4 ) = 0;
 	protected:
 

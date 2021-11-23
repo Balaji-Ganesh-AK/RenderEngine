@@ -3,7 +3,7 @@
 #include "RenderingAPI/OpenGL/Shader/OpenGLShader.h"
 
 
-KREngine::FShader* KREngine::FShader::CreateShader(const std::string& vertexFilePath, const std::string& fragFilePath )
+KREngine::FShader* KREngine::FShader::CreateShader(std::filesystem::path& vertexFilePath, std::filesystem::path& fragFilePath )
 {
 	std::string vertexCode;
 	std::string fragCode;
@@ -16,8 +16,10 @@ KREngine::FShader* KREngine::FShader::CreateShader(const std::string& vertexFile
 	try
 	{
 		/** Open and read the files*/
-		vertexShaderFile.open( vertexFilePath );
-		fragShaderFile.open( fragFilePath );
+		std::cout << "Shader error! Failed to read the file " << std::filesystem::absolute(vertexFilePath.relative_path()) <<std::endl;
+		vertexShaderFile.open( ( vertexFilePath.relative_path() ) );
+
+		fragShaderFile.open( (fragFilePath.relative_path() ));
 		std::stringstream vertexShaderStream;
 		std::stringstream fragShaderStream;
 

@@ -12,6 +12,11 @@ KREngine::FIndexBuffer* KREngine::FIndexBuffer::CreateIndexBuffer( unsigned int*
 	return new OpenGLIndexBuffer( indices, count );
 }
 
+KREngine::FFrameBuffer* KREngine::FFrameBuffer::CreateFrameBuffer( float width, float height)
+{
+	return new OpenGLFrameBuffer( width, height );
+}
+
 
 void KREngine::VertexBufferLayout::CalculateStride()
 {

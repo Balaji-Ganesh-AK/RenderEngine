@@ -1,5 +1,8 @@
 #pragma once
+#include <glad/glad.h>
+
 #include "../utility/Pch.h"
+
 
 namespace KREngine
 {
@@ -47,7 +50,12 @@ namespace KREngine
 			case EShaderDataType::Mat3: return GL_FLOAT;
 			case EShaderDataType::Mat4: return GL_FLOAT;
 			case EShaderDataType::Int:  return GL_INT;
-			case EShaderDataType::Bool: return GL_BOOL;
+			case EShaderDataType::Bool: return GL_BOOL; 
+			case EShaderDataType::None: break;
+			case EShaderDataType::IVec2: break;
+			case EShaderDataType::IVec3: break;
+			case EShaderDataType::IVec4: break;
+			//default: ;
 		}
 	}
 	
@@ -84,6 +92,22 @@ namespace KREngine
 
 	};
 
+	class FFrameBuffer
+	{
+	public:
+		virtual ~FFrameBuffer() = default;
+
+		static FFrameBuffer* CreateFrameBuffer( float width, float height);
+
+		virtual void BindBuffer() = 0;
+		virtual void UnBindBuffer() = 0;
+		virtual uint32 GetTextureRendererID() = 0 ;
+		virtual void OnWindowResize( float width, float height ) = 0;
+	protected:
+		uint32 RendererID{ 0 };
+		uint32 RendererTextureID{ 0 };
+		uint32 DepthAttachmentID{ 0 };
+	};
 
 	struct BufferElement
 	{
@@ -113,7 +137,7 @@ namespace KREngine
 			case EShaderDataType::Mat3:  return 4*3;
 			case EShaderDataType::Mat4:  return 4*4;
 			case EShaderDataType::Bool:  return 1;
-			default: ; }
+			default:return 0; }
 			return 0;
 		}
 	};
@@ -155,6 +179,7 @@ namespace KREngine
 		
 		
 	};
-	
+
+
 
 }

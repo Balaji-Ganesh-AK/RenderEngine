@@ -12,10 +12,13 @@ namespace KREngine
 		void UnBindShader() override;
 		virtual void SetUniform4f( const std::string& location, KREngine::vec4 vector4 ) override;
 		virtual void SetUniform4f( int location, vec4 vector4 ) override;
+		virtual void SetUniformMat4( const std::string& location, const glm::mat4& matrix ) override;
 	private:
 		unsigned CreateShader( const std::string& vertexShader, const std::string& fragmentShader );
 		unsigned CompileShader( unsigned type, const std::string& source );
-		
+
+	public:
+	
 	};
 
 }

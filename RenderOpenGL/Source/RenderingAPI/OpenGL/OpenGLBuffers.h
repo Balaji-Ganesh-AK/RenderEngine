@@ -47,5 +47,20 @@ namespace KREngine
 
 		
 	};
+
+
+	class OpenGLFrameBuffer : public FFrameBuffer
+	{
+	public:
+		OpenGLFrameBuffer( float Width, float Height);
+		~OpenGLFrameBuffer();
+		virtual void BindBuffer() override;
+		virtual void UnBindBuffer() override;
+		virtual uint32 GetTextureRendererID() override;
+	private:
+		void InitializeFrameBuffer( float Width, float Height );
+	public:
+		virtual void OnWindowResize(float width, float height) override;
+	};
 	
 }

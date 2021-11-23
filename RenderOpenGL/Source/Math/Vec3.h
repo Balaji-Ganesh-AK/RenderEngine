@@ -1,8 +1,8 @@
 #pragma once
 #include "utility/Pch.h"
-
-namespace  Engine
+namespace  KREngine
 {
+	
 	struct  vec3
 	{
 		float x, y, z;
@@ -59,10 +59,13 @@ namespace  Engine
 		float Dot( const vec3& other )const;
 
 
+		glm::vec3 AsGLMVec3() const;
+		
+
 		friend std::ostream& operator<<( std::ostream& stream, const vec3& other );
 
 
 	};
 
-
+	typedef KREngine::vec3 FVector;
 }
