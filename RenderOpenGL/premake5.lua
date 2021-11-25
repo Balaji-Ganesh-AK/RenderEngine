@@ -15,7 +15,8 @@ project "RenderOpenGL"
 	kind "ConsoleApp"
 	language "C++"
 	
-	targetdir ("bin/" .. outputdir .. "%{prj.name}")
+	targetdir ("$(SolutionDir)bin/$(Configuration)/$(Platform)/$(ProjectName)/")
+	targetdir ("$(SolutionDir)/Intermediate/")
 	
 	files
 	{
@@ -29,8 +30,12 @@ project "RenderOpenGL"
 		"Dependencies/glm/glm/**.h",
 		"Dependencies/glm/glm/**.cpp",
 		"Dependencies/glm/glm/**.inl",
+		"Dependencies/glad/**.h",
+		"Dependencies/GLFW/lib-vc2019/**.lib",
+		"Dependencies/GLFW/include/**.h",
 		"Content/**.GLSL",
-		"Config/**.ini"
+		"Config/**.ini",
+		"**.md"
 	}
 	
 	includedirs 
