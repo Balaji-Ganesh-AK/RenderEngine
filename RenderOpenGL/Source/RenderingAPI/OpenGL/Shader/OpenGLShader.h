@@ -18,7 +18,7 @@ namespace KREngine
 		unsigned CompileShader( unsigned type, const std::string& source );
 
 	public:
-	
+		virtual void SetUniform3f(const std::string& location, KREngine::vec3 vector4) override;
 	};
 
 }

@@ -38,13 +38,11 @@ using namespace KREngine;
 			//	} );
 			//	
 			//}
-
-			
 			
 			while ( GameSystems->GetRenderingSystem()->GetWindowsWindow()->IsActive() )
 			{
 				{
-
+					
 					SCOPED_TIMER( "Systems Loop");
 					GameSystems->Run();
 					GameSystems->RunGUI();
@@ -54,7 +52,7 @@ using namespace KREngine;
 			GameSystems->StopGUI();
 			GameSystems->Stop();
 			delete GameSystems;
-			Logger::Verbose( " Engine Shuting down!" );
+			Logger::Verbose( " Engine Shutting down!" );
 		}
 		_CrtDumpMemoryLeaks();
 		

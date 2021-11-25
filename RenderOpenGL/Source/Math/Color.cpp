@@ -11,6 +11,11 @@ namespace KREngine
 
 	}
 
+	/*FColor::FColor(vec4& vec4): r( vec4.x ), g( vec4.y ), b( vec4.z ), a( vec4.w )
+	{
+		
+	}*/
+
 	//FColor::FColor( vec4& vec4 ) : r( vec4.x ), g( vec4.y ), b( vec4.z ), a( vec4.w )
 	//{
 	//	

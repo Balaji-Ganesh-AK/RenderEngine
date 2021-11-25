@@ -1,9 +1,5 @@
-
 #include "FRenderingSystem.h"
 #include "WindowsWindow.h"
-
-
-
 
 
 #define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
@@ -26,7 +22,7 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window )
 	VertexBufferLayout layout{
 		BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 		BufferElement{"v_Color", EShaderDataType::FVec3, true},
-		BufferElement{"v_Texture", EShaderDataType::FVec2, true}
+		BufferElement{"v_Texture", EShaderDataType::FVec2, true},
 	};
 	RO.VertexArray->SetLayOut(layout);
 	RO.VertexArray->BindBufferLayout();
@@ -69,6 +65,9 @@ void FRenderingSystem::GUIInit()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); ( void ) io;
+	io.IniFilename = NULL;
+	//io.IniFilename = nullptr;
+	ImGui::LoadIniSettingsFromDisk( "Config/Imgui.ini" );
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -238,6 +237,7 @@ void FRenderingSystem::GUIInit()
 
 void FRenderingSystem::GUIStop()
 {
+	ImGui::SaveIniSettingsToDisk( "Config/Imgui.ini" );
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -276,6 +276,8 @@ void FRenderingSystem::GUIRun()
 
     IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraRotation", &CameraTransform.GetRotation().x, 1, -360000, 360000 ), "CameraRotation", );
     IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraScale", &CameraTransform.GetScale().x, 1, -360000, 360000 ), "CameraScale", );
+    IMGUI_LEFT_LABEL( ImGui::DragFloat4( "##GlobalLight", &Color.r, 0.01, -1, 1 ), "GlobalLight", );
+	ImGui::ColorPicker4( "Test light",&GlobalColor.r);
     ImGui::Text( "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
     //ImGui::DragFloat3( "Translation", &Translation.x);
     ImGui::End();
@@ -294,6 +296,7 @@ ERenderingAPI FRenderingSystem::GetRenderingAPI() const
 
 void FRenderingSystem::Init()
 {
+	WorldProjection = glm::perspective( glm::radians( 45.0f ), WindowWindow->Properties->GetWidth() / WindowWindow->Properties->GetHeight(), 0.1f, 100.0f );
 }
 
 void FRenderingSystem::Run()
@@ -329,7 +332,8 @@ void FRenderingSystem::Run()
             RO.Shader->BindShader();
             RO.Texture2D->BindTexture();
             // RO.Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
-            RO.Shader->SetUniform4f( "u_Color", vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+            RO.Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
+            RO.Shader->SetUniform4f( "u_Color",vec4( GlobalColor.r, GlobalColor.g, GlobalColor.b, GlobalColor.a) );
             RO.Shader->SetUniformMat4( "u_WorldProjection", WorldProjection * ViewProjection * ModelProjection );
             RO.VertexArray->BindBuffer();
 

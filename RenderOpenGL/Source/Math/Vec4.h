@@ -8,7 +8,7 @@ namespace  KREngine
 		float x, y, z, w;
 		vec4();
 		vec4( float x, float y, float z, float w );
-		//vec4( const FColor& color );
+		//vec4 FromColor(FColor color) { return vec4{}; };
 
 		static vec4 Down();
 		static vec4 Zero();

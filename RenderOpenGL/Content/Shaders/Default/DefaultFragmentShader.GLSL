@@ -4,8 +4,9 @@
     in vec2 f_Texture;
 
     uniform vec4 u_Color;
+    uniform vec4 u_ObjectColor;
     uniform sampler2D u_Texture;
     void main()
     {
-        color = texture(u_Texture, f_Texture)* u_Color;
+        color = /*texture(u_Texture, f_Texture)**/ vec4( u_ObjectColor * u_Color);
     }

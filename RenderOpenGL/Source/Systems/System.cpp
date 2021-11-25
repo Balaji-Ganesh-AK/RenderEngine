@@ -48,7 +48,7 @@ namespace KREngine
 	void SystemManager::RunGUI()
 	{
 
-
+		SCOPED_TIMER( "GUI LOOP" );
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

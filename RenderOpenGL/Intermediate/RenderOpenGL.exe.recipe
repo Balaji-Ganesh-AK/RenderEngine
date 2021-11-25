@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\Personal Projects\RenderEngine\RenderOpenGL\bin\Debug\-x64\RenderOpenGL\RenderOpenGL.exe</FullPath>
+      <FullPath>E:\Personal Projects\RenderEngine\RenderOpenGL\bin\Debug\x64\RenderOpenGL\RenderOpenGL.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

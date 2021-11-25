@@ -6,10 +6,11 @@
     out vec4 f_Color;
     out vec2 f_Texture;
     uniform mat4 u_WorldProjection;
-
+  
     void main()
     {
         f_Color = v_Color;
         f_Texture = v_Texture;
-        gl_Position = u_WorldProjection * v_Pos;
+        gl_Position = u_WorldProjection * v_Pos ;
+      
     }

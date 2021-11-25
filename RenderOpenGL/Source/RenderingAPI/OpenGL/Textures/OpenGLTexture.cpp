@@ -37,7 +37,7 @@ namespace KREngine
 
 	void OpenGLTexture2D::LoadTextures()
 	{
-		stbi_set_flip_vertically_on_load( 1 );
+		stbi_set_flip_vertically_on_load( true );
 		stbi_uc* textureData = stbi_load(TexturePath.c_str(), &Width, &Height, &Channels, 4);
 		
 		glGenTextures( 1,&RendererID );

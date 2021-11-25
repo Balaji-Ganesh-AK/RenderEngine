@@ -3,12 +3,13 @@
 
 namespace  KREngine
 {
+
 	struct  FColor
 	{
 		float r, g, b, a;
 		FColor();
 		FColor( float r, float g, float b, float a );
-	//	FColor( vec4& vec4 );
+		//FColor( vec4& vec4 );
 
 
 		static FColor Down();
@@ -16,7 +17,7 @@ namespace  KREngine
 		static FColor Up();
 		static FColor Right();
 		static FColor Left();
-
+		
 		FColor& Add( const FColor& other );
 		FColor& Subtract( const FColor& other );
 		FColor& Multiply( const FColor& other );
@@ -60,6 +61,8 @@ namespace  KREngine
 		float Dot( const FColor& other )const;
 
 
+		//FVector Test() { return FVector(); }
+		
 		friend std::ostream& operator<<( std::ostream& stream, const FColor& other );
 
 

@@ -1,5 +1,4 @@
 #include "Vec4.h"
-
 namespace KREngine
 {
 	vec4::vec4() :x( 0.0f ), y( 0.0f ), z( 0.0f ), w( 0.0f )
@@ -10,6 +9,14 @@ namespace KREngine
 	{
 
 	}
+
+	/*vec4::vec4(FColor color) 
+	{
+		x = ( color.r );
+		y = ( color.b );
+		z = ( color.g );
+		w = ( color.a );
+	}*/
 
 	//vec4::vec4( const FColor& color ): x(color.r), y(color.g), z( color.b), w(color.a)
 	//{
