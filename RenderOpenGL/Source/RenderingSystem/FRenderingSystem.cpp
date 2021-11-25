@@ -67,7 +67,7 @@ void FRenderingSystem::GUIInit()
     ImGuiIO& io = ImGui::GetIO(); ( void ) io;
 	io.IniFilename = NULL;
 	//io.IniFilename = nullptr;
-	ImGui::LoadIniSettingsFromDisk( "Config/Imgui.ini" );
+	ImGui::LoadIniSettingsFromDisk( "../Config/Imgui.ini" );
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -237,7 +237,7 @@ void FRenderingSystem::GUIInit()
 
 void FRenderingSystem::GUIStop()
 {
-	ImGui::SaveIniSettingsToDisk( "Config/Imgui.ini" );
+	ImGui::SaveIniSettingsToDisk( "../Config/Imgui.ini" );
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

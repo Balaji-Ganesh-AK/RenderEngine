@@ -14,9 +14,9 @@ project "RenderOpenGL"
 	location "RenderOpenGL"
 	kind "ConsoleApp"
 	language "C++"
-	
+	targetname ("$(ProjectName)")
 	targetdir ("$(SolutionDir)bin/$(Configuration)/$(Platform)/$(ProjectName)/")
-	targetdir ("$(SolutionDir)/Intermediate/")
+	objdir ("$(SolutionDir)/Intermediate/")
 	
 	files
 	{
@@ -31,6 +31,7 @@ project "RenderOpenGL"
 		"Dependencies/glm/glm/**.cpp",
 		"Dependencies/glm/glm/**.inl",
 		"Dependencies/glad/**.h",
+		"Dependencies/KHR/**.h",
 		"Dependencies/GLFW/lib-vc2019/**.lib",
 		"Dependencies/GLFW/include/**.h",
 		"Content/**.GLSL",
@@ -38,13 +39,20 @@ project "RenderOpenGL"
 		"**.md"
 	}
 	
+	links
+	{		
+			"$(SolutionDir)Dependencies/GLFW/lib-vc2019/glfw3"
+	}
+	
 	includedirs 
 	{
 		"$(SolutionDir)/Dependencies/glm",
-		"$(SolutionDir)/Dependencies/ ",
+		"$(SolutionDir)/Dependencies/GLFW/lib-vc2019/",
+		"$(SolutionDir)/Dependencies/",
 		"$(SolutionDir)/Dependencies/GLFW/include",
 		"$(SolutionDir)/Dependencies/glad",
-		"$(SolutionDir)/Source/"
+		"$(SolutionDir)/Source/",
+		"$(SolutionDir)/../"
 	}
 	
 	filter "system:windows"
@@ -68,7 +76,6 @@ project "RenderOpenGL"
 			}
 			links
 			{
-				"glfw3.lib",
 				"opengl32.lib"
 			}
 			symbols "on"
@@ -85,7 +92,6 @@ project "RenderOpenGL"
 			}
 			links
 			{
-				"glfw3.lib",
 				"opengl32.lib",
 				"msvcrt.lib",
 				"msvcmrt.lib"

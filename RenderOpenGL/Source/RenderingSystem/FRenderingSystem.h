@@ -68,8 +68,8 @@ namespace KREngine
 		std::vector<FRenderingObject> RenderingObjectList;
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 		//const std::string DefaultVertexShaderPath = "Content/Shaders/Default/DefaultVertexShader.GLSL";
-		std::filesystem::path DefaultVertexShaderPath = "Content/Shaders/Default/DefaultVertexShader.GLSL";
-		std::filesystem::path DefaultFragmentShaderPath = "Content/Shaders/Default/DefaultFragmentShader.GLSL";
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
 		//const std::string DefaultFragmentShaderPath = "Content/Shaders/Default/DefaultFragmentShader.GLSL";
 
 		float pos [8 * 24] = {

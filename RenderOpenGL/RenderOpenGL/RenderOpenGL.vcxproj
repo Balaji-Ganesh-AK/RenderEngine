@@ -55,23 +55,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\DebugRenderOpenGL\</OutDir>
-    <IntDir>obj\Debug\</IntDir>
-    <TargetName>RenderOpenGL</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)\Intermediate\Debug\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\ReleaseRenderOpenGL\</OutDir>
-    <IntDir>obj\Release\</IntDir>
-    <TargetName>RenderOpenGL</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)\Intermediate\Release\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shippment|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\ShippmentRenderOpenGL\</OutDir>
-    <IntDir>obj\Shippment\</IntDir>
-    <TargetName>RenderOpenGL</TargetName>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)\Intermediate\Shippment\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRTDBG_MAP_ALLOC;GUI;LOGGING;PROFILE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\GLFW\lib-vc2019;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;$(SolutionDir)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -87,7 +87,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Dependencies\GLFW\lib-vc2019\glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRTDBG_MAP_ALLOC;GUI;LOGGING;PROFILE;NDEBUG;_CONSOLE;ENGINE_ONLY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\GLFW\lib-vc2019;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;$(SolutionDir)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -107,22 +107,25 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;msvcrt.lib;msvcmrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Dependencies\GLFW\lib-vc2019\glfw3.lib;opengl32.lib;msvcrt.lib;msvcmrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shippment|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm;$(SolutionDir)\Dependencies\GLFW\lib-vc2019;$(SolutionDir)\Dependencies;$(SolutionDir)\Dependencies\GLFW\include;$(SolutionDir)\Dependencies\glad;$(SolutionDir)\Source;$(SolutionDir)\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(SolutionDir)Dependencies\GLFW\lib-vc2019\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Dependencies\GLFW\include\GLFW\glfw3.h" />
+    <ClInclude Include="..\Dependencies\GLFW\include\GLFW\glfw3native.h" />
     <ClInclude Include="..\Dependencies\ImGUI\imconfig.h" />
     <ClInclude Include="..\Dependencies\ImGUI\imgui.h" />
     <ClInclude Include="..\Dependencies\ImGUI\imgui_impl_glfw.h" />
@@ -132,6 +135,8 @@
     <ClInclude Include="..\Dependencies\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="..\Dependencies\ImGUI\imstb_textedit.h" />
     <ClInclude Include="..\Dependencies\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="..\Dependencies\KHR\khrplatform.h" />
+    <ClInclude Include="..\Dependencies\glad\glad.h" />
     <ClInclude Include="..\Dependencies\glm\glm\common.hpp" />
     <ClInclude Include="..\Dependencies\glm\glm\detail\_features.hpp" />
     <ClInclude Include="..\Dependencies\glm\glm\detail\_fixes.hpp" />
@@ -618,6 +623,13 @@
     <None Include="..\Config\Imgui.ini" />
     <None Include="..\Content\Shaders\Default\DefaultFragmentShader.GLSL" />
     <None Include="..\Content\Shaders\Default\DefaultVertexShader.GLSL" />
+    <None Include="..\Dependencies\GLFW\LICENSE.md" />
+    <None Include="..\Dependencies\GLFW\README.md" />
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3.lib" />
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3_mt.lib" />
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3dll.lib" />
+    <None Include="..\Dependencies\glm\manual.md" />
+    <None Include="..\Dependencies\glm\readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

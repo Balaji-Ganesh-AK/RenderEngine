@@ -16,8 +16,26 @@
     <Filter Include="Dependencies">
       <UniqueIdentifier>{6C01343A-5864-C3DE-01EA-FB94ED2B8F61}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dependencies\GLFW">
+      <UniqueIdentifier>{2B80440F-9796-42A5-E00D-CEC64C63132D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\GLFW\include">
+      <UniqueIdentifier>{9EA238D7-0A65-6C61-5315-FBEDBF16453F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\GLFW\include\GLFW">
+      <UniqueIdentifier>{9DB0F771-89D6-C1D8-721C-47A45EE1E6A4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\GLFW\lib-vc2019">
+      <UniqueIdentifier>{63A7666F-4F62-561B-F819-CF65E4B3A0AB}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Dependencies\ImGUI">
       <UniqueIdentifier>{56D30AF8-42B7-CB4D-AB17-C6A0971AB6CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\KHR">
+      <UniqueIdentifier>{E0E5094E-CCDE-28A0-F510-0E25E16808AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\glad">
+      <UniqueIdentifier>{F397560F-5FAE-54A5-A825-E0C6147B252D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Dependencies\glm">
       <UniqueIdentifier>{BB610A4E-A75A-29A0-D08C-0E25BCE408AC}</UniqueIdentifier>
@@ -96,6 +114,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Dependencies\GLFW\include\GLFW\glfw3.h">
+      <Filter>Dependencies\GLFW\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\GLFW\include\GLFW\glfw3native.h">
+      <Filter>Dependencies\GLFW\include\GLFW</Filter>
+    </ClInclude>
     <ClInclude Include="..\Dependencies\ImGUI\imconfig.h">
       <Filter>Dependencies\ImGUI</Filter>
     </ClInclude>
@@ -122,6 +146,12 @@
     </ClInclude>
     <ClInclude Include="..\Dependencies\ImGUI\imstb_truetype.h">
       <Filter>Dependencies\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\KHR\khrplatform.h">
+      <Filter>Dependencies\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dependencies\glad\glad.h">
+      <Filter>Dependencies\glad</Filter>
     </ClInclude>
     <ClInclude Include="..\Dependencies\glm\glm\common.hpp">
       <Filter>Dependencies\glm\glm</Filter>
@@ -1572,6 +1602,27 @@
     </None>
     <None Include="..\Content\Shaders\Default\DefaultVertexShader.GLSL">
       <Filter>Content\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Dependencies\GLFW\LICENSE.md">
+      <Filter>Dependencies\GLFW</Filter>
+    </None>
+    <None Include="..\Dependencies\GLFW\README.md">
+      <Filter>Dependencies\GLFW</Filter>
+    </None>
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3.lib">
+      <Filter>Dependencies\GLFW\lib-vc2019</Filter>
+    </None>
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3_mt.lib">
+      <Filter>Dependencies\GLFW\lib-vc2019</Filter>
+    </None>
+    <None Include="..\Dependencies\GLFW\lib-vc2019\glfw3dll.lib">
+      <Filter>Dependencies\GLFW\lib-vc2019</Filter>
+    </None>
+    <None Include="..\Dependencies\glm\manual.md">
+      <Filter>Dependencies\glm</Filter>
+    </None>
+    <None Include="..\Dependencies\glm\readme.md">
+      <Filter>Dependencies\glm</Filter>
     </None>
   </ItemGroup>
 </Project>
