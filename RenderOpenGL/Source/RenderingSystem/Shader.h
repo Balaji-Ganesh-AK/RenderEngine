@@ -1,6 +1,5 @@
 #pragma once
-#include "../utility/Pch.h"
-#include "glm/fwd.hpp"
+#include "utility/Pch.h"
 
 namespace KREngine
 {

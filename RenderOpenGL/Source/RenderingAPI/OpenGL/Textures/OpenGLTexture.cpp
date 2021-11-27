@@ -1,10 +1,11 @@
+
+
+
 #include "OpenGLTexture.h"
 
-#include <glad/glad.h>
 
-
-
-
+#include "ThirdParty/stb_image.h"
+#include "utility/GLFWIncludes.h"
 namespace KREngine
 {
 	OpenGLTexture2D::OpenGLTexture2D(std::string& texturePath)

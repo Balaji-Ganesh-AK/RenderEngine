@@ -2,8 +2,10 @@
 
 
 #include "utility/Pch.h"
+#include "Input/Windows/WindowsInput.h"
 #include "RenderingSystem/WindowsWindow.h"
 #include "utility/CommonUtilityClass.h"
+#include "Game.h"
 
 namespace KREngine
 {
@@ -41,6 +43,8 @@ namespace KREngine
 		WindowsInput* GetInput() const;
 		
 	private:
+
+		friend class FGameManager;
 		
 	//	void Register( std::shared_ptr<FGameSystem> system);
 		//WindowsProperties Prop;
@@ -50,7 +54,7 @@ namespace KREngine
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
 		std::unique_ptr<WindowsInput> InputSystem;
 		
-		
+		std::shared_ptr<FGame> GameLoop;
 		//std::vector<FGameSystem*> SystemsList;
 		//std::vector<std::shared_ptr<FGameSystem>> SystemsList;
 		//

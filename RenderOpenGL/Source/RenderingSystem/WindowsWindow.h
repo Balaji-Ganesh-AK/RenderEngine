@@ -1,10 +1,7 @@
 #pragma once
 #include <string>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include "../utility/Enums.h"
-#include "Math/Vec2.h"
+#include "utility/GLFWIncludes.h"
+#include "utility/Enums.h"
 
 
 namespace KREngine

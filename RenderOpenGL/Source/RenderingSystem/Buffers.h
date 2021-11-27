@@ -1,8 +1,11 @@
 #pragma once
-#include <glad/glad.h>
 
-#include "../utility/Pch.h"
 
+
+#include "glad.h"
+#include "glm/gtx/associated_min_max.hpp"
+#include "utility/Defines.h"
+#include "utility/Pch.h"
 
 namespace KREngine
 {
@@ -17,7 +20,7 @@ namespace KREngine
 		Bool
 	};
 
-	static uint32_t ShaderDataTypeSize( EShaderDataType Type )
+	static glm::uint32_t ShaderDataTypeSize( EShaderDataType Type )
 	{
 		switch ( Type )
 		{

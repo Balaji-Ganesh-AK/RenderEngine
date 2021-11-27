@@ -1,6 +1,6 @@
 #pragma once
 #include "RenderingSystem/Textures.h"
-#include "utility/Pch.h"
+
 
 namespace KREngine
 {

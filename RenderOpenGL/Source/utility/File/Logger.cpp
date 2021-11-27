@@ -1,3 +1,5 @@
+
+#include "utility/Pch.h"
 #include "Logger.h"
 
 #include <cstdarg>

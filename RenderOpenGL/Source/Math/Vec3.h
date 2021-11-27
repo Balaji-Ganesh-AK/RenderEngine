@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/gtx/vec_swizzle.hpp"
 #include "utility/Pch.h"
 namespace  KREngine
 {

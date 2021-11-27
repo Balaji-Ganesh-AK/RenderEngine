@@ -1,13 +1,11 @@
 #pragma once
 
 
-
-
 #include "Buffers.h"
 #include "Shader.h"
 #include "Textures.h"
-#include "../utility/Pch.h"
-#include "ImGUI/imgui_impl_glfw.h"
+#include "Entity/Entity.h"
+#include "RenderingAPI/OpenGL/OpenGLWindow.h"
 #include "Runtime/Containers/FTransform.h"
 #include "Systems/Systems.h"
 
@@ -175,8 +173,8 @@ namespace KREngine
 		FColor GlobalColor{ 1.0f,1.0f,1.0f,1.0f };
 		KREngine::FTransform Transform;
 		KREngine::FTransform CameraTransform;
-		std::string DefaultTexture = "Content/Textures/Checkerboard.png";
-		std::string SecondTexture = "Content/Textures/awesomeface.png";
+		std::string DefaultTexture = "../Content/Textures/Checkerboard.png";
+		std::string SecondTexture = "../../Content/Textures/awesomeface.png";
 		//std::string DefaultTexture = "Content/Textures/Checkerboard.png";
 		float test{0.0f};
 	};

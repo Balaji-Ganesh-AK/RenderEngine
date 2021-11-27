@@ -1,9 +1,10 @@
 #pragma once
-#include "utility/Pch.h"
+
 
 
 namespace KREngine
 {
+	enum class EKeyCode;
 	class Vec2;
 	class FInput 
 	{

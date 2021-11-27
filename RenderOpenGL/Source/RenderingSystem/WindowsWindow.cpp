@@ -1,6 +1,6 @@
 #include "WindowsWindow.h"
 
-#include <glad/glad.h>
+#include "utility/KRELogger.h"
 
 
 namespace KREngine

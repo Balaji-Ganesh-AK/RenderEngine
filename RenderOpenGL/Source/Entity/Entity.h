@@ -1,6 +1,5 @@
 #pragma once
 #include "utility/Pch.h"
-#include <string_view>
 
 namespace KREngine
 {

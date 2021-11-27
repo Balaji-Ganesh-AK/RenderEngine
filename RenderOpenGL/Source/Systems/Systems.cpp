@@ -1,7 +1,11 @@
-#include "utility/Globals.h"
-#include "Systems.h"
+
 #include "RenderingSystem/FRenderingSystem.h"
-#include "RenderingSystem/WindowsWindow.h"
+#include "RenderingSystem/WindowsWindow.h""
+#include "Systems.h"
+
+
+#include "GLFW/glfw3.h"
+
 
 //#include "utility/Globals.h"
 
@@ -11,38 +15,37 @@ namespace KREngine
 	void SystemManager::Init()
 	{
 		RenderingSystem->Init();
-		/*for( std::vector<std::shared_ptr<FGameSystem>>::value_type GameSystem : SystemsList)
+		if(GameLoop)
 		{
-			GameSystem->Init();
-		}*/
+			
+			GameLoop->Init();
+		}
 	}
 
 	void SystemManager::Run()
 	{
 		RenderingSystem->Run();
-		/*for ( std::vector<std::shared_ptr<FGameSystem>>::value_type GameSystem : SystemsList )
+		if ( GameLoop )
 		{
-			
-		}*/
+
+			GameLoop->Run();
+		}
 	}
 
 	void SystemManager::Stop()
 	{
 		RenderingSystem->Stop();
-		/*for ( std::vector<std::shared_ptr<FGameSystem>>::value_type GameSystem : SystemsList )
+		
+		if ( GameLoop )
 		{
-			
-		}*/
+			GameLoop->Stop();
+		}
 	}
 
 #if GUI
   	void SystemManager::InitGUI()
 	{
 		RenderingSystem->GUIInit();
-		/*for ( std::vector<std::shared_ptr<FGameSystem>>::value_type GameSystem : SystemsList )
-		{
-			
-		}*/
 	}
 
 	void SystemManager::RunGUI()
@@ -172,10 +175,6 @@ namespace KREngine
 	void SystemManager::StopGUI()
 	{
 		RenderingSystem->GUIStop();
-		/*for (std::vector<std::shared_ptr<FGameSystem>>::value_type GameSystem : SystemsList )
-		{
-			
-		}*/
 	}
 
 	SystemManager::SystemManager()
