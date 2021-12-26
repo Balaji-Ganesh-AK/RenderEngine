@@ -11,6 +11,6 @@
     {
         f_Color = v_Color;
         f_Texture = v_Texture;
-        gl_Position = u_WorldProjection * v_Pos ;
+        gl_Position = u_WorldProjection * v_Pos;
       
     }

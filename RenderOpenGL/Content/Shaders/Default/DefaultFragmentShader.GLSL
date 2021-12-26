@@ -8,5 +8,5 @@
     uniform sampler2D u_Texture;
     void main()
     {
-        color = /*texture(u_Texture, f_Texture)**/ vec4( u_ObjectColor * u_Color);
+        color = /*texture(u_Texture, f_Texture)*/ vec4( u_ObjectColor * u_Color);
     }

@@ -16,7 +16,7 @@ KREngine::FShader* KREngine::FShader::CreateShader(std::filesystem::path& vertex
 	try
 	{
 		/** Open and read the files*/
-		std::cout << "Shader error! Failed to read the file " << std::filesystem::absolute(vertexFilePath.relative_path()) <<std::endl;
+		//std::cout << "Shader error! Failed to read the file " << std::filesystem::absolute(vertexFilePath.relative_path()) <<std::endl;
 		vertexShaderFile.open( ( vertexFilePath.relative_path() ) );
 
 		fragShaderFile.open( (fragFilePath.relative_path() ));

@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Entity/Entity.h"
 #include "RenderingAPI/OpenGL/OpenGLWindow.h"
+#include "Runtime/Actors/Lights/FLights.h"
 #include "Runtime/Containers/FTransform.h"
 #include "Systems/Systems.h"
 
@@ -152,10 +153,10 @@ namespace KREngine
 
 		uint32 indices [3 * 4 *3] = {
 			0,1,2,
-			0,2,3,
+			2,3,0,
 
 			4,5,7,
-			4,7,6,
+			7,6,4,
 
 			8,9,10,
 			10,11,8,
@@ -170,12 +171,14 @@ namespace KREngine
 			22,23,20
 		};
 		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
-		FColor GlobalColor{ 1.0f,1.0f,1.0f,1.0f };
 		KREngine::FTransform Transform;
 		KREngine::FTransform CameraTransform;
 		std::string DefaultTexture = "../Content/Textures/Checkerboard.png";
 		std::string SecondTexture = "../../Content/Textures/awesomeface.png";
 		//std::string DefaultTexture = "Content/Textures/Checkerboard.png";
+
+
+		FLight GlobalLight;
 		float test{0.0f};
 	};
 }

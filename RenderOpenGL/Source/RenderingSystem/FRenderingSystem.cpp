@@ -9,9 +9,9 @@
 
 using namespace KREngine;
 
-FRenderingSystem::FRenderingSystem( WindowsWindow * window )
+FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 {
-    WindowWindow = window;
+	WindowWindow = window;
 
 	FRenderingObject RO;
 
@@ -49,7 +49,8 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window )
 	//RenderingObjectList.emplace_back( RO1 );
 	//
 
-	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(WindowWindow->Properties->GetWidth(), WindowWindow->Properties->GetHeight()));
+	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(WindowWindow->Properties->GetWidth(),
+	                                                  WindowWindow->Properties->GetHeight()));
 	glfwSwapInterval(0);
 }
 
@@ -134,7 +135,6 @@ void FRenderingSystem::GUIInit()
 	    //Style->Colors [ImGuiCol_TooltipBg] = ImVec4( 1.00f, 1.00f, 1.00f, 0.94f );
 	    // Style->Colors [ImGuiCol_ModalWindowDarkening] = ImVec4( 0.20f, 0.20f, 0.20f, 0.35f );
     }
-
     if (1)
 	{
         auto& colors = ImGui::GetStyle().Colors;
@@ -277,8 +277,8 @@ void FRenderingSystem::GUIRun()
 
     IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraRotation", &CameraTransform.GetRotation().x, 1, -360000, 360000 ), "CameraRotation", );
     IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraScale", &CameraTransform.GetScale().x, 1, -360000, 360000 ), "CameraScale", );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat4( "##GlobalLight", &Color.r, 0.01, -1, 1 ), "GlobalLight", );
-	ImGui::ColorPicker4( "Test light",&GlobalColor.r);
+    IMGUI_LEFT_LABEL( ImGui::DragFloat4( "##ObjectColor", &Color.r, 0.01, -1, 1 ), "GlobalLight", );
+	ImGui::ColorPicker4( "Global Light",&GlobalLight.GetLightColor().r);
     ImGui::Text( "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
     //ImGui::DragFloat3( "Translation", &Translation.x);
     ImGui::End();
@@ -334,7 +334,7 @@ void FRenderingSystem::Run()
             RO.Texture2D->BindTexture();
             // RO.Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
             RO.Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
-            RO.Shader->SetUniform4f( "u_Color",vec4( GlobalColor.r, GlobalColor.g, GlobalColor.b, GlobalColor.a) );
+            RO.Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
             RO.Shader->SetUniformMat4( "u_WorldProjection", WorldProjection * ViewProjection * ModelProjection );
             RO.VertexArray->BindBuffer();
 

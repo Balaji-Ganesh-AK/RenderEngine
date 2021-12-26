@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Math/Vec3.h"
 
 namespace KREngine
 {
@@ -24,6 +24,12 @@ namespace KREngine
 		void SetLocation(FVector& location) { Location = location; }
 		void SetRotation(FVector& rotation);
 		void SetScale( FVector& scale ) { Scale = scale; }
+
+
+
+		void SetLocation(const FVector& location ) { Location = location; }
+		void SetRotation( const FVector& rotation );
+		void SetScale( const FVector& scale ) { Scale = scale; }
 		
 	private:
 

@@ -69,4 +69,5 @@ namespace  KREngine
 	};
 
 	typedef KREngine::vec3 FVector;
+	typedef KREngine::vec3 FRotation;
 }
