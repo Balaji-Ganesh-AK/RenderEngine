@@ -3,6 +3,11 @@
 
 namespace KREngine
 {
+	FLight::FLight()
+	{
+		Mesh.SetScale( Mesh.GetScale() / 2 );
+	}
+
 	FColor& FLight::GetLightColor()
 	{
 		return LightColor;
@@ -25,9 +30,12 @@ namespace KREngine
 
 	FColor FLight::GetShaderColor() const
 	{
+		return LightColor;
+
 		if(bUseAmbientColor)
-		{			
-			return LightColor * AmbientColor;
+		{
+			return FColor( LightColor.r * AmbientStrength, LightColor.g * AmbientStrength, LightColor.b * AmbientStrength,LightColor.a );
+			
 		}
 		else
 		{

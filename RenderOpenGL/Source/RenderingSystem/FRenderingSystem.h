@@ -2,11 +2,14 @@
 
 
 #include "Buffers.h"
+#include "Materials.h"
 #include "Shader.h"
 #include "Textures.h"
 #include "Entity/Entity.h"
 #include "RenderingAPI/OpenGL/OpenGLWindow.h"
 #include "Runtime/Actors/Lights/FLights.h"
+#include "Runtime/Camera/FCamera.h"
+
 #include "Runtime/Containers/FTransform.h"
 #include "Systems/Systems.h"
 
@@ -15,6 +18,8 @@ namespace KREngine
 {
 	class WindowsWindow;
 
+	/*Batch rendering ku use agum*/
+	
 	struct FRenderingObject
 	{
 	public:
@@ -23,6 +28,8 @@ namespace KREngine
 		std::shared_ptr<FVertexArray> VertexArray;
 		std::shared_ptr<FTexture2D> Texture2D;
 		std::shared_ptr<FShader> Shader;
+		std::shared_ptr<FMaterials> Material;
+		FStaticMesh* Mesh = nullptr;
 	};
 
 
@@ -66,118 +73,24 @@ namespace KREngine
 
 		std::vector<FRenderingObject> RenderingObjectList;
 		std::shared_ptr<FFrameBuffer> Framebuffer;
-		//const std::string DefaultVertexShaderPath = "Content/Shaders/Default/DefaultVertexShader.GLSL";
-		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
-		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
-		//const std::string DefaultFragmentShaderPath = "Content/Shaders/Default/DefaultFragmentShader.GLSL";
+		
+		//std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
+		//std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultLitVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultLitFragmentShader.GLSL";
+		
 
-		float pos [8 * 24] = {
-			                //Vertex Positions	    //Color				//Tex Cord   
-			/** 0 */		-0.5f,-0.5f,-0.5f,		0.0f, 0.0f, 0.0f,	0.5f, 0.5f, 
-			/** 1 */		0.5f,-0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.5f,
-			/** 2 */		0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			/** 3 */		-0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	0.5f, 1.0f,
-
-			/** 4 */		-0.5f,-0.5f,0.5f,		0.0f, 0.0f, 0.0f,	0.5f, 0.5f,
-			/** 5 */		0.5f,-0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.5f,
-			/** 6 */		-0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	0.5f, 1.0f,
-			/** 7 */		0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-
-			/** 8 */		-0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-			/** 9 */		0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-			/** 10 */		0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			/** 11 */		-0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-
-			/** 12 */		-0.5f,-0.5f,-0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-			/** 13 */		0.5f,-0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-			/** 14 */		0.5f,-0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			/** 15 */		-0.5f,-0.5f,0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-
-			/** 16 */		0.5f,-0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-			/** 17 */		0.5f,-0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-			/** 18 */		0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-			/** 19 */		0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			
-			/** 20 */		-0.5f,-0.5f,-0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-			/** 21 */		-0.5f,-0.5f,0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-			/** 22 */		-0.5f,0.5f,	0.5f,		0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-			/** 23 */		-0.5f,0.5f,	-0.5f,		0.0f, 0.0f, 0.0f,	0.0f, 1.0f
-
-		};
-
-
-		float testpos [1000] =
-		{
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		};
-
-		uint32 indices [3 * 4 *3] = {
-			0,1,2,
-			2,3,0,
-
-			4,5,7,
-			7,6,4,
-
-			8,9,10,
-			10,11,8,
-
-			12,13,14,
-			14,15,12,
-
-			16,17,18,
-			18,19,16,
-
-			20,21,22,
-			22,23,20
-		};
-		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
-		KREngine::FTransform Transform;
-		KREngine::FTransform CameraTransform;
-		std::string DefaultTexture = "../Content/Textures/Checkerboard.png";
+		
+		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
+		FCamera CameraTransform;
+		std::string DefaultTexture = "../Content/Textures/awesomeface.png";
 		std::string SecondTexture = "../../Content/Textures/awesomeface.png";
 		//std::string DefaultTexture = "Content/Textures/Checkerboard.png";
 
-
+		FStaticMesh CubeMesh;
+		FMaterials Material;
+		bool bAmbientColor = false;
+		float TestTime = 0;
 		FLight GlobalLight;
 		float test{0.0f};
 	};

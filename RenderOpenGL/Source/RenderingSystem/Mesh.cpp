@@ -39,8 +39,7 @@ namespace KREngine
 	}
 
 	void FMesh::SetScale(FVector& scale)
-	{
-		Transform.SetScale( scale );
+	{	Transform.SetScale( scale );
 	}
 
 	FTransform& FMesh::GetTransform()

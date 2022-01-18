@@ -88,8 +88,20 @@ namespace KREngine
 
 	void OpenGLShader::SetUniform3f(const std::string& name, KREngine::vec3 vector4)
 	{
-		GLint location = glGetUniformLocation( RendererID, name.c_str() );
+		const GLint location = glGetUniformLocation( RendererID, name.c_str() );
 		glUniform3f( location, vector4.x, vector4.y, vector4.z);
+	}
+
+	void OpenGLShader::SetUniformInt(const std::string& name, int value)
+	{
+		const GLint location = glGetUniformLocation( RendererID, name.c_str() );
+		glUniform1i( location, value );
+	}
+
+	void OpenGLShader::SetUniformF(const std::string& name, float value)
+	{
+		const GLint location = glGetUniformLocation( RendererID, name.c_str() );
+		glUniform1f( location, value );
 	}
 }
 

@@ -102,6 +102,37 @@ namespace KREngine
 		}
 		Rotation = rotation;
 	}
+
+	inline void FTransform::SetRotation(const FVector& rotation)
+	{
+		FRotation Temp = rotation;
+		if ( Temp.x < -360 )
+		{
+			Temp.x = Temp.x / -360;
+		}
+		if ( Temp.y < 0 )
+		{
+			Temp.y = Temp.y / -360;
+		}
+		if ( Temp.z < 0 )
+		{
+			Temp.z = Temp.z / -360;
+		}
+
+		if ( Temp.x > 360 )
+		{
+			Temp.x = Temp.x / 360;
+		}
+		if ( Temp.y > 360 )
+		{
+			Temp.y = Temp.y / 360;
+		}
+		if ( Temp.z > 360 )
+		{
+			Temp.z = Temp.z / 360;
+		}
+		Rotation = Temp;
+	}
 }
 
 
