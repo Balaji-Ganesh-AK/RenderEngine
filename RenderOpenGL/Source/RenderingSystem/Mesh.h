@@ -1,4 +1,5 @@
 #pragma once
+#include "Buffers.h"
 #include "Runtime/Containers/FTransform.h"
 #include "utility/Defines.h"
 
@@ -8,23 +9,11 @@ namespace KREngine
 	class FMesh
 	{
 	public:
-		void SetTransform(const FTransform&  transform);
-		void SetLocation(const FVector& location);
-		void SetRotation( const FRotation& rotation );
-		void SetScale( const FVector& scale );
-
-
-
-		void SetTransform( FTransform& transform );
-		void SetLocation( FVector& location );
-		void SetRotation( FRotation& rotation );
-		void SetScale(  FVector& scale );
-
-		FTransform& GetTransform();
-		FVector& GetLocation();
-		FVector& GetRotation();
-		FVector& GetScale();
 	private:
+
+		std::shared_ptr<FVertexBuffer> VertexBufferData;
+		std::shared_ptr<FIndexBuffer> IndexBufferData;
+		std::shared_ptr<FVertexArray> VertexArray;
 		friend class FRenderingSystem;
 		KREngine::FTransform Transform;
 

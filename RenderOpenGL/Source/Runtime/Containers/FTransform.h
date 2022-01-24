@@ -21,6 +21,10 @@ namespace KREngine
 		FVector& GetScale() { return Scale; }
 
 
+		FVector GetLocation() const { return Location; } 
+		FVector GetRotation() const ;
+		FVector GetScale()const { return Scale; }
+		
 		void SetLocation(FVector& location) { Location = location; }
 		void SetRotation(FVector& rotation);
 		void SetScale( FVector& scale ) { Scale = scale; }
@@ -71,6 +75,41 @@ namespace KREngine
 	
 
 		return Rotation;
+	}
+
+	inline FVector FTransform::GetRotation() const
+	{
+		FVector temp = Rotation;
+		if ( temp.x < -360 )
+		{
+			temp.x = temp.x / -360;
+		}
+		if ( temp.y < -360 )
+		{
+			temp.y = temp.y / -360;
+		}
+		if ( temp.z < -360 )
+		{
+			temp.z = temp.z / -360;
+		}
+
+		if ( temp.x > 360 )
+		{
+			temp.x = temp.x / 360;
+		}
+		if ( temp.y > 360 )
+		{
+			temp.y = temp.y / 360;
+		}
+		if ( temp.z > 360 )
+		{
+			temp.z = temp.z / 360;
+		}
+
+
+
+
+		return temp;
 	}
 
 	inline void FTransform::SetRotation(FVector& rotation)

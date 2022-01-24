@@ -26,10 +26,10 @@ namespace KREngine
 		std::shared_ptr<FVertexBuffer> VertexBufferData;
 		std::shared_ptr<FIndexBuffer> IndexBufferData;
 		std::shared_ptr<FVertexArray> VertexArray;
-		std::shared_ptr<FTexture2D> Texture2D;
 		std::shared_ptr<FShader> Shader;
-		std::shared_ptr<FMaterials> Material;
+		FMaterials Material;
 		FStaticMesh* Mesh = nullptr;
+		FTransform Transform;
 	};
 
 
@@ -79,12 +79,14 @@ namespace KREngine
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultLitVertexShader.GLSL";
 		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultLitFragmentShader.GLSL";
 		
+		
 
 		
 		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
 		FCamera CameraTransform;
 		std::string DefaultTexture = "../Content/Textures/awesomeface.png";
-		std::string SecondTexture = "../../Content/Textures/awesomeface.png";
+		std::string SecondTexture = "../Content/Textures/awesomeface.png";
+		
 		//std::string DefaultTexture = "Content/Textures/Checkerboard.png";
 
 		FStaticMesh CubeMesh;

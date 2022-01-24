@@ -15,7 +15,7 @@ namespace KREngine
 		OpenGLTexture2D::BindTexture();
 	}
 
-	void OpenGLTexture2D::BindTexture()
+	void OpenGLTexture2D::BindTexture() 
 	{
 		glActiveTexture( GL_TEXTURE0 );
 		glBindTexture( GL_TEXTURE_2D, RendererID );
@@ -23,6 +23,12 @@ namespace KREngine
 
 		//glActiveTexture( GL_TEXTURE0 +slot );
 		//glBindTexture( GL_TEXTURE_2D, RendererID );
+	}
+
+	void OpenGLTexture2D::BindTexture(int slot) const
+	{
+		glActiveTexture( GL_TEXTURE0 +  slot );
+		glBindTexture( GL_TEXTURE_2D, RendererID );
 	}
 
 	void OpenGLTexture2D::UnBindTexture()

@@ -20,7 +20,7 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 
 	RO.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer( CubeMesh.Positions, sizeof( CubeMesh.Positions ) / sizeof(float)));
 	RO.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer( CubeMesh.Indices, sizeof( CubeMesh.Indices ) / sizeof(unsigned int)));
-	RO.Texture2D.reset(FTexture2D::Create(DefaultTexture));
+
 	VertexBufferLayout layout{
 		BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 		BufferElement{"v_Texture", EShaderDataType::FVec2, true},
@@ -32,6 +32,8 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	RO.VertexArray->BindBufferLayout();
 	RO.Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 	RO.Mesh = &CubeMesh;
+	int slot = 0;
+	RO.Material.Init( RO.Shader, slot);
 	RenderingObjectList.emplace_back(RO);
 
 
@@ -40,9 +42,9 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 
 	RO1.VertexArray.reset( FVertexArray::Create() );
 
-	RO1.VertexBufferData.reset( FVertexBuffer::CreateVertexBuffer( GlobalLight.GetMesh().Positions, sizeof( GlobalLight.GetMesh().Positions ) / sizeof( float ) ) );
-	RO1.IndexBufferData.reset( FIndexBuffer::CreateIndexBuffer( GlobalLight.GetMesh().Indices, sizeof( GlobalLight.GetMesh().Indices ) / sizeof( unsigned int ) ) );
-	RO1.Texture2D.reset( FTexture2D::Create( DefaultTexture ) );
+	RO1.VertexBufferData.reset( FVertexBuffer::CreateVertexBuffer( CubeMesh.Positions, sizeof( CubeMesh.Positions ) / sizeof( float ) ) );
+	RO1.IndexBufferData.reset( FIndexBuffer::CreateIndexBuffer( CubeMesh.Indices, sizeof( CubeMesh.Indices ) / sizeof( unsigned int ) ) );
+	
 	VertexBufferLayout layout1{
 		BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 		BufferElement{"v_Texture", EShaderDataType::FVec2, true},
@@ -52,8 +54,9 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	RO1.VertexArray->SetLayOut( layout1 );
 	RO1.VertexArray->BindBufferLayout();
 	RO1.Shader.reset( FShader::CreateShader( DefaultVertexShaderPath, DefaultFragmentShaderPath ) );
-	
-	RO1.Mesh = &GlobalLight.GetMesh();
+	int slot1 = 0;
+	RO1.Material.Init( RO1.Shader, slot1);
+	RO1.Mesh = &CubeMesh;
 	
 	RenderingObjectList.emplace_back( RO1 );
 	
@@ -61,9 +64,9 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	/*glEnable( GL_CULL_FACE );
-	glFrontFace( GL_CW );
-	glCullFace( GL_BACK );*/
+	//glEnable( GL_CULL_FACE );
+	//glFrontFace( GL_CW );
+	//glCullFace( GL_BACK );
 	//FRenderingObject RO1;
 
 	//RO1.VertexArray.reset( FVertexArray::Create() );
@@ -82,6 +85,11 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(WindowWindow->Properties->GetWidth(),
 	                                                  WindowWindow->Properties->GetHeight()));
 	glfwSwapInterval(0);
+
+
+	//Post init
+//	Material.Init();
+
 }
 
 FRenderingSystem::~FRenderingSystem()
@@ -299,11 +307,11 @@ void FRenderingSystem::GUIRun()
     ImGui::End();
 
     ImGui::Begin( "Settings" );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Translation", &CubeMesh.GetLocation().x ), "Testing", );
+    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Translation", &RenderingObjectList[0].Transform.GetLocation().x ), "Testing", );
 
 
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Rotation", &CubeMesh.GetRotation().x, 1, -360000, 360000 ), "Rotation", );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Scale", &CubeMesh.GetScale().x, 1, -360000, 360000 ), "Scale", );
+    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Rotation", &RenderingObjectList [0].Transform.GetRotation().x, 1, -360000, 360000 ), "Rotation", );
+    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Scale", &RenderingObjectList [0].Transform.GetScale().x, 1, -360000, 360000 ), "Scale", );
     IMGUI_LEFT_LABEL( ImGui::DragFloat( "##Angle", &TestTime, 0.01, -9, 9 ), "Angle", );
 
     IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraTrans", &CameraTransform.GetTransform().GetLocation().x ), "CameraTrans", );
@@ -368,20 +376,17 @@ void FRenderingSystem::Run()
         /*ViewProjection = glm::rotate( ViewProjection, glm::radians( CameraTransform.GetGLMTransform().GetRotation().x ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
         ViewProjection = glm::rotate( ViewProjection, glm::radians( CameraTransform.GetGLMTransform().GetRotation().y ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
         ViewProjection = glm::rotate( ViewProjection, glm::radians( CameraTransform.GetGLMTransform().GetRotation().z ), glm::vec3( 0.0f, 0.0f, 1.0f ) );*/
-		FVector tempLocation = GlobalLight.GetMesh().GetLocation();
+		FVector tempLocation = RenderingObjectList [1].Transform.GetLocation();
 		//TestTime += 0.000;
-		tempLocation.x = CubeMesh.GetLocation().x + cos( TestTime ) * 2;
-		tempLocation.z = CubeMesh.GetLocation().z + sin( TestTime ) * 2;
-		GlobalLight.GetMesh().SetLocation( tempLocation );
+		tempLocation.x = RenderingObjectList [0].Transform.GetLocation().x + cos( TestTime ) * 2;
+		tempLocation.z = RenderingObjectList [0].Transform.GetLocation().z + sin( TestTime ) * 2;
+		RenderingObjectList [1].Transform.SetLocation( tempLocation );
 		/*Needs clean up*/
 		GlobalLight.SetUseAmbientColor( bAmbientColor );
 		//auto color = Color * GlobalLight.GetShaderColor();
 		RenderingObjectList [0].Shader->BindShader();
 		RenderingObjectList[0].Shader->SetUniform4f( "u_ObjectColor", vec4( Color.r, Color.g, Color.b, Color.a ) );
-		RenderingObjectList[0].Shader->SetUniform3f( "material.Ambient", Material.GetAmbient() );
-		RenderingObjectList[0].Shader->SetUniform3f( "material.Diffuse", Material.GetDiffuse() );
-		RenderingObjectList[0].Shader->SetUniform3f( "material.Specular", Material.GetSpecular() );
-		RenderingObjectList[0].Shader->SetUniformF( "material.Shininess", Material.GetShininess() );
+		RenderingObjectList[0].Shader->SetUniformF( "material.Shininess", RenderingObjectList [0].Material.GetShininess() );
 		RenderingObjectList[0].Shader->SetUniform4f( "u_LightColor",  vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a ) );
 		RenderingObjectList[0].Shader->SetUniformInt( "u_Light", 1 );
 		RenderingObjectList [0].Shader->UnBindShader();
@@ -392,21 +397,21 @@ void FRenderingSystem::Run()
 		RenderingObjectList [1].Shader->UnBindShader();
         for ( const FRenderingObject& RO : RenderingObjectList )
         {
+			int slot = 0;
             RO.Shader->BindShader();
-            RO.Texture2D->BindTexture();
-
+			RO.Material.Bind(slot);
 			glm::mat4 ModelProjection = glm::mat4( 1.0f );
-			ModelProjection = glm::translate( ModelProjection, RO.Mesh->GetLocation().AsGLMVec3() );
-			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Mesh->GetRotation().x ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
-			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Mesh->GetRotation().y ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
-			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Mesh->GetRotation().z ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
-			ModelProjection = glm::scale( ModelProjection, RO.Mesh->GetScale().AsGLMVec3() );
+			ModelProjection = glm::translate( ModelProjection, RO.Transform.GetLocation().AsGLMVec3() );
+			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Transform.GetRotation().x ), glm::vec3( 1.0f, 0.0f, 0.0f ) );
+			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Transform.GetRotation().y ), glm::vec3( 0.0f, 1.0f, 0.0f ) );
+			ModelProjection = glm::rotate( ModelProjection, glm::radians(RO.Transform.GetRotation().z ), glm::vec3( 0.0f, 0.0f, 1.0f ) );
+			ModelProjection = glm::scale( ModelProjection, RO.Transform.GetScale().AsGLMVec3() );
             // RO.Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
            //RO.Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
            // RO.Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
             RO.Shader->SetUniformMat4( "u_WorldProjection", WorldProjection * ViewProjection * ModelProjection );
             RO.Shader->SetUniformMat4( "u_Model", /*ViewProjection**/ ModelProjection );
-            RO.Shader->SetUniform3f( "u_LightPos",  GlobalLight.GetMesh().GetLocation());
+            RO.Shader->SetUniform3f( "u_LightPos", RenderingObjectList[1].Transform.GetLocation());
             RO.Shader->SetUniform3f( "u_CameraPos", CameraTransform.GetTransform().GetLocation());
         	
             RO.VertexArray->BindBuffer();

@@ -9,6 +9,7 @@ namespace KREngine
 	public:
 		virtual ~FTexture2D() = default;
 		virtual void BindTexture() = 0;
+		virtual void BindTexture( int slot) const = 0;
 		virtual void UnBindTexture() = 0;
 
 		static FTexture2D* Create(std::string& texturePath);

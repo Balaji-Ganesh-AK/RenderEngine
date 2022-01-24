@@ -5,7 +5,7 @@ namespace KREngine
 {
 	FLight::FLight()
 	{
-		Mesh.SetScale( Mesh.GetScale() / 2 );
+		
 	}
 
 	FColor& FLight::GetLightColor()

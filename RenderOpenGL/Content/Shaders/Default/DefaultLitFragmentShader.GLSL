@@ -3,9 +3,9 @@
     layout( location = 0 ) out vec4 color;
     struct Material
     {
-        vec3 Ambient;
-        vec3 Diffuse;
-        vec3 Specular;
+        
+        sampler2D Diffuse;
+        sampler2D Specular;
         float Shininess;
     };
     in vec3 f_Normal;
@@ -30,8 +30,9 @@
         }
         else
         {
+           // color = texture( material.Ambient, f_Texture ) * vec4( u_ObjectColor );
             //Ambient
-            vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * material.Ambient;
+            vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * vec3( texture( material.Diffuse, f_Texture ) );
 
             //Diffuse
            
@@ -39,13 +40,13 @@
 
             vec3 LightDir = normalize( u_LightPos - f_FragPos );
             float DiffuseStrength = max( dot( Norm, LightDir ),0.0 );
-            vec3 Diffuse = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * ( DiffuseStrength * material.Diffuse );
+            vec3 Diffuse = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * ( DiffuseStrength * vec3(texture(material.Diffuse, f_Texture )));
 
             //Specular 
             vec3 ViewDir = normalize( u_CameraPos - f_FragPos );
             vec3 ReflectDir = reflect( -LightDir, Norm );
             float SpecularStrength = pow( max( dot( ViewDir, ReflectDir ), 0.0 ), material.Shininess );
-            vec3 Specular = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *( SpecularStrength * material.Specular);
+            vec3 Specular = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *( SpecularStrength * vec3( texture( material.Specular, f_Texture ) ) );
 
       
         //    
@@ -53,7 +54,8 @@
             vec3 result = ( Diffuse + Ambient + Specular );
 
 
-           color = texture( u_Texture, f_Texture ) * vec4( result , 1.0) * ( u_ObjectColor );
+          // color = texture( u_Texture, f_Texture ) * vec4( result , 1.0) * ( u_ObjectColor );
+           color =  vec4( result , 1.0)/* * ( u_ObjectColor )*/;
         }
-        //
+        
     }

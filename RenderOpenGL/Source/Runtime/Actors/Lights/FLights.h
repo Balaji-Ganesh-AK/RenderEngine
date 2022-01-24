@@ -11,7 +11,6 @@ namespace KREngine
 		FColor LightColor{ 1.0f,1.0f,1.0f,1.0f };
 		FColor AmbientColor;
 		float AmbientStrength =0.1f;
-		FStaticMesh Mesh;
 		bool bUseAmbientColor{ false };
 
 	public:
@@ -29,9 +28,6 @@ namespace KREngine
 		/*Whether to use ambient color for this light source*/
 		void SetUseAmbientColor( bool value );
 		bool GetUseAmbientColor() { return bUseAmbientColor; }
-		FORCEINLINE FStaticMesh& GetMesh()
-		{
-			return Mesh;
-		}
+		
 	};
 }
