@@ -4,6 +4,7 @@
 #include "Systems.h"
 
 
+#include "GameManager.h"
 #include "GLFW/glfw3.h"
 
 
@@ -12,40 +13,44 @@
 namespace KREngine
 {
 
-	void SystemManager::Init()
+	void SystemManager::Init() const
 	{
 		RenderingSystem->Init();
-		if(GameLoop)
+
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
 		{
-			
-			GameLoop->Init();
+			system->Init();
 		}
+	
 	}
 
-	void SystemManager::Run()
+	void SystemManager::Run() const
 	{
 		RenderingSystem->Run();
-		if ( GameLoop )
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
 		{
-
-			GameLoop->Run();
+			system->Run();
 		}
 	}
 
-	void SystemManager::Stop()
+	void SystemManager::Stop() const
 	{
 		RenderingSystem->Stop();
-		
-		if ( GameLoop )
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
 		{
-			GameLoop->Stop();
+			system->Stop();
 		}
 	}
 
 #if GUI
-  	void SystemManager::InitGUI()
-	{
+  	void SystemManager::InitGUI() const
+    {
 		RenderingSystem->GUIInit();
+
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
+		{
+			system->GUIInit();
+		}
 	}
 
 	void SystemManager::RunGUI()
@@ -57,9 +62,8 @@ namespace KREngine
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		bool bT = true;
 		static bool opt_fullscreen = true;
-		static bool rtest = true;
+		static bool AppExit = true;
 		static bool opt_padding = false;
 		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -115,7 +119,7 @@ namespace KREngine
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
-				ImGui::MenuItem( "Exit", NULL, &rtest );
+				ImGui::MenuItem( "Exit", NULL, &AppExit );
 				//ImGui::MenuItem( "Padding", NULL, &opt_padding );
 				//ImGui::Separator();
 
@@ -150,7 +154,10 @@ namespace KREngine
 		
 		RenderingSystem->GUIRun();
 
-
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
+		{
+			system->GUIRun();
+		}
 
 		/*Post Update*/
 		if( bShowDebugProfiler )
@@ -172,20 +179,29 @@ namespace KREngine
 		}
 	}
 
-	void SystemManager::StopGUI()
+	void SystemManager::StopGUI() const
 	{
 		RenderingSystem->GUIStop();
+		for (const std::shared_ptr<FGameSystem>& system : SystemsList)
+		{
+			system->GUIStop();
+		}
 	}
-
+#endif
 	SystemManager::SystemManager()
 	{
 		Properties = std::make_unique<WindowsProperties>( WindowsProperties( ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1" ) );
-		WindowWindow = std::make_unique < WindowsWindow>( *Properties.get() );
+		WindowWindow = std::make_unique < WindowsWindow>( *Properties);
 		RenderingSystem = std::make_shared<FRenderingSystem>( WindowWindow.get() );
 
 		InputSystem = std::make_unique<WindowsInput>(RenderingSystem);
+
+
+		/*Game systems*/
+		std::shared_ptr<FStaticMeshSystem> System = std::make_shared<FStaticMeshSystem>();
+		SystemsList.emplace_back(System);
 	}
-#endif
+
 
 
 	/*void SystemManager::Register( std::shared_ptr<FGameSystem> system )

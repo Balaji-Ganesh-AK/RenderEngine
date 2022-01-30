@@ -17,7 +17,7 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	FRenderingObject RO1;
 
 	RO.VertexArray.reset(FVertexArray::Create());
-
+	RO.Mesh = &CubeMesh;
 	RO.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer( CubeMesh.Positions, sizeof( CubeMesh.Positions ) / sizeof(float)));
 	RO.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer( CubeMesh.Indices, sizeof( CubeMesh.Indices ) / sizeof(unsigned int)));
 
@@ -31,7 +31,7 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	RO.VertexArray->SetLayOut(layout);
 	RO.VertexArray->BindBufferLayout();
 	RO.Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
-	RO.Mesh = &CubeMesh;
+
 	int slot = 0;
 	RO.Material.Init( RO.Shader, slot);
 	RenderingObjectList.emplace_back(RO);

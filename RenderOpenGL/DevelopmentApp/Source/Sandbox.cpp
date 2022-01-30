@@ -11,14 +11,23 @@ namespace KREngine
 
 	void TestGame::Init()
 	{
-		Logger::Verbose( "Client is started.." );
+		
 	}
 
 	void TestGame::Run()
 	{
+		
 	}
 
-	void TestGame::Stop()
+	void TestGame::End()
 	{
 	}
+
+	
+
+	KREngine::FApplication* KREngine::CreateApplication()
+	{
+		return new TestGame();
+	}
+
 }

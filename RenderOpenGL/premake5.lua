@@ -22,6 +22,8 @@ project "RenderOpenGL"
 		"Source/**.h",
 		"Source/**.cpp",
 		"Content/**.GLSL",
+		"Content/**.png",
+		"Content/**.jpg",
 		"Glad/**.c",
 		"Dependencies/ImGUI/**.h",
 		"Dependencies/ImGUI/**.cpp",
@@ -106,8 +108,14 @@ project "DevelopmentApp"
 	objdir ("$(SolutionDir)/Intermediate/")	
 	
 	links
-	{		
+	{	
 		"RenderOpenGL"
+		
+	}
+	
+	libdirs 
+	{
+		"$(SolutionDir)bin/$(Configuration)/$(Platform)/RenderOpenGL"
 	}
 	files
 	{
@@ -144,8 +152,10 @@ project "DevelopmentApp"
 				"_CONSOLE",
 			}
 			links
-			{
-				"opengl32.lib"
+			{	
+				
+				"opengl32.lib",
+				
 			}
 			symbols "on"
 		filter "configurations:Release"

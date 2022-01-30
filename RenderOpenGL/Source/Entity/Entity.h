@@ -1,11 +1,12 @@
 #pragma once
+
 #include "utility/Pch.h"
 
 namespace KREngine
 {
 	class EEntity;
 	/*This is the atomic interface class for all the components*/
-	class IComponents
+	struct IComponents
 	{
 		
 	};
@@ -20,10 +21,12 @@ namespace KREngine
 		virtual void Run() = 0;
 		virtual void Stop() = 0;
 
+#ifdef GUI
+		virtual void GUIInit() {}
+		virtual void GUIRun() {}
+		virtual void GUIStop() {}
+#endif
 
-		virtual void GUIInit() {};
-		virtual void GUIRun() {};
-		virtual void GUIStop() {};
 
 		const std::string& GetName() const
 		{ return Name; }
@@ -40,7 +43,7 @@ namespace KREngine
 	protected:
 		
 	private:
-		std::vector<FGameSystem*> SystemsList;
+		std::vector<IComponents*> SystemsList;
 		std::string Name;
 	};
 

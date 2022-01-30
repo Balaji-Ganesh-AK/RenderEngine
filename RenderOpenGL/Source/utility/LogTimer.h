@@ -43,7 +43,7 @@ public:
 		const long long end_time = std::chrono::time_point_cast<std::chrono::microseconds>( End ).time_since_epoch().count();
 		const float duration = ( end_time - start_time ) * 0.001f;
 		Function( { FunctionName, duration } );
-		//float MS = Duration.count() * 1000.0f;
+		//float MS = duration * 1000.0f;
 		//std::cout << FunctionName << " Took :" << MS << " MS" << std::endl;
 	}
 #else

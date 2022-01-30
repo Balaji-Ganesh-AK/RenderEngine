@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Game.h"
+#include "GameManager.h"
 
 
 namespace KREngine
 {
-	class TestGame : public FGame
+	class TestGame : public FApplication
 	{
 	public:
 		TestGame() ;
-		virtual void Init() override;
-		virtual void Run() override;
-		virtual void Stop() override;
-
+		void Init() override;
+		void Run() override;
+		void End() override;
 		void Test() {};
+		~TestGame() {};
 	};
 
 

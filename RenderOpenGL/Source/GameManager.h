@@ -4,31 +4,49 @@
 
 namespace KREngine
 {
-	class FGameManager
+	
+
+	class FApplication
 	{
 	public:
-		FGameManager() = default;
+		FApplication();
+		virtual ~FApplication();
 		//static FGameManager& Instance()
 		//{
 		//static FGameManager instance;
 		//	return instance;
 		//}
 
-		 void Init();
 
-		 void Run();
+		FORCEINLINE static FApplication& Get()
+		{
+			return *Instance;
+		}
 
-		 void End();
-		template <typename T>
-		static void AddGame(T* game);
+		virtual void Init() = 0;
+		virtual void Run() = 0;
+		virtual void End() = 0;
+
+
+		 void InternalInit();
+
+		 void InternalRun();
+
+		 void InternalEnd();
+	
+
+		 void RegisterSystem(std::shared_ptr<FGameSystem> GameSystem) const;
+
 	private:
+		
+		static FApplication* Instance;
 
 		void EngineInit();
 		void EngineRun();
 		void EngineEnd();
 
-		KREngine::SystemManager* GameSystems = nullptr;
+		KREngine::SystemManager* GameSystemManager = nullptr;
 	};
-
-
+	FApplication* CreateApplication();
+	
 }

@@ -6,51 +6,70 @@
 
 namespace KREngine
 {
-	void FGameManager::Init()
+
+	FApplication* FApplication::Instance = nullptr;
+
+	void FApplication::InternalInit()
 	{
 		EngineInit();
+
 	}
 
-	void FGameManager::Run()
+	void FApplication::InternalRun()
 	{
 		EngineRun();
+
 	}
 
-	void FGameManager::End()
+	void FApplication::InternalEnd()
 	{
 		EngineEnd();
+
 	}
-	template <typename T>
-	void FGameManager::AddGame(T* game) 
+
+	void FApplication::RegisterSystem(std::shared_ptr<FGameSystem> GameSystem) const
 	{
-		
-
-
-		if ( game )
+		if(GameSystemManager)
 		{
-			if ( dynamic_cast< FGame* >( game ) )
+			if(GameSystem)
 			{
-
-				Instance().GameSystems->GameLoop = std::make_shared<T>( *game );
+				GameSystemManager->SystemsList.emplace_back((GameSystem));
 			}
-			else
-			{
-				Logger::Fatal( "Trying to add a empty game!" );
-			}
+			
 		}
-
+		else
+		{
+			Logger::Error("No System Manager found!, please register the game system after engine initialization call");
+		}
 	}
 
-	void FGameManager::EngineInit()
+	FApplication::FApplication()
 	{
-		GameSystems = new SystemManager();
+		if(Instance!=nullptr)
+		{
+			Instance = this;
+		}
+	}
 
+	FApplication::~FApplication()
+	{
+	}
+
+
+
+	void FApplication::EngineInit()
+	{
+		GameSystemManager = new SystemManager();
+		
 		//PrintCurrentMemoryUsage();
-		GameSystems->Init();
-		//	PrintCurrentMemoryUsage();
-		GameSystems->InitGUI();
+		GameSystemManager->Init();
 
-		int i = 10000000;
+		Init();
+
+		//	PrintCurrentMemoryUsage();
+		GameSystemManager->InitGUI();
+
+
 
 		//std::vector<int> tes(i, 1);
 		//UTimerLog Systems( "Systems Loop" );
@@ -68,24 +87,39 @@ namespace KREngine
 		//}
 	}
 
-	void FGameManager::EngineRun()
+	void FApplication::EngineRun()
 	{
-		while ( GameSystems->GetRenderingSystem()->GetWindowsWindow()->IsActive() )
+		while (GameSystemManager->GetRenderingSystem()->GetWindowsWindow()->IsActive())
 		{
 			{
-				SCOPED_TIMER( "Systems Loop" );
-				GameSystems->Run();
-				GameSystems->RunGUI();
+
+				{
+					SCOPED_TIMER("Systems Loop");
+					GameSystemManager->Run();
+
+				}
+				{
+					SCOPED_TIMER("Game Loop");
+					Run();
+				}
+
+				{
+					SCOPED_TIMER("GUI Loop");
+					GameSystemManager->RunGUI();
+				}
 
 			}
+			
 		}
 	}
 
-	void FGameManager::EngineEnd()
+	void FApplication::EngineEnd()
 	{
-		GameSystems->StopGUI();
-		GameSystems->Stop();
-		delete GameSystems;
-		Logger::Verbose( " Engine Shutting down!" );
+		GameSystemManager->StopGUI();
+		End();
+		GameSystemManager->Stop();
+		delete GameSystemManager;
+		Logger::Verbose(" Engine Shutting down!");
 	}
+
 }

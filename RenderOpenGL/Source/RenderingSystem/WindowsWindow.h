@@ -6,10 +6,6 @@
 
 namespace KREngine
 {
-	class TESTCLASS
-	{
-
-	};
 	class WindowsProperties
 	{
 	
@@ -21,15 +17,10 @@ namespace KREngine
 			Moniter = nullptr;
 		}
 		WindowsProperties(ERenderingAPI renderingAPI, const float Height, const float Width,
-		                  std::string&& screenTitle);;
+		                  std::string&& screenTitle);
 
-		WindowsProperties(const WindowsProperties& Other)
+		WindowsProperties(const WindowsProperties& Other): API(Other.API),WindowHeight(Other.WindowHeight), WindowWidth(Other.WindowWidth), ScreenTitle(Other.ScreenTitle),Moniter(Other.Moniter)
 		{
-			this->API = Other.API;
-			this->WindowHeight = Other.WindowHeight;
-			this->WindowWidth = Other.WindowWidth;
-			this->ScreenTitle = Other.ScreenTitle;
-			this->Moniter = Other.Moniter;
 		}
 		static WindowsProperties DefaultOpenGl();
 
