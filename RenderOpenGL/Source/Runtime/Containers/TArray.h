@@ -4,9 +4,85 @@
 
 namespace KREngine
 {
+
+	template<typename TArray>
+	class TArrayIterator
+	{
+	public:
+		using ValueType = typename TArray::ValueType;
+		using PointerType = ValueType*;
+		using PointerRef = ValueType&;
+
+		TArrayIterator(PointerType ptr):
+			Ptr(ptr)
+		{
+			
+		}
+
+		TArrayIterator& operator++()
+		{
+			Ptr++;
+			return *this;
+		}
+
+		TArrayIterator operator++(int)
+		{
+			TArrayIterator iterator = *this;
+			++(*this);
+			return iterator;
+		}
+
+		TArrayIterator& operator--()
+		{
+			Ptr--;
+			return *this;
+		}
+
+		TArrayIterator operator--(int)
+		{
+			TArrayIterator iterator = *this;
+			--(*this);
+			return iterator;
+		}
+		PointerRef operator[](int index)
+		{
+			return *(Ptr[index]);
+		}
+
+
+		PointerType operator->()
+		{
+			return Ptr;
+		}
+
+		PointerRef operator*()
+		{
+			return *Ptr;
+		}
+
+
+		bool operator==(const TArrayIterator& other) const
+		{
+			return Ptr == other.Ptr;
+		}
+
+		bool operator!=(const TArrayIterator& other) const
+		{
+			return !(*this == other);
+		}
+		
+
+	private:
+		PointerType Ptr;
+	};
+
+
 	template <typename ElementType>
 	class TArray
 	{
+	public:
+		using ValueType = ElementType;
+		using Iterator = TArrayIterator<TArray<ElementType>>;
 	public:
 		TArray()
 		{
@@ -147,7 +223,27 @@ namespace KREngine
 			}*/
 			return Data [Index];
 		}
-		
+
+
+		ElementType* GetData()
+		{
+			return Data;
+		}
+		const ElementType* GetData() const
+		{
+			return Data;
+		}
+
+		/*Iterators*/
+		Iterator begin()
+		{
+			return Iterator(Data);
+		}
+
+		Iterator end()
+		{
+			return Iterator(Data + Size);
+		}
 	private:
 
 		void ReAllocate(size_t newCapacity)

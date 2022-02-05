@@ -45,6 +45,7 @@ namespace KREngine
 		va_start( Arguments, format );
 		Get().Print( format, Arguments );
 		va_end( Arguments );
+		throw std::runtime_error("Fatal Error!");
 #endif
 	}
 

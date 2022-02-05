@@ -14,11 +14,11 @@ namespace KREngine
 
 	
 
-	class SystemManager : INonCopyableClass
+	class Test : INonCopyableClass
 	{
 	public:
 
-		SystemManager();
+		Test();
 		
 		/* Runs the initialization code on all the registered systems. All systems will have to be registered.
 		 * Note : Systems can be unregistered any time.
@@ -49,8 +49,7 @@ namespace KREngine
 		
 	//	void Register( std::shared_ptr<FGameSystem> system);
 		//WindowsProperties Prop;
-		std::unique_ptr<WindowsProperties> Properties;
-		std::unique_ptr<WindowsWindow> WindowWindow;
+		
 	
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
 		std::unique_ptr<WindowsInput> InputSystem;
@@ -63,7 +62,7 @@ namespace KREngine
 		//
 		//
 	private:
-		bool bShowDebugProfiler {false} ;
+		
 	};
 
 

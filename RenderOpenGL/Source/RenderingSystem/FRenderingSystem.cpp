@@ -3,9 +3,7 @@
 #include "glm/gtx/transform.hpp"
 
 
-#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
 
-//#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 using namespace KREngine;
 
@@ -82,9 +80,7 @@ FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
 	//RenderingObjectList.emplace_back( RO1 );
 	//
 
-	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(WindowWindow->Properties->GetWidth(),
-	                                                  WindowWindow->Properties->GetHeight()));
-	glfwSwapInterval(0);
+	
 
 
 	//Post init
@@ -99,165 +95,7 @@ FRenderingSystem::~FRenderingSystem()
 
 void FRenderingSystem::GUIInit()
 {
-    const char* glsl_version = "#version 130";
-    // Setup Dear ImGui context
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); ( void ) io;
-	io.IniFilename = NULL;
-	//io.IniFilename = nullptr;
-	ImGui::LoadIniSettingsFromDisk( "../Config/Imgui.ini" );
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    ImGuiStyle* Style = &ImGui::GetStyle();
-	Style->WindowPadding = ImVec2( 15, 15 );
-    Style->WindowRounding = 5.0f;
-    Style->FramePadding = ImVec2( 5, 5 );
-    Style->FrameRounding = 4.0f;
-    Style->ItemSpacing = ImVec2( 12, 8 );
-    Style->ItemInnerSpacing = ImVec2( 8, 6 );
-    Style->IndentSpacing = 25.0f;
-    Style->ScrollbarSize = 15.0f;
-    Style->ScrollbarRounding = 9.0f;
-    Style->GrabMinSize = 5.0f;
-    Style->GrabRounding = 3.0f;
-
-
-    if (0)
-    {
-	    Style->Colors [ImGuiCol_Text] = ImVec4( 0.00f, 0.00f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_TextDisabled] = ImVec4( 0.60f, 0.60f, 0.60f, 1.00f );
-	    //Style->Colors [ImGuiCol_TextHovered] = ImVec4( 1.00f, 1.00f, 1.00f, 1.00f );
-	    //Style->Colors [ImGuiCol_TextActive] = ImVec4( 1.00f, 1.00f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_WindowBg] = ImVec4( 0.94f, 0.94f, 0.94f, 1.00f );
-	    // Style->Colors [ImGuiCol_ChildWindowBg] = ImVec4( 0.00f, 0.00f, 0.00f, 0.00f );
-	    Style->Colors [ImGuiCol_Border] = ImVec4( 0.00f, 0.00f, 0.00f, 0.39f );
-	    Style->Colors [ImGuiCol_BorderShadow] = ImVec4( 1.00f, 1.00f, 1.00f, 0.10f );
-	    Style->Colors [ImGuiCol_FrameBg] = ImVec4( 1.00f, 1.00f, 1.00f, 1.00f );
-	    Style->Colors [ImGuiCol_FrameBgHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 0.40f );
-	    Style->Colors [ImGuiCol_FrameBgActive] = ImVec4( 0.26f, 0.59f, 0.98f, 0.67f );
-	    Style->Colors [ImGuiCol_TitleBg] = ImVec4( 0.96f, 0.96f, 0.96f, 1.00f );
-	    Style->Colors [ImGuiCol_TitleBgCollapsed] = ImVec4( 1.00f, 1.00f, 1.00f, 0.51f );
-	    Style->Colors [ImGuiCol_TitleBgActive] = ImVec4( 0.82f, 0.82f, 0.82f, 1.00f );
-	    Style->Colors [ImGuiCol_MenuBarBg] = ImVec4( 0.86f, 0.86f, 0.86f, 1.00f );
-	    Style->Colors [ImGuiCol_ScrollbarBg] = ImVec4( 0.98f, 0.98f, 0.98f, 0.53f );
-	    Style->Colors [ImGuiCol_ScrollbarGrab] = ImVec4( 0.69f, 0.69f, 0.69f, 0.80f );
-	    Style->Colors [ImGuiCol_ScrollbarGrabHovered] = ImVec4( 0.49f, 0.49f, 0.49f, 0.80f );
-	    Style->Colors [ImGuiCol_ScrollbarGrabActive] = ImVec4( 0.49f, 0.49f, 0.49f, 1.00f );
-	    // Style->Colors [ImGuiCol_ComboBg] = ImVec4( 0.86f, 0.86f, 0.86f, 0.99f );
-	    Style->Colors [ImGuiCol_CheckMark] = ImVec4( 0.26f, 0.59f, 0.98f, 1.00f );
-	    Style->Colors [ImGuiCol_SliderGrab] = ImVec4( 0.26f, 0.59f, 0.98f, 0.78f );
-	    Style->Colors [ImGuiCol_SliderGrabActive] = ImVec4( 0.26f, 0.59f, 0.98f, 1.00f );
-	    Style->Colors [ImGuiCol_Button] = ImVec4( 0.26f, 0.59f, 0.98f, 0.40f );
-	    Style->Colors [ImGuiCol_ButtonHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 1.00f );
-	    Style->Colors [ImGuiCol_ButtonActive] = ImVec4( 0.06f, 0.53f, 0.98f, 1.00f );
-	    Style->Colors [ImGuiCol_Header] = ImVec4( 0.26f, 0.59f, 0.98f, 0.31f );
-	    Style->Colors [ImGuiCol_HeaderHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 0.80f );
-	    Style->Colors [ImGuiCol_HeaderActive] = ImVec4( 0.26f, 0.59f, 0.98f, 1.00f );
-	    // Style->Colors [ImGuiCol_Column] = ImVec4( 0.39f, 0.39f, 0.39f, 1.00f );
-	    //Style->Colors [ImGuiCol_ColumnHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 0.78f );
-	    //Style->Colors [ImGuiCol_ColumnActive] = ImVec4( 0.26f, 0.59f, 0.98f, 1.00f );
-	    Style->Colors [ImGuiCol_ResizeGrip] = ImVec4( 1.00f, 1.00f, 1.00f, 0.00f );
-	    Style->Colors [ImGuiCol_ResizeGripHovered] = ImVec4( 0.26f, 0.59f, 0.98f, 0.67f );
-	    Style->Colors [ImGuiCol_ResizeGripActive] = ImVec4( 0.26f, 0.59f, 0.98f, 0.95f );
-	    //Style->Colors [ImGuiCol_CloseButton] = ImVec4( 0.59f, 0.59f, 0.59f, 0.50f );
-	    //Style->Colors [ImGuiCol_CloseButtonHovered] = ImVec4( 0.98f, 0.39f, 0.36f, 1.00f );
-	    //Style->Colors [ImGuiCol_CloseButtonActive] = ImVec4( 0.98f, 0.39f, 0.36f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotLines] = ImVec4( 0.39f, 0.39f, 0.39f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotLinesHovered] = ImVec4( 1.00f, 0.43f, 0.35f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotHistogram] = ImVec4( 0.90f, 0.70f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotHistogramHovered] = ImVec4( 1.00f, 0.60f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_TextSelectedBg] = ImVec4( 0.26f, 0.59f, 0.98f, 0.35f );
-	    //Style->Colors [ImGuiCol_TooltipBg] = ImVec4( 1.00f, 1.00f, 1.00f, 0.94f );
-	    // Style->Colors [ImGuiCol_ModalWindowDarkening] = ImVec4( 0.20f, 0.20f, 0.20f, 0.35f );
-    }
-    if (1)
-	{
-        auto& colors = ImGui::GetStyle().Colors;
-        colors [ImGuiCol_WindowBg] = ImVec4{ 0.1f, 0.105f, 0.11f, 1.0f };
-
-        // Headers
-        colors [ImGuiCol_Header] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-        colors [ImGuiCol_HeaderHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-        colors [ImGuiCol_HeaderActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-
-        // Buttons
-        colors [ImGuiCol_Button] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-        colors [ImGuiCol_ButtonHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-        colors [ImGuiCol_ButtonActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-
-        // Frame BG
-        colors [ImGuiCol_FrameBg] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-        colors [ImGuiCol_FrameBgHovered] = ImVec4{ 0.3f, 0.305f, 0.31f, 1.0f };
-        colors [ImGuiCol_FrameBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-
-        // Tabs
-        colors [ImGuiCol_Tab] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-        colors [ImGuiCol_TabHovered] = ImVec4{ 0.38f, 0.3805f, 0.381f, 1.0f };
-        colors [ImGuiCol_TabActive] = ImVec4{ 0.28f, 0.2805f, 0.281f, 1.0f };
-        colors [ImGuiCol_TabUnfocused] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-        colors [ImGuiCol_TabUnfocusedActive] = ImVec4{ 0.2f, 0.205f, 0.21f, 1.0f };
-
-        // Title
-        colors [ImGuiCol_TitleBg] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-        colors [ImGuiCol_TitleBgActive] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-        colors [ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
-	}
-    if(0)
-    {
-	    Style->Colors [ImGuiCol_Text] = ImVec4( 0.80f, 0.80f, 0.83f, 1.00f );
-	    Style->Colors [ImGuiCol_TextDisabled] = ImVec4( 0.24f, 0.23f, 0.29f, 1.00f );
-	    Style->Colors [ImGuiCol_WindowBg] = ImVec4( 0.06f, 0.05f, 0.07f, 1.00f );
-	    // Style->Colors [ImGuiCol_ChildWindowBg] = ImVec4( 0.07f, 0.07f, 0.09f, 1.00f );
-	    Style->Colors [ImGuiCol_PopupBg] = ImVec4( 0.07f, 0.07f, 0.09f, 1.00f );
-	    Style->Colors [ImGuiCol_Border] = ImVec4( 0.80f, 0.80f, 0.83f, 0.88f );
-	    Style->Colors [ImGuiCol_BorderShadow] = ImVec4( 0.92f, 0.91f, 0.88f, 0.00f );
-	    Style->Colors [ImGuiCol_FrameBg] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_FrameBgHovered] = ImVec4( 0.24f, 0.23f, 0.29f, 1.00f );
-	    Style->Colors [ImGuiCol_FrameBgActive] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_TitleBg] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_TitleBgCollapsed] = ImVec4( 1.00f, 0.98f, 0.95f, 0.75f );
-	    Style->Colors [ImGuiCol_TitleBgActive] = ImVec4( 0.07f, 0.07f, 0.09f, 1.00f );
-	    Style->Colors [ImGuiCol_MenuBarBg] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_ScrollbarBg] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_ScrollbarGrab] = ImVec4( 0.80f, 0.80f, 0.83f, 0.31f );
-	    Style->Colors [ImGuiCol_ScrollbarGrabHovered] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_ScrollbarGrabActive] = ImVec4( 0.06f, 0.05f, 0.07f, 1.00f );
-	    // Style->Colors [ImGuiCol_ComboBg] = ImVec4( 0.19f, 0.18f, 0.21f, 1.00f );
-	    Style->Colors [ImGuiCol_CheckMark] = ImVec4( 0.80f, 0.80f, 0.83f, 0.31f );
-	    Style->Colors [ImGuiCol_SliderGrab] = ImVec4( 0.80f, 0.80f, 0.83f, 0.31f );
-	    Style->Colors [ImGuiCol_SliderGrabActive] = ImVec4( 0.06f, 0.05f, 0.07f, 1.00f );
-	    Style->Colors [ImGuiCol_Button] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_ButtonHovered] = ImVec4( 0.24f, 0.23f, 0.29f, 1.00f );
-	    Style->Colors [ImGuiCol_ButtonActive] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_Header] = ImVec4( 0.10f, 0.09f, 0.12f, 1.00f );
-	    Style->Colors [ImGuiCol_HeaderHovered] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_HeaderActive] = ImVec4( 0.06f, 0.05f, 0.07f, 1.00f );
-	    // Style->Colors [ImGuiCol_Column] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    //// Style->Colors [ImGuiCol_ColumnHovered] = ImVec4( 0.24f, 0.23f, 0.29f, 1.00f );
-	    // Style->Colors [ImGuiCol_ColumnActive] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_ResizeGrip] = ImVec4( 0.00f, 0.00f, 0.00f, 0.00f );
-	    Style->Colors [ImGuiCol_ResizeGripHovered] = ImVec4( 0.56f, 0.56f, 0.58f, 1.00f );
-	    Style->Colors [ImGuiCol_ResizeGripActive] = ImVec4( 0.06f, 0.05f, 0.07f, 1.00f );
-	    // Style->Colors [ImGuiCol_CloseButton] = ImVec4( 0.40f, 0.39f, 0.38f, 0.16f );
-	    /// Style->Colors [ImGuiCol_CloseButtonHovered] = ImVec4( 0.40f, 0.39f, 0.38f, 0.39f );
-	    //  Style->Colors [ImGuiCol_CloseButtonActive] = ImVec4( 0.40f, 0.39f, 0.38f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotLines] = ImVec4( 0.40f, 0.39f, 0.38f, 0.63f );
-	    Style->Colors [ImGuiCol_PlotLinesHovered] = ImVec4( 0.25f, 1.00f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_PlotHistogram] = ImVec4( 0.40f, 0.39f, 0.38f, 0.63f );
-	    Style->Colors [ImGuiCol_PlotHistogramHovered] = ImVec4( 0.25f, 1.00f, 0.00f, 1.00f );
-	    Style->Colors [ImGuiCol_TextSelectedBg] = ImVec4( 0.25f, 1.00f, 0.00f, 0.43f );
-	    //   Style->Colors [ImGuiCol_ModalWindowDarkening] = ImVec4( 1.00f, 0.98f, 0.95f, 0.73f );
-    }
-	
-  //  ImGui::StyleColorsDark();
-
-
-    ImGui_ImplGlfw_InitForOpenGL( FRenderingSystem::GetGFLWWindow(), true );
-    ImGui_ImplOpenGL3_Init( glsl_version );
-
+  
 
 
    /* std::vector<int> test( 100000, 10 );
@@ -276,10 +114,7 @@ void FRenderingSystem::GUIInit()
 
 void FRenderingSystem::GUIStop()
 {
-	ImGui::SaveIniSettingsToDisk( "../Config/Imgui.ini" );
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+	
 }
 
 GLFWwindow* FRenderingSystem::GetGFLWWindow() const
@@ -291,51 +126,7 @@ GLFWwindow* FRenderingSystem::GetGFLWWindow() const
 
 void FRenderingSystem::GUIRun()
 {
-    Framebuffer->UnBindBuffer();
     
-
-    ImGui::Begin( "ScreenPort" );
-    if ( test != WindowWindow->Properties->GetWidth() )
-    {
-        test = WindowWindow->Properties->GetWidth();
-        Framebuffer->OnWindowResize( static_cast< float >( WindowWindow->Properties->GetWidth() ), static_cast< float >( WindowWindow->Properties->GetHeight() ) );
-    }
-
-    const uint32 textureID = Framebuffer->GetTextureRendererID();
-	auto WindowSize = ImGui::GetWindowSize();
-    ImGui::Image( reinterpret_cast< void* >( textureID ), ImVec2{ static_cast< float >( WindowWindow->Properties->GetWidth() ),static_cast< float >( WindowWindow->Properties->GetHeight() ) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/ );
-    ImGui::End();
-
-    ImGui::Begin( "Settings" );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Translation", &RenderingObjectList[0].Transform.GetLocation().x ), "Testing", );
-
-
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Rotation", &RenderingObjectList [0].Transform.GetRotation().x, 1, -360000, 360000 ), "Rotation", );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Scale", &RenderingObjectList [0].Transform.GetScale().x, 1, -360000, 360000 ), "Scale", );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat( "##Angle", &TestTime, 0.01, -9, 9 ), "Angle", );
-
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraTrans", &CameraTransform.GetTransform().GetLocation().x ), "CameraTrans", );
-	IMGUI_LEFT_LABEL( ImGui::Checkbox( "##Ambient light", &bAmbientColor ), "Ambient light" );
-
-	IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Diffuse", &Material.GetDiffuse().x, 0.01, -1, 1 ), "Diffuse", );
-	IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Ambient", &Material.GetAmbient().x, 0.01, -1, 1 ), "Ambient", );
-	IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##Specluar", &Material.GetSpecular().x, 0.01, -1, 1 ), "Specluar", );
-	IMGUI_LEFT_LABEL( ImGui::DragFloat( "##Shiny", &Material.GetShininess(), 1, 256, 2 ), "Shiny", );
-
-	
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraRotation", &CameraTransform.GetTransform().GetRotation().x, 1, -360000, 360000 ), "CameraRotation", );
-    
-    IMGUI_LEFT_LABEL( ImGui::DragFloat3( "##CameraScale", &CameraTransform.GetTransform().GetScale().x, 1, -360000, 360000 ), "CameraScale", );
-    IMGUI_LEFT_LABEL( ImGui::DragFloat4( "##ObjectColor", &Color.r, 0.01, -1, 1 ), "ObjectColor", );
-	ImGui::ColorPicker4( "Light Color",&GlobalLight.GetLightColor().r);
-    ImGui::Text( "Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate );
-    //ImGui::DragFloat3( "Translation", &Translation.x);
-    ImGui::End();
-//    ImGui::End();
-
-
-
-   
 }
 
 
@@ -353,9 +144,7 @@ void FRenderingSystem::Run()
 {
 	SCOPED_TIMER( "Rendering Loop" );
     GLFWwindow* window = WindowWindow->GetCurrentWindow();
-#if GUI
-    Framebuffer->BindBuffer();
-#endif
+
 	
     {
         /* Render here */
@@ -384,17 +173,17 @@ void FRenderingSystem::Run()
 		/*Needs clean up*/
 		GlobalLight.SetUseAmbientColor( bAmbientColor );
 		//auto color = Color * GlobalLight.GetShaderColor();
-		RenderingObjectList [0].Shader->BindShader();
-		RenderingObjectList[0].Shader->SetUniform4f( "u_ObjectColor", vec4( Color.r, Color.g, Color.b, Color.a ) );
-		RenderingObjectList[0].Shader->SetUniformF( "material.Shininess", RenderingObjectList [0].Material.GetShininess() );
-		RenderingObjectList[0].Shader->SetUniform4f( "u_LightColor",  vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a ) );
-		RenderingObjectList[0].Shader->SetUniformInt( "u_Light", 1 );
-		RenderingObjectList [0].Shader->UnBindShader();
-		RenderingObjectList [1].Shader->BindShader();
+		//RenderingObjectList [0].Shader->BindShader();
+		//RenderingObjectList[0].Shader->SetUniform4f( "u_ObjectColor", vec4( Color.r, Color.g, Color.b, Color.a ) );
+		//RenderingObjectList[0].Shader->SetUniformF( "material.Shininess", RenderingObjectList [0].Material.GetShininess() );
+		//RenderingObjectList[0].Shader->SetUniform4f( "u_LightColor",  vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a ) );
+		//RenderingObjectList[0].Shader->SetUniformInt( "u_Light", 1 );
+		//RenderingObjectList [0].Shader->UnBindShader();
+		//RenderingObjectList [1].Shader->BindShader();
 	
-		RenderingObjectList[1].Shader->SetUniform4f( "u_ObjectColor", vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a ) );
-		RenderingObjectList [1].Shader->SetUniformInt( "u_Light", 0 );
-		RenderingObjectList [1].Shader->UnBindShader();
+		//RenderingObjectList[1].Shader->SetUniform4f( "u_ObjectColor", vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a ) );
+		//RenderingObjectList [1].Shader->SetUniformInt( "u_Light", 0 );
+		//RenderingObjectList [1].Shader->UnBindShader();
         for ( const FRenderingObject& RO : RenderingObjectList )
         {
 			int slot = 0;
@@ -413,7 +202,7 @@ void FRenderingSystem::Run()
             RO.Shader->SetUniformMat4( "u_Model", /*ViewProjection**/ ModelProjection );
             RO.Shader->SetUniform3f( "u_LightPos", RenderingObjectList[1].Transform.GetLocation());
             RO.Shader->SetUniform3f( "u_CameraPos", CameraTransform.GetTransform().GetLocation());
-        	
+        	RO.Shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
             RO.VertexArray->BindBuffer();
 
             DrawCallCount++;

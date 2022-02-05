@@ -1,8 +1,6 @@
 
 
-#include "Game.h"
-#include "GameManager.h"
-#include "Runtime/Containers/TArray.h"
+#include "EngineMain.h"
 using namespace KREngine;
 
 //class TestGame: public FGame
@@ -15,9 +13,11 @@ using namespace KREngine;
 //	void Test() {};
 //};
 
-	extern KREngine::FApplication* KREngine::CreateApplication();
+
 	int main( void )
 	{
+
+
 		if (false)
 		{
 			struct TESTINGSHIT
@@ -155,13 +155,13 @@ using namespace KREngine;
 		
 		else
 		{
-			FApplication* Manager = KREngine::CreateApplication();
+		FApplication* Application = KREngine::CreateApplication();
+		EngineManager::PreInit(*Application);
 
-			Manager->InternalInit();
-			Manager->InternalRun();
-			Manager->InternalEnd();
-
-			delete Manager;
+		EngineManager::Init();
+		EngineManager::Run();
+		EngineManager::End();
+			delete Application;
 		}
 
 		

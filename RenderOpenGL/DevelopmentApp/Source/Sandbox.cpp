@@ -1,6 +1,7 @@
 #include "Sandbox.h"
 
 #include "GameManager.h"
+#include "Entity/Components/TransformComponent.h"
 
 namespace KREngine
 {

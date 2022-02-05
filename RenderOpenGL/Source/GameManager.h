@@ -1,4 +1,5 @@
 #pragma once
+#include "RenderingSystem/Buffers.h"
 #include "Systems/Systems.h"
 
 
@@ -8,6 +9,7 @@ namespace KREngine
 
 	class FApplication
 	{
+		friend class EngineManager;
 	public:
 		FApplication();
 		virtual ~FApplication();
@@ -28,11 +30,7 @@ namespace KREngine
 		virtual void End() = 0;
 
 
-		 void InternalInit();
-
-		 void InternalRun();
-
-		 void InternalEnd();
+		
 	
 
 		 void RegisterSystem(std::shared_ptr<FGameSystem> GameSystem) const;
@@ -45,8 +43,31 @@ namespace KREngine
 		void EngineRun();
 		void EngineEnd();
 
-		KREngine::SystemManager* GameSystemManager = nullptr;
+
+		void InternalInit();
+
+		void InternalRun();
+
+		void InternalEnd();
+
+
+#if GUI
+		void EngineGUIInit();
+		void EngineGUIRun();
+		void EngineGUIStop();
+#endif
+
+
+
+		std::unique_ptr<WindowsProperties> Properties;
+		std::unique_ptr<WindowsWindow> WindowWindow;
+		std::shared_ptr<FFrameBuffer> Framebuffer;
+
+		bool bShowDebugProfiler{ false };
+		float test{ 0.0f };
 	};
 	FApplication* CreateApplication();
-	
+
+
+
 }

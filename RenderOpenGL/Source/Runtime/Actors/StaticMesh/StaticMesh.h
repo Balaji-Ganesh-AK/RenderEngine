@@ -1,22 +1,19 @@
 #pragma
 #include "Entity/Entity.h"
 #include "RenderingSystem/Mesh.h"
+#include "Runtime/Containers/TArray.h"
 
 namespace KREngine
 {
-	struct FStaticMesh : IComponents
+	struct FStaticMesh 
 	{
 	public:
-
-
-	private:
 		std::shared_ptr<FVertexBuffer> VertexBufferData;
 		std::shared_ptr<FIndexBuffer> IndexBufferData;
 		std::shared_ptr<FVertexArray> VertexArray;
 		friend class FRenderingSystem;
-		KREngine::FTransform Transform;
 
-		uint32 Indices [3 * 4 * 3] = {
+			uint32 Indices [3 * 4 * 3] = {
 			/**Front*/		0,1,2,
 			/**Front*/		2,3,0,
 
@@ -35,6 +32,44 @@ namespace KREngine
 			/**DOWN*/			20,21,22,
 			/**DOWN*/			22,23,20
 		};
+
+		float Positions[8 * 24] = {
+			//Vertex Positions		//Tex Cord		//Normals
+			/** 0 */		0.0f,0.0f,0.0f,			0.0f, 0.0f,		0.0f,0.0f,-1.0f,
+			/** 1 */		1.0f,0.0f,0.0f,			1.0f, 0.0f,		0.0f,0.0f,-1.0f,
+			/** 2 */		1.0f,1.0f,0.0f,			1.0f, 1.0f,		0.0f,0.0f,-1.0f,
+			/** 3 */		0.0f,1.0f,0.0f,			0.0f, 1.0f,		0.0f,0.0f,-1.0f,
+
+			/** 4 */		0.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,0.0f,1.0f,
+			/** 5 */		1.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,0.0f,1.0f,
+			/** 6 */		1.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,0.0f,1.0f,
+			/** 7 */		0.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,0.0f,1.0f,
+
+			/** 8 */		0.0f,0.0f,1.0f,			0.0f, 0.0f,		-1.0f,0.0f,0.0f,
+			/** 9 */		0.0f,0.0f,0.0f,			1.0f, 0.0f,		-1.0f,0.0f,0.0f,
+			/** 10 */		0.0f,1.0f,0.0f,			1.0f, 1.0f,		-1.0f,0.0f,0.0f,
+			/** 11 */		0.0f,1.0f,1.0f,			0.0f, 1.0f,		-1.0f,0.0f,0.0f,
+
+			/** 12 */		1.0f,0.0f,0.0f,			0.0f, 0.0f,		1.0f,0.0f,0.0f,
+			/** 13 */		1.0f,0.0f,1.0f,			1.0f, 0.0f,		1.0f,0.0f,0.0f,
+			/** 14 */		1.0f,1.0f,1.0f,			1.0f, 1.0f,		1.0f,0.0f,0.0f,
+			/** 15 */		1.0f,1.0f,0.0f,			0.0f, 1.0f,		1.0f,0.0f,0.0f,
+
+			/** 16 */		0.0f,1.0f,0.0f,			0.0f, 0.0f,		 0.0f,1.0f,0.0f,
+			/** 17 */		1.0f,1.0f,0.0f,			1.0f, 0.0f,		 0.0f,1.0f,0.0f,
+			/** 18 */		1.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,1.0f,0.0f,
+			/** 19 */		0.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,1.0f,0.0f,
+
+			/** 20 */		0.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,-1.0f,0.0f,
+			/** 21 */		1.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,-1.0f,0.0f,
+			/** 22 */		1.0f,0.0f,0.0f,			1.0f, 1.0f,		 0.0f,-1.0f,0.0f,
+			/** 23 */		0.0f,0.0f,0.0f,			0.0f, 1.0f,		 0.0f,-1.0f,0.0f
+
+		};
+	private:
+	
+
+	
 
 		float s [8 * 24] = {
 			//Vertex Positions	//Tex Cord		//Normals
@@ -81,39 +116,7 @@ namespace KREngine
 		//|	   |
 		//|----|
 
-		float Positions [8 * 24] = {
-			//Vertex Positions		//Tex Cord		//Normals
-			/** 0 */		0.0f,0.0f,0.0f,			0.0f, 0.0f,		0.0f,0.0f,-1.0f,
-			/** 1 */		1.0f,0.0f,0.0f,			1.0f, 0.0f,		0.0f,0.0f,-1.0f,
-			/** 2 */		1.0f,1.0f,0.0f,			1.0f, 1.0f,		0.0f,0.0f,-1.0f,
-			/** 3 */		0.0f,1.0f,0.0f,			0.0f, 1.0f,		0.0f,0.0f,-1.0f,
 
-			/** 4 */		0.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,0.0f,1.0f,
-			/** 5 */		1.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,0.0f,1.0f,
-			/** 6 */		1.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,0.0f,1.0f,
-			/** 7 */		0.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,0.0f,1.0f,
-
-			/** 8 */		0.0f,0.0f,1.0f,			0.0f, 0.0f,		-1.0f,0.0f,0.0f,
-			/** 9 */		0.0f,0.0f,0.0f,			1.0f, 0.0f,		-1.0f,0.0f,0.0f,
-			/** 10 */		0.0f,1.0f,0.0f,			1.0f, 1.0f,		-1.0f,0.0f,0.0f,
-			/** 11 */		0.0f,1.0f,1.0f,			0.0f, 1.0f,		-1.0f,0.0f,0.0f,
-
-			/** 12 */		1.0f,0.0f,0.0f,			0.0f, 0.0f,		1.0f,0.0f,0.0f,
-			/** 13 */		1.0f,0.0f,1.0f,			1.0f, 0.0f,		1.0f,0.0f,0.0f,
-			/** 14 */		1.0f,1.0f,1.0f,			1.0f, 1.0f,		1.0f,0.0f,0.0f,
-			/** 15 */		1.0f,1.0f,0.0f,			0.0f, 1.0f,		1.0f,0.0f,0.0f,
-
-			/** 16 */		0.0f,1.0f,0.0f,			0.0f, 0.0f,		 0.0f,1.0f,0.0f,
-			/** 17 */		1.0f,1.0f,0.0f,			1.0f, 0.0f,		 0.0f,1.0f,0.0f,
-			/** 18 */		1.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,1.0f,0.0f,
-			/** 19 */		0.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,1.0f,0.0f,
-
-			/** 20 */		0.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,-1.0f,0.0f,
-			/** 21 */		1.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,-1.0f,0.0f,
-			/** 22 */		1.0f,0.0f,0.0f,			1.0f, 1.0f,		 0.0f,-1.0f,0.0f,
-			/** 23 */		0.0f,0.0f,0.0f,			0.0f, 1.0f,		 0.0f,-1.0f,0.0f
-
-		};
 	};
 
 	class FStaticMeshSystem : public FGameSystem
@@ -132,5 +135,8 @@ namespace KREngine
 	private:
 		void LoadMesh();
 		void SetUpMesh();
+
+	//	std::vector<FStaticMesh> StaticMeshComponents;
+		TArray<FStaticMesh> StaticMeshComponents;
 	};
 }

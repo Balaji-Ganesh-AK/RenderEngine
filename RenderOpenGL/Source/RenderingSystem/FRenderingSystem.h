@@ -72,12 +72,12 @@ namespace KREngine
 		glm::mat4 WorldProjection;
 
 		std::vector<FRenderingObject> RenderingObjectList;
-		std::shared_ptr<FFrameBuffer> Framebuffer;
+	
 		
-		//std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
-		//std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
-		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultLitVertexShader.GLSL";
-		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultLitFragmentShader.GLSL";
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
+		//std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultLitVertexShader.GLSL";
+		//std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultLitFragmentShader.GLSL";
 		
 		
 
@@ -94,6 +94,6 @@ namespace KREngine
 		bool bAmbientColor = false;
 		float TestTime = 0;
 		FLight GlobalLight;
-		float test{0.0f};
+		
 	};
 }
