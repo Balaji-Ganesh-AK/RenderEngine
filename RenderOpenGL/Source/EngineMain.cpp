@@ -155,6 +155,8 @@ using namespace KREngine;
 		
 		else
 		{
+
+
 		FApplication* Application = KREngine::CreateApplication();
 		EngineManager::PreInit(*Application);
 

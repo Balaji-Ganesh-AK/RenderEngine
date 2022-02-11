@@ -60,6 +60,7 @@ KREngine::OpenGLVertexArray::OpenGLVertexArray()
 {
 	glGenVertexArrays( 1, &RendererID );
 	glBindVertexArray( RendererID );
+	
 }
 
 void KREngine::OpenGLVertexArray::BindBuffer()

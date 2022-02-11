@@ -43,7 +43,7 @@ namespace KREngine
 
 
 		void BindBufferLayout() override;
-		~OpenGLVertexArray();
+		~OpenGLVertexArray() override;
 
 		
 	};

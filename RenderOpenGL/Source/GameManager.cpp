@@ -1,9 +1,11 @@
 
 #include "GameManager.h"
 
-#include "RenderingSystem/FRenderingSystem.h"
-#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
 
+#include "RenderingSystem/FRenderingSystem.h"
+#include "Entity/Components/EditorTagComponent.h"
+#include "Entity/Components/TransformComponent.h"
+#include "Runtime/Actors/StaticMesh/StaticMesh.h"
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 namespace KREngine
@@ -44,7 +46,7 @@ namespace KREngine
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.IniFilename = NULL;
+		io.IniFilename = nullptr;
 		//io.IniFilename = nullptr;
 		ImGui::LoadIniSettingsFromDisk("../Config/Imgui.ini");
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -200,9 +202,14 @@ namespace KREngine
 
 	/*	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(WindowWindow->Properties->GetWidth(),
 			WindowWindow->Properties->GetHeight()));
-		glfwSwapInterval(0);*/
+		*/
+		glfwSwapInterval(bEnableVSync);
 
 
+		EditorTagSystem->GUIInit();
+
+		StaticMeshSystem->GUIInit();
+		RenderingSystem->GUIInit();
 	}
 
 	void FApplication::EngineGUIRun()
@@ -274,7 +281,6 @@ namespace KREngine
 			{
 				// Disabling fullscreen would allow the window to be moved to the front of other windows,
 				// which we can't undo at the moment without finer window depth/z control.
-				ImGui::MenuItem("Exit", NULL, &AppExit);
 				//ImGui::MenuItem( "Padding", NULL, &opt_padding );
 				//ImGui::Separator();
 
@@ -292,9 +298,21 @@ namespace KREngine
 
 			if (ImGui::BeginMenu("Windows"))
 			{
-				if (ImGui::MenuItem("Show Profiler", "", (bShowDebugProfiler) != 0))
+				
+				
+
+
+				ImGui::EndMenu();
+			}
+			
+
+			if (ImGui::BeginMenu("Settings"))
+			{
+			
+				if (ImGui::MenuItem("Enable V-Sync", "", (bEnableVSync) != 0))
 				{
-					bShowDebugProfiler = !bShowDebugProfiler;
+					bEnableVSync = !bEnableVSync;
+					glfwSwapInterval(bEnableVSync);
 				}
 				ImGui::Separator();
 
@@ -307,44 +325,30 @@ namespace KREngine
 
 
 		{
-			ImGui::Begin("ScreenPort");
-			if (test != WindowWindow->Properties->GetWidth())
-			{
-				test = WindowWindow->Properties->GetWidth();
-				//Framebuffer->OnWindowResize(static_cast<float>(WindowWindow->Properties->GetWidth()), static_cast<float>(WindowWindow->Properties->GetHeight()));
-			}
+			RenderingSystem->GUIRun();
+			ImGui::Begin("World Outliner");
 
-			//const uint32 textureID = Framebuffer->GetTextureRendererID();
-			auto WindowSize = ImGui::GetWindowSize();
-			//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(WindowWindow->Properties->GetWidth()),static_cast<float>(WindowWindow->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
+
+			EditorTagSystem->GUIRun();
+
 			ImGui::End();
 
-			ImGui::Begin("Settings");
-			/*IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Translation", &RenderingObjectList[0].Transform.GetLocation().x), "Testing", );
+			ImGui::Begin("Properties Panel");
+			TransformSystem->GUIRun(entity->GetUID());
+			ImGui::End();
+			ImGui::Begin("Content Browser");
+			ImGui::End();
 
+			ImGui::Begin("Actor menu");
+			ImGui::End();
 
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Rotation", &RenderingObjectList[0].Transform.GetRotation().x, 1, -360000, 360000), "Rotation", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Scale", &RenderingObjectList[0].Transform.GetScale().x, 1, -360000, 360000), "Scale", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat("##Angle", &TestTime, 0.01, -9, 9), "Angle", );
-
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##CameraTrans", &CameraTransform.GetTransform().GetLocation().x), "CameraTrans", );
-			IMGUI_LEFT_LABEL(ImGui::Checkbox("##Ambient light", &bAmbientColor), "Ambient light");
-
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Diffuse", &Material.GetDiffuse().x, 0.01, -1, 1), "Diffuse", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Ambient", &Material.GetAmbient().x, 0.01, -1, 1), "Ambient", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Specluar", &Material.GetSpecular().x, 0.01, -1, 1), "Specluar", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat("##Shiny", &Material.GetShininess(), 1, 256, 2), "Shiny", );
-
-
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##CameraRotation", &CameraTransform.GetTransform().GetRotation().x, 1, -360000, 360000), "CameraRotation", );
-
-			IMGUI_LEFT_LABEL(ImGui::DragFloat3("##CameraScale", &CameraTransform.GetTransform().GetScale().x, 1, -360000, 360000), "CameraScale", );
-			IMGUI_LEFT_LABEL(ImGui::DragFloat4("##ObjectColor", &Color.r, 0.01, -1, 1), "ObjectColor", );
-			ImGui::ColorPicker4("Light Color", &GlobalLight.GetLightColor().r);*/
+			ImGui::Begin("Profiler");
+			IMGUI_LEFT_LABEL(ImGui::Checkbox("##AShow Profiler", &bShowDebugProfiler), "Show Profiler");
+			ImGui::Separator();
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			//ImGui::DragFloat3( "Translation", &Translation.x);
+			
 			ImGui::End();
-			//    ImGui::End();
+
 
 		}
 
@@ -373,7 +377,6 @@ namespace KREngine
 
 
 
-
 	}
 
 	void FApplication::EngineGUIStop()
@@ -389,7 +392,7 @@ namespace KREngine
 
 	FApplication::FApplication()
 	{
-		if(Instance!=nullptr)
+		if(Instance==nullptr)
 		{
 			Instance = this;
 		}
@@ -406,24 +409,51 @@ namespace KREngine
 
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
 		WindowWindow = std::make_unique < WindowsWindow>(*Properties);
+		EntityManager::RegisterComponent<FName>();
+		EntityManager::RegisterComponent<FTransformComponent>();
+		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
+		EntityManager::RegisterComponent<FRenderingComponent>();
+		RenderingSystem = EntityManager::RegisterSystem<FRenderingSystem>();
+		EntityManager::RegisterComponent<FStaticMesh>();
+		StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
+		
+		TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
+
+		{
+			
+
+		ComponentUID UID;
+		UID.set(EntityManager::GetComponentType<FName>());
+		EntityManager::SetSystemComponents<FEditorTagSystem>(UID);
+		}
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FRenderingComponent>());
+			EntityManager::SetSystemComponents<FRenderingSystem>(UID);
+		}
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FStaticMesh>());
+	
+			EntityManager::SetSystemComponents<FStaticMeshSystem>(UID);
+		}
+
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			EntityManager::SetSystemComponents<FTransformSystem>(UID);
+		}
+
+		entity = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-1");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{});
+		entity->AddComponent(FRenderingComponent{});
+
 		Init();
+		RenderingSystem->Init();
+		StaticMeshSystem->Init();
 
-		//	PrintCurrentMemoryUsage();
-
-		//std::vector<int> tes(i, 1);
-		//UTimerLog Systems( "Systems Loop" );
-		//{
-		//	/*for (auto& x : tes )
-		//	{
-		//		x += rand();
-		//	}*/
-
-		//	std::for_each( std::execution::par, tes.begin(), tes.end(), [] ( int& x )
-		//	{
-		//		x += rand();
-		//	} );
-		//	
-		//}
 	}
 
 	void FApplication::EngineRun()
@@ -432,7 +462,14 @@ namespace KREngine
 		{
 			SCOPED_TIMER("Engine Loop");
 #if GUI
-			 //Framebuffer->BindBuffer();
+			 //
+
+
+			EditorTagSystem->Run();
+
+			StaticMeshSystem->Run();
+			RenderingSystem->Run();
+
 			glfwSwapBuffers(WindowWindow->GetCurrentWindow());
 
 			/* Poll for and process events */
@@ -448,6 +485,8 @@ namespace KREngine
 	void FApplication::EngineEnd()
 	{
 		End();
+
+
 		Logger::Verbose(" Engine Shutting down!");
 	}
 

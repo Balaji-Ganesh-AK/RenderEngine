@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 #include "Entity/Entity.h"
 #include "RenderingSystem/Mesh.h"
 #include "Runtime/Containers/TArray.h"
@@ -8,11 +8,16 @@ namespace KREngine
 	struct FStaticMesh 
 	{
 	public:
-		std::shared_ptr<FVertexBuffer> VertexBufferData;
-		std::shared_ptr<FIndexBuffer> IndexBufferData;
-		std::shared_ptr<FVertexArray> VertexArray;
-		friend class FRenderingSystem;
+		//std::shared_ptr<FVertexBuffer> VertexBufferData;
+		//std::shared_ptr<FIndexBuffer> IndexBufferData;
+		//std::shared_ptr<FVertexArray> VertexArray;
 
+		FVertexBuffer* VertexBufferData = nullptr;
+		FIndexBuffer* IndexBufferData= nullptr;
+		FVertexArray* VertexArray=nullptr;
+
+		
+		FTransform Transform;
 			uint32 Indices [3 * 4 * 3] = {
 			/**Front*/		0,1,2,
 			/**Front*/		2,3,0,
@@ -119,24 +124,23 @@ namespace KREngine
 
 	};
 
-	class FStaticMeshSystem : public FGameSystem
+	class FStaticMeshSystem : public FSystem
 	{
 	public:
-		virtual void Init() override;
-		virtual void Run() override;
-		virtual void Stop() override;
-		~FStaticMeshSystem() override;
+		FStaticMeshSystem() = default;
+		 void Init();
+		 void Run() ;
+		 void Stop();
+		~FStaticMeshSystem();
 
 #ifdef GUI
-		void GUIInit() override;
-		void GUIRun() override;
-		void GUIStop() override;
+		void GUIInit();
+		void GUIRun() ;
+		void GUIStop();
 #endif
 	private:
 		void LoadMesh();
 		void SetUpMesh();
 
-	//	std::vector<FStaticMesh> StaticMeshComponents;
-		TArray<FStaticMesh> StaticMeshComponents;
 	};
 }

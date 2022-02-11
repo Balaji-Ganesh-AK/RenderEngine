@@ -6,59 +6,25 @@
 
 namespace KREngine
 {
-	class FTransformComponent
+	struct FTransformComponent
 	{
 	public:
 		FTransform Transform;
-		glm::mat4 ModelProjection{};
-
-		FTransformComponent() {}
-		FTransformComponent(const FTransformComponent &other);
-
-		FTransformComponent(const FTransformComponent* other)
-		{
-			if(other)
-			{
-				Transform = other->Transform;
-				ModelProjection = other->ModelProjection;
-			}
-			else
-			{
-				Logger::Error("Cant be empty");
-			}
-		}
-
-		FTransformComponent& operator= (const FTransformComponent& other)
-		{
-			if(this == &other)
-			{
-				return *this;
-			}
-
-			Transform = (other.Transform);
-			ModelProjection = (other.ModelProjection);
-			return *this;
-		}
-
 	};
 
-	class FTransformSystem: public FGameSystem
+	class FTransformSystem : public FSystem
 	{
-	public:
-		virtual void Init() override;
-		virtual void Run() override;
-		virtual void Stop() override;
-		~FTransformSystem() override;
+	public:				   
+		 void Init();
+		 void Run() ;
+		 void Stop();
+		~FTransformSystem();
 
 #ifdef  GUI
-		void GUIInit() override;
-		void GUIRun() override;
-		void GUIStop() override;
+		void GUIInit();
+		void GUIRun(FEntityHandle entity) ;
+		void GUIStop();
 #endif
-
-	private:
-		//TArray<FTransformComponent> TransformComponents;
-		std::vector<FTransformComponent*> TransformComponents;
 
 	};
 }

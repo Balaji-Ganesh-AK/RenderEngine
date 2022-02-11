@@ -1,64 +1,23 @@
 #include "TransformComponent.h"
 
+#include "GameManager.h"
 #include "glm/gtx/transform.hpp"
+#include "ImGUI/imgui.h"
+
 namespace KREngine
 {
-	FTransformComponent::FTransformComponent(const FTransformComponent& other):Transform(other.Transform), ModelProjection(other.ModelProjection)
-	{
-
-	}
 
 	void FTransformSystem::Init()
 	{
 
-		std::vector<FTransformComponent> temp;
-
-		temp.reserve(TransformComponents.size());
-		temp.insert(temp.end(), TransformComponents.begin(), TransformComponents.end());
-		{
-
-			for (FTransformComponent& transform_component : temp)
-			{
-				transform_component.ModelProjection = glm::mat4(1.0f);
-				transform_component.ModelProjection = glm::translate(transform_component.ModelProjection, transform_component.Transform.GetLocation().AsGLMVec3());
-				transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-				transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-				transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-				transform_component.ModelProjection = glm::scale(transform_component.ModelProjection, transform_component.Transform.GetScale().AsGLMVec3());
-			}
-		}
-
-		/*Should lock it here and update here*/
-		for (int i =0; i< TransformComponents.size(); i++)
-		{
-			TransformComponents[i] = &temp[i];
-		} 
+		
 	}
 
 	void FTransformSystem::Run()
 	{
 		
 
-		std::vector<FTransformComponent> temp;
-
-		temp.reserve(TransformComponents.size());
-		temp.insert(temp.end(), TransformComponents.begin(), TransformComponents.end());
-		for (FTransformComponent& transform_component : temp)
-		{
-			Logger::Verbose("Running on");
-			transform_component.ModelProjection = glm::mat4(1.0f);
-			transform_component.ModelProjection = glm::translate(transform_component.ModelProjection, transform_component.Transform.GetLocation().AsGLMVec3());
-			transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-			transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-			transform_component.ModelProjection = glm::rotate(transform_component.ModelProjection, glm::radians(transform_component.Transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-			transform_component.ModelProjection = glm::scale(transform_component.ModelProjection, transform_component.Transform.GetScale().AsGLMVec3());
-		}
-
-		/*Should lock it here and update here*/
-		for (int i = 0; i < TransformComponents.size(); i++)
-		{
-			TransformComponents[i] = &temp[i];
-		}
+		
 	}
 
 	void FTransformSystem::Stop()
@@ -71,16 +30,35 @@ namespace KREngine
 
 	void FTransformSystem::GUIInit()
 	{
-		FGameSystem::GUIInit();
+		
 	}
 
-	void FTransformSystem::GUIRun()
+	void FTransformSystem::GUIRun(FEntityHandle entity)
 	{
-		FGameSystem::GUIRun();
+
+	
+			{
+				if(ImGui::CollapsingHeader("Transform"))
+				{
+					auto& transformcomponent = EntityManager::GetComponent<FTransformComponent>(entity);
+
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Translation", &transformcomponent.Transform.GetLocation().x), "Translation", );
+
+
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Rotation", &transformcomponent.Transform.GetRotation().x, 1, -360000, 360000), "Rotation", );
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Scale", &transformcomponent.Transform.GetScale().x, 1, -360000, 360000), "Scale", );
+				}
+				ImGui::Separator();
+				
+
+			}
+
+		
+		
 	}
 
 	void FTransformSystem::GUIStop()
 	{
-		FGameSystem::GUIStop();
+	
 	}
 }
