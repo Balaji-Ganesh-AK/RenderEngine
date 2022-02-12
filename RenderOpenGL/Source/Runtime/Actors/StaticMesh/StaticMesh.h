@@ -16,8 +16,6 @@ namespace KREngine
 		FIndexBuffer* IndexBufferData= nullptr;
 		FVertexArray* VertexArray=nullptr;
 
-		
-		FTransform Transform;
 			uint32 Indices [3 * 4 * 3] = {
 			/**Front*/		0,1,2,
 			/**Front*/		2,3,0,

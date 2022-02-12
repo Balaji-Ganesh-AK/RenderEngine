@@ -255,14 +255,15 @@ void FRenderingSystem::Run()
 	Framebuffer->BindBuffer();
 #endif
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClearColor(1, 0, 0, 0);
 	//glfwPollEvents();
 	
 	  int32 DrawCallCount{ 0 };
 	        //WorldProjection = glm::ortho( -Properties.GetWidth()/2, Properties.GetWidth()/2, -Properties.GetHeight()/2, Properties.GetHeight() / 2 ,-1.0f, 1.0f );
 	WorldProjection = glm::perspective( glm::radians(45.0f ), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f );
-	
-	glm::mat4 ViewProjection /*= glm::translate( glm::mat4( 1.0f ) )*/;
-	ViewProjection = glm::lookAt(CameraTransform.GetTransform().GetLocation().AsGLMVec3(), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+
+	const glm::mat4 ViewProjection = glm::lookAt(CameraTransform.GetTransform().GetLocation().AsGLMVec3(),
+	                                             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 
 
 
@@ -272,20 +273,13 @@ void FRenderingSystem::Run()
 
 	for(const FEntityHandle Entity : EntityHandles)
 	{
-		
-		auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-		auto& transform = EntityManager::GetComponent<FTransformComponent>(Entity).Transform;
-		glm::mat4 ModelProjection = glm::mat4(1.0f);
-		ModelProjection = glm::translate(ModelProjection, transform.GetLocation().AsGLMVec3());
-		ModelProjection = glm::rotate(ModelProjection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-		ModelProjection = glm::rotate(ModelProjection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-		ModelProjection = glm::rotate(ModelProjection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-		ModelProjection = glm::scale(ModelProjection, transform.GetScale().AsGLMVec3());
+		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+		const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
 		// Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
 	   //Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
 	   // Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
-		Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * ModelProjection);
-		Shader->SetUniformMat4("u_Model", /*ViewProjection**/ ModelProjection);
+		Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+		Shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
 		/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
 		Shader->SetUniform3f("u_CameraPos", CameraTransform.GetTransform().GetLocation());
 		Shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));

@@ -7,6 +7,7 @@
 #define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
 namespace KREngine
 {
+	class FInput;
 	class FTransformSystem;
 	class FStaticMeshSystem;
 	class FEditorTagSystem;
@@ -40,7 +41,10 @@ namespace KREngine
 			return WindowWindow.get();
 		}
 		
-
+		FInput& GetInputSystem() 
+		{
+			return *Input;
+		}
 		 
 
 	private:
@@ -69,6 +73,7 @@ namespace KREngine
 
 		std::unique_ptr<WindowsProperties> Properties;
 		std::unique_ptr<WindowsWindow> WindowWindow;
+		std::shared_ptr<FInput> Input;
 
 
 		bool bShowDebugProfiler{ false };
@@ -76,7 +81,6 @@ namespace KREngine
 		float test{ 0.0f };
 
 
-		FEntity* entity{};
 
 		std::shared_ptr<FEditorTagSystem> EditorTagSystem;
 		std::shared_ptr<FRenderingSystem> RenderingSystem;

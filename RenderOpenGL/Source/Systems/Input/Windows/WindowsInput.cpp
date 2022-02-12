@@ -1,17 +1,18 @@
 #include "WindowsInput.h"
 
-#include "RenderingSystem/FRenderingSystem.h"
+
+#include "RenderingSystem/WindowsWindow.h"
 
 namespace KREngine
 {
-	WindowsInput::WindowsInput(std::shared_ptr<KREngine::FRenderingSystem> renderingSystem)
+	WindowsInput::WindowsInput(WindowsWindow* pointer) :WindowWindow(pointer)
 	{
-		RenderingSystem = renderingSystem;
+		
 	}
 
-	bool WindowsInput::IsKeyPressed( EKeyCode keyCode)
+	bool WindowsInput::IsKeyPressed(Input::KeyCodes keyCode)
 	{
-		GLFWwindow* window = RenderingSystem->GetGFLWWindow();
+		auto* window = WindowWindow->GetCurrentWindow();
 
 		if( window )
 		{
@@ -21,9 +22,9 @@ namespace KREngine
 		return false;
 	}	 
 		 
-	bool WindowsInput::IsMouseKeyPressed( EKeyCode mouseCode)
+	bool WindowsInput::IsMouseKeyPressed(Input::KeyCodes mouseCode)
 	{
-		GLFWwindow* window = RenderingSystem->GetGFLWWindow();
+		auto* window = WindowWindow->GetCurrentWindow();
 
 		if ( window )
 		{
@@ -33,15 +34,24 @@ namespace KREngine
 		return false;
 	}	 
 		 
-	KREngine::Vec2 WindowsInput::GetMousePosition()
+	Vec2 WindowsInput::GetMousePosition()
 	{
-		GLFWwindow* window = RenderingSystem->GetGFLWWindow();
+		auto* window = WindowWindow->GetCurrentWindow();
 		Vec2 _mouse_pos_;
 		double xpos, ypos;
 		glfwGetCursorPos( window, &xpos, &ypos );
 		_mouse_pos_.x = static_cast< float >( xpos );
 		_mouse_pos_.y = static_cast< float >( ypos );
 		return _mouse_pos_;
-		return Vec2();
+		
+	}
+
+	void WindowsInput::GetMousePosition(Vec2& mousePos)
+	{
+		auto* window = WindowWindow->GetCurrentWindow();
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		mousePos.x = static_cast<float>(xpos);
+		mousePos.y = static_cast<float>(ypos);
 	}
 }

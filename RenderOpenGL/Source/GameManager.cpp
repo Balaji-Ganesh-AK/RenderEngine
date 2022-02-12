@@ -6,6 +6,7 @@
 #include "Entity/Components/EditorTagComponent.h"
 #include "Entity/Components/TransformComponent.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
+
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 namespace KREngine
@@ -334,7 +335,7 @@ namespace KREngine
 			ImGui::End();
 
 			ImGui::Begin("Properties Panel");
-			TransformSystem->GUIRun(entity->GetUID());
+			TransformSystem->GUIRun();
 			ImGui::End();
 			ImGui::Begin("Content Browser");
 			ImGui::End();
@@ -408,7 +409,12 @@ namespace KREngine
 	{
 
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
-		WindowWindow = std::make_unique < WindowsWindow>(*Properties);
+		WindowWindow = std::make_unique< WindowsWindow>(*Properties);
+		Input.reset(FInput::Create(WindowWindow.get()));
+
+
+
+
 		EntityManager::RegisterComponent<FName>();
 		EntityManager::RegisterComponent<FTransformComponent>();
 		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
@@ -445,10 +451,7 @@ namespace KREngine
 			EntityManager::SetSystemComponents<FTransformSystem>(UID);
 		}
 
-		entity = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-1");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{});
-		entity->AddComponent(FRenderingComponent{});
+		
 
 		Init();
 		RenderingSystem->Init();
@@ -466,7 +469,7 @@ namespace KREngine
 
 
 			EditorTagSystem->Run();
-
+			TransformSystem->Run();
 			StaticMeshSystem->Run();
 			RenderingSystem->Run();
 

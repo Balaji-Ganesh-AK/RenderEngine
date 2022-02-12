@@ -4,16 +4,19 @@
 
 namespace KREngine
 {
-	class FRenderingSystem;
 	class WindowsInput : public FInput
 	{
 	public:
-		WindowsInput( std::shared_ptr<FRenderingSystem> renderingSystem );
-		~WindowsInput() {};
-		virtual bool IsKeyPressed( EKeyCode keyCode) override;
-		virtual bool IsMouseKeyPressed( EKeyCode mouseCode) override;
+		WindowsInput(WindowsWindow* pointer);
+		~WindowsInput()
+		{
+			
+		}
+		virtual bool IsKeyPressed(Input::KeyCodes keyCode) override;
+		virtual bool IsMouseKeyPressed(Input::KeyCodes mouseCode) override;
 		virtual Vec2 GetMousePosition() override;
+		void GetMousePosition(Vec2& mousePos) override;
 	private:
-		std::shared_ptr<FRenderingSystem> RenderingSystem;
+		WindowsWindow* WindowWindow;
 	};
 }

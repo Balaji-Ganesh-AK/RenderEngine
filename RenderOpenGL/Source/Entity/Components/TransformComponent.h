@@ -10,19 +10,20 @@ namespace KREngine
 	{
 	public:
 		FTransform Transform;
+		glm::mat4 ModelProjection;
 	};
 
 	class FTransformSystem : public FSystem
 	{
 	public:				   
 		 void Init();
-		 void Run() ;
+		 void Run() const;
 		 void Stop();
 		~FTransformSystem();
 
 #ifdef  GUI
 		void GUIInit();
-		void GUIRun(FEntityHandle entity) ;
+		void GUIRun() ;
 		void GUIStop();
 #endif
 

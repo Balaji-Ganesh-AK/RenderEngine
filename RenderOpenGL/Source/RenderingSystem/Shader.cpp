@@ -32,9 +32,9 @@ KREngine::FShader* KREngine::FShader::CreateShader(std::filesystem::path& vertex
 		fragCode = fragShaderStream.str();
 		return new OpenGLShader( vertexCode, fragCode );
 	}
-	catch (std::ifstream::failure e)
+	catch (std::ifstream::failure& e)
 	{
-		std::cout << "Shader error! Failed to read the file" << std::endl;
+		std::cout << "Shader error! Failed to read the file" << e.what() << std::endl;
 		return nullptr;
 	}
 

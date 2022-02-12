@@ -16,7 +16,8 @@ namespace KREngine
 		~TestGame() {};
 
 	private:
-		
+
+		FEntity* entity{};
 	};
 
 
