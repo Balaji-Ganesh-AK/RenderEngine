@@ -1,33 +1,19 @@
 #pragma once
+#include <memory>
 
-
-#include "Buffers.h"
 #include "Materials.h"
-#include "Shader.h"
-#include "Textures.h"
 #include "Entity/Entity.h"
-#include "Runtime/Actors/StaticMesh/StaticMesh.h"
-#include "Runtime/Camera/FCamera.h"
-#include "Runtime/Containers/FTransform.h"
 
 
 namespace KREngine
 {
-	class WindowsWindow;
+	struct FCamera;
+
+	class FFrameBuffer;
+
 
 	/*Batch rendering ku use agum*/
-	
-	struct FRenderingObject
-	{
-	public:
-		std::shared_ptr<FVertexBuffer> VertexBufferData;
-		std::shared_ptr<FIndexBuffer> IndexBufferData;
-		std::shared_ptr<FVertexArray> VertexArray;
-		std::shared_ptr<FShader> Shader;
-		FMaterials Material;
-		//FStaticMesh* Mesh = nullptr;
-		FTransform Transform;
-	};
+
 
 
 	struct FRenderingComponent
@@ -44,7 +30,7 @@ namespace KREngine
 		FRenderingSystem() = default;
 		~FRenderingSystem()= default;
 		void Init();
-		void Run();
+		void Run(const FCamera& mainCamera);
 		void Stop();
 
 		void GUIInit();
@@ -128,7 +114,6 @@ namespace KREngine
 		std::string SecondTexture = "../Content/Textures/awesomeface.png";
 		glm::mat4 WorldProjection;
 
-		FCamera CameraTransform;
 
 		std::shared_ptr<FShader> Shader;
 		FMaterials Material;

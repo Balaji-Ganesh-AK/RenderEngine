@@ -15,6 +15,6 @@
 #include "Math/Vec3.h"
 #include "Math/Vec2.h"
 
-#include "glad.h"
+
 
 /*======================================Custom Utility=====================*/

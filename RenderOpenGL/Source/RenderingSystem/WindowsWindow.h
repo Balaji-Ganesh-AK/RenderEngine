@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
+
 #include "utility/GLFWIncludes.h"
-#include "utility/Enums.h"
+#include "Systems/Event/FEvent.h"
 
 
 namespace KREngine
 {
+
 	class WindowsProperties
 	{
 	
@@ -22,6 +24,8 @@ namespace KREngine
 		WindowsProperties(const WindowsProperties& Other): API(Other.API),WindowHeight(Other.WindowHeight), WindowWidth(Other.WindowWidth), ScreenTitle(Other.ScreenTitle),Moniter(Other.Moniter)
 		{
 		}
+
+		bool OnWindowsEvent(FEvent& Event);
 		static WindowsProperties DefaultOpenGl();
 
 		ERenderingAPI GetAPI() const;
@@ -38,6 +42,13 @@ namespace KREngine
 			BIsOpen = false;
 		}
 		void SetWidthHeight( float width, float height );
+
+		bool OnWindowsResize(WindowResizeEvent& event);
+
+
+		EventCallBackFn EventCallBack;
+	
+
 	private:
 		ERenderingAPI API {ERenderingAPI::OpenGL};
 		float WindowHeight =1080;
@@ -60,8 +71,8 @@ namespace KREngine
 	
 
 		GLFWwindow* GetCurrentWindow() const;
-		void static WindowResizeEvent( GLFWwindow* window, int width, int height );
-		void static WindowCloseEvent( GLFWwindow* window );
+		void static OnWindowResizeEvent( GLFWwindow* window, int width, int height );
+		void static OnWindowCloseEvent( GLFWwindow* window );
 
 
 		WindowsProperties* Properties = nullptr;

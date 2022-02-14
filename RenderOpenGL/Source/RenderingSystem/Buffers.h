@@ -1,11 +1,11 @@
 #pragma once
-
-
+#include <string>
+#include <vector>
 
 #include "glad.h"
-#include "glm/gtx/associated_min_max.hpp"
+#include "glm/fwd.hpp"
 #include "utility/Defines.h"
-#include "utility/Pch.h"
+
 
 namespace KREngine
 {

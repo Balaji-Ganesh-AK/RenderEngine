@@ -4,7 +4,6 @@
 #include <set>
 #include <unordered_map>
 
-#include "utility/Defines.h"
 #include "utility/Pch.h"
 #include <map>
 

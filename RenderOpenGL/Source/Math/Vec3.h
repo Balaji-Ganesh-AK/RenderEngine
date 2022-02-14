@@ -37,6 +37,13 @@ namespace  KREngine
 		friend vec3 operator*( vec3 left, float value );
 		friend vec3 operator/( vec3 left, float value );
 
+
+		friend vec3 operator+(float value, vec3 left);
+		friend vec3 operator-(float value, vec3 left);
+		friend vec3 operator*(float value, vec3 left);
+		friend vec3 operator/(float value, vec3 left);
+	
+
 		bool operator==( const vec3& other ) const;
 		bool operator!=( const vec3& other ) const;
 		bool operator>( const vec3& other ) const;
@@ -62,6 +69,7 @@ namespace  KREngine
 
 		glm::vec3 AsGLMVec3() const;
 		
+		static vec3  AsVec3(const glm::vec3& other);
 
 		friend std::ostream& operator<<( std::ostream& stream, const vec3& other );
 

@@ -5,7 +5,13 @@
 #include "RenderingSystem/FRenderingSystem.h"
 #include "Entity/Components/EditorTagComponent.h"
 #include "Entity/Components/TransformComponent.h"
+#include "ImGUI/imgui.h"
+#include "ImGUI/imgui_impl_glfw.h"
+#include "ImGUI/imgui_impl_opengl3.h"
+#include "RenderingSystem/WindowsWindow.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
+#include "Runtime/Camera/FCamera.h"
+#include "Systems/Input/Input.h"
 
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
@@ -396,6 +402,7 @@ namespace KREngine
 		if(Instance==nullptr)
 		{
 			Instance = this;
+
 		}
 	}
 
@@ -404,11 +411,18 @@ namespace KREngine
 	}
 
 
+	void FApplication::OnEvent(FEvent& event)
+	{
+		EventDispatcher dispatcher(event);
+		Properties->OnWindowsEvent(event);
+		Input->OnEvent(event);
+	}
 
 	void FApplication::EngineInit()
 	{
 
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
+		Properties->EventCallBack = std::bind(&FApplication::OnEvent, this, std::placeholders::_1);
 		WindowWindow = std::make_unique< WindowsWindow>(*Properties);
 		Input.reset(FInput::Create(WindowWindow.get()));
 
@@ -417,20 +431,22 @@ namespace KREngine
 
 		EntityManager::RegisterComponent<FName>();
 		EntityManager::RegisterComponent<FTransformComponent>();
-		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
+		EntityManager::RegisterComponent<FCamera>();
 		EntityManager::RegisterComponent<FRenderingComponent>();
-		RenderingSystem = EntityManager::RegisterSystem<FRenderingSystem>();
 		EntityManager::RegisterComponent<FStaticMesh>();
+
+
+
+		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
+		RenderingSystem = EntityManager::RegisterSystem<FRenderingSystem>();
 		StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
-		
 		TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
+		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
 
 		{
-			
-
-		ComponentUID UID;
-		UID.set(EntityManager::GetComponentType<FName>());
-		EntityManager::SetSystemComponents<FEditorTagSystem>(UID);
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FName>());
+			EntityManager::SetSystemComponents<FEditorTagSystem>(UID);
 		}
 		{
 			ComponentUID UID;
@@ -441,7 +457,7 @@ namespace KREngine
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
-	
+
 			EntityManager::SetSystemComponents<FStaticMeshSystem>(UID);
 		}
 
@@ -451,12 +467,19 @@ namespace KREngine
 			EntityManager::SetSystemComponents<FTransformSystem>(UID);
 		}
 
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FCamera>());
+			EntityManager::SetSystemComponents<FCameraSystem>(UID);
+		}
+
 		
 
 		Init();
+
 		RenderingSystem->Init();
 		StaticMeshSystem->Init();
-
+		CameraSystem->Init();
 	}
 
 	void FApplication::EngineRun()
@@ -469,9 +492,10 @@ namespace KREngine
 
 
 			EditorTagSystem->Run();
-			TransformSystem->Run();
+			CameraSystem->Run();
 			StaticMeshSystem->Run();
-			RenderingSystem->Run();
+			TransformSystem->Run();
+			RenderingSystem->Run(CameraSystem->GetMainCamera());
 
 			glfwSwapBuffers(WindowWindow->GetCurrentWindow());
 

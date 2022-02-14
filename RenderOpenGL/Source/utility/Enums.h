@@ -15,3 +15,34 @@ enum class DrawMode:
 	Static,
 	Moveable
 };
+
+enum class EEventType :
+	uint8
+{
+	None = 0,
+
+	//----------KeyBoardEvent----------//
+	KeyReleased,
+	KeyPressed,
+
+	//----------MouseEvents----------//
+	MouseButtonPressed,
+	MouseButtonReleased,
+	MouseMoved,
+	MouseScroll,
+
+
+	//----------WindowEvents----------//
+	WindowClose,
+	WindowCreate,
+	WindowResize,
+	
+};
+
+enum EEventCategory
+{
+	None = 0,
+	EventCategoryWindow = BIT(0),
+	EventCategoryKeyboard = BIT(1),
+	EventCategoryMouse = BIT(2)
+};

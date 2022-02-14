@@ -1,6 +1,5 @@
 #pragma once
 #include "Systems/Input/Input.h"
-#include "utility/Pch.h"
 
 namespace KREngine
 {
@@ -13,10 +12,14 @@ namespace KREngine
 			
 		}
 		virtual bool IsKeyPressed(Input::KeyCodes keyCode) override;
-		virtual bool IsMouseKeyPressed(Input::KeyCodes mouseCode) override;
+		virtual bool IsMouseKeyPressed(Input::MouseCode mouseCode) override;
 		virtual Vec2 GetMousePosition() override;
 		void GetMousePosition(Vec2& mousePos) override;
+		bool OnEvent(FEvent& event) override;
+		bool OnMouseMovedEvent(MouseMovedEvent& event) override;
 	private:
 		WindowsWindow* WindowWindow;
+		Vec2 MousePos;
+		std::bitset< static_cast<int>(Input::KeyCodes::Count)> KeyCodes;
 	};
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include "Entity/Entity.h"
 #include "Runtime/Containers/FTransform.h"
-#include "Runtime/Containers/TArray.h"
 
 
 namespace KREngine

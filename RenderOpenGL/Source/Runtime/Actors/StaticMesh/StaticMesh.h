@@ -1,10 +1,14 @@
 #pragma once
 #include "Entity/Entity.h"
-#include "RenderingSystem/Mesh.h"
-#include "Runtime/Containers/TArray.h"
+
+
 
 namespace KREngine
 {
+	class FVertexArray;
+	class FIndexBuffer;
+	class FVertexBuffer;
+
 	struct FStaticMesh 
 	{
 	public:

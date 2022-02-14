@@ -1,7 +1,8 @@
 #include "WindowsInput.h"
 
-
 #include "RenderingSystem/WindowsWindow.h"
+#include "Systems/Event/FEvent.h"
+
 
 namespace KREngine
 {
@@ -22,7 +23,7 @@ namespace KREngine
 		return false;
 	}	 
 		 
-	bool WindowsInput::IsMouseKeyPressed(Input::KeyCodes mouseCode)
+	bool WindowsInput::IsMouseKeyPressed(Input::MouseCode mouseCode)
 	{
 		auto* window = WindowWindow->GetCurrentWindow();
 
@@ -36,22 +37,29 @@ namespace KREngine
 		 
 	Vec2 WindowsInput::GetMousePosition()
 	{
-		auto* window = WindowWindow->GetCurrentWindow();
-		Vec2 _mouse_pos_;
-		double xpos, ypos;
-		glfwGetCursorPos( window, &xpos, &ypos );
-		_mouse_pos_.x = static_cast< float >( xpos );
-		_mouse_pos_.y = static_cast< float >( ypos );
-		return _mouse_pos_;
+		return MousePos;
 		
 	}
 
 	void WindowsInput::GetMousePosition(Vec2& mousePos)
 	{
-		auto* window = WindowWindow->GetCurrentWindow();
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		mousePos.x = static_cast<float>(xpos);
-		mousePos.y = static_cast<float>(ypos);
+		mousePos = MousePos;
+	}
+
+	bool WindowsInput::OnEvent(FEvent& event)
+	{
+		EventDispatcher dispatcher(event);
+		bool bSuccess{ false };
+		bSuccess &= dispatcher.Dispatch<MouseMovedEvent>(DNE_BIND_SINGLE_EVENT(WindowsInput::OnMouseMovedEvent));
+		return bSuccess;
+	}
+
+	bool WindowsInput::OnMouseMovedEvent(MouseMovedEvent& event)
+	{
+		
+		MousePos.x = event.GetMouseX();
+		MousePos.y = event.GetMouseY();
+		
+		return true;
 	}
 }

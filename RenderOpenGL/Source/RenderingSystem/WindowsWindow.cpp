@@ -1,6 +1,7 @@
 #include "WindowsWindow.h"
+#include "utility/EngineCore.h"
+#include "utility/GLFWIncludes.h"
 
-#include "utility/KRELogger.h"
 
 
 namespace KREngine
@@ -10,6 +11,15 @@ namespace KREngine
 	                                                                 WindowWidth(Width)
 	                                                                 , ScreenTitle(std::move(screenTitle))
 	{
+	}
+
+	bool WindowsProperties::OnWindowsEvent(FEvent& Event)
+	{
+		EventDispatcher dispatcher(Event);
+		bool bSuccess{ false };
+		bSuccess &= dispatcher.Dispatch<WindowResizeEvent>(DNE_BIND_SINGLE_EVENT(WindowsProperties::OnWindowsResize));
+
+		return bSuccess;
 	}
 
 	WindowsProperties WindowsProperties::DefaultOpenGl()
@@ -49,6 +59,16 @@ namespace KREngine
 		WindowHeight = height;
 	}
 
+	bool WindowsProperties::OnWindowsResize(WindowResizeEvent& event)
+	{
+		SetWidthHeight(static_cast<float>(event.GetWidth()), static_cast<float>(event.GetHeight()));
+
+		glViewport(0, 0, event.GetWidth(), event.GetHeight());
+		return true;
+	}
+
+
+
 
 	KREngine::WindowsWindow::WindowsWindow()
 	{
@@ -71,8 +91,97 @@ namespace KREngine
 			glfwMakeContextCurrent( CurrentWindow );
 			glfwSwapInterval( 1 );
 			glfwSetWindowUserPointer( CurrentWindow, Properties );
-			glfwSetFramebufferSizeCallback( CurrentWindow, WindowResizeEvent );
-			glfwSetWindowCloseCallback( CurrentWindow, WindowCloseEvent );
+			glfwSetFramebufferSizeCallback(CurrentWindow, [](GLFWwindow* window, int width, int height)
+				{
+					WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
+					WindowResizeEvent window_resize_event(width, height);
+
+					WindowsPro->EventCallBack(window_resize_event);
+				});
+			glfwSetWindowCloseCallback( CurrentWindow, OnWindowCloseEvent );
+			glfwSetKeyCallback(CurrentWindow, [](GLFWwindow* window, int key, int scanCode, int action, int mods)
+			{
+					WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
+
+					switch (action)
+					{
+					case GLFW_PRESS:
+					{
+						KeyPressedEvent event(key, 0);
+						WindowsPro->EventCallBack(event);
+						break;
+
+					}
+					case GLFW_RELEASE:
+					{
+						KeyReleasedEvent event(key);
+						WindowsPro->EventCallBack(event);
+						break;
+					}
+					case GLFW_REPEAT:
+					{
+						KeyReleasedEvent event(key);
+						WindowsPro->EventCallBack(event);
+						break;
+					}
+					default: ;
+					}
+
+
+					KeyPressedEvent keyboard_event(key,0);
+
+					WindowsPro->EventCallBack(keyboard_event);
+			});
+
+			/*Mouse call back events*/
+
+			/*Mouse button events*/
+
+			glfwSetMouseButtonCallback(CurrentWindow, [](GLFWwindow* window, int button, int action, int mods)
+				{
+					WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
+					switch (action)
+					{
+					case GLFW_PRESS:
+					{
+						MouseButtonPressedEvent event(button);
+
+						WindowsPro->EventCallBack(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						MouseButtonReleasedEvent event(button);
+						WindowsPro->EventCallBack(event);
+						break;
+					}
+					default:;
+					}
+				});
+
+			/*Mouse scroll event*/
+
+			glfwSetScrollCallback(CurrentWindow, [](GLFWwindow* window, double xOffset, double yOffset)
+				{
+					WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
+
+					MouseScrollEvent event(xOffset, yOffset);
+					WindowsPro->EventCallBack(event);
+
+
+				});
+
+
+			/*Mouse Cursor callback event*/
+
+			glfwSetCursorPosCallback(CurrentWindow, [](GLFWwindow* window, double xpos, double ypos)
+				{
+					WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
+
+					MouseMovedEvent event(static_cast<float>(xpos), static_cast<float>(ypos));
+					WindowsPro->EventCallBack(event);
+				});
+
 			if ( !gladLoadGLLoader( reinterpret_cast<GLADloadproc>(glfwGetProcAddress) ) )
 			{
 				KREngine::KRELogger::Error( "Failed to init GLAD" );
@@ -115,14 +224,13 @@ namespace KREngine
 		return CurrentWindow;
 	}
 
-	void WindowsWindow::WindowResizeEvent(GLFWwindow* window, int width, int height)
+	void WindowsWindow::OnWindowResizeEvent(GLFWwindow* window, int width, int height)
 	{
-		WindowsProperties* WindowsPro = static_cast<WindowsProperties*>(glfwGetWindowUserPointer(window));
-		WindowsPro->SetWidthHeight( static_cast<float>(width), static_cast<float>(height) );
-		glViewport( 0, 0, width, height );
+
+
 	}
 
-	void WindowsWindow::WindowCloseEvent( GLFWwindow* window )
+	void WindowsWindow::OnWindowCloseEvent( GLFWwindow* window )
 	{
 		WindowsProperties* WindowsPro = static_cast< WindowsProperties* >( glfwGetWindowUserPointer( window ) );
 		WindowsPro->OnCloseClicked();

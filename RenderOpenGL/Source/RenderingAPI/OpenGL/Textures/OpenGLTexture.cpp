@@ -3,9 +3,11 @@
 
 #include "OpenGLTexture.h"
 
-
-#include "ThirdParty/stb_image.h"
 #include "utility/GLFWIncludes.h"
+#include "ThirdParty/stb_image.h"
+
+#include "utility/KRELogger.h"
+
 namespace KREngine
 {
 	OpenGLTexture2D::OpenGLTexture2D(std::string& texturePath)

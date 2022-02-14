@@ -7,7 +7,7 @@ namespace KREngine
 #pragma once
 	namespace Input
 	{
-		typedef enum class KeyCodes
+		typedef enum class KeyCodes: size_t
 		{
 			// From glfw3.h
 			Space = 32,
@@ -139,7 +139,8 @@ namespace KREngine
 			RightControl = 345,
 			RightAlt = 346,
 			RightSuper = 347,
-			Menu = 348
+			Menu = 348,
+			Count = 349
 		} Key;
 
 
@@ -157,7 +158,8 @@ namespace KREngine
 			ButtonLeft = Button1,
 			ButtonLast = Button8,
 			ButtonRight = Button2,
-			ButtonMiddle = Button3
+			ButtonMiddle = Button3,
+			Count = 12
 
 
 		}Mouse;

@@ -1,12 +1,21 @@
 #pragma once
 
 
-#include "Systems/Systems.h"
+
+
+
 
 // ReSharper disable once IdentifierTypo
 #define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
+#include <memory>
+
 namespace KREngine
 {
+	class FEvent;
+	class WindowsWindow;
+	class WindowsProperties;
+	class FRenderingSystem;
+	class FCameraSystem;
 	class FInput;
 	class FTransformSystem;
 	class FStaticMeshSystem;
@@ -26,7 +35,7 @@ namespace KREngine
 		//}
 
 
-		FORCEINLINE static FApplication& Get()
+		static FApplication& Get()
 		{
 			return *Instance;
 		}
@@ -35,6 +44,7 @@ namespace KREngine
 		virtual void Run() = 0;
 		virtual void End() = 0;
 
+		void OnEvent(FEvent& event);
 
 		WindowsWindow* GetWindowsWindow() const
 		{
@@ -86,6 +96,9 @@ namespace KREngine
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
 		std::shared_ptr<FTransformSystem> TransformSystem;
+		std::shared_ptr<FCameraSystem> CameraSystem;
+
+
 	};
 	FApplication* CreateApplication();
 

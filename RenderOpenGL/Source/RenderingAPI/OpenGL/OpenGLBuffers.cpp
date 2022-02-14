@@ -1,5 +1,7 @@
 #include "OpenGLBuffers.h"
 
+#include "glad.h"
+
 
 KREngine::OpenGLVertexBuffer::OpenGLVertexBuffer(float* VertexPos, uint32 count )
 {

@@ -5,6 +5,8 @@
 
 namespace KREngine
 {
+	class FEntity;
+
 	class TestGame : public FApplication
 	{
 	public:
@@ -18,6 +20,8 @@ namespace KREngine
 	private:
 
 		FEntity* entity{};
+		FEntity* entity1{};
+		FEntity* CameraEntity{};
 	};
 
 

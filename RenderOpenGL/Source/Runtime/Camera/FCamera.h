@@ -1,24 +1,63 @@
 #pragma once
+
+#include "Entity/Entity.h"
 #include "Runtime/Containers/FTransform.h"
 
 
 namespace KREngine
 {
-	class FCamera 
+	struct FCamera
 	{
-	public:
-		FCamera();
-		void SetTransform(FTransform& transform)
-		{
-			CameraTransform = transform;
-		}
-		FTransform& GetTransform()
-		{
-			return CameraTransform;
-		}
+		bool bMainCamera = false;
+		float CameraSpeed{ 0.05f };
+		glm::mat4 ViewProjection;
+		glm::vec3 Direction{};
+		glm::vec3 CameraPosition{ 0.0f,0.0f,1.0f };
+		glm::vec3 CameraFront{ 0.0f,0.0f,-1.0f };
+		glm::vec3 CameraUp{ 0.0f,-1.0f,0.0f };
+		FVector Rotator{90.0f,0,0};
 
-		 FTransform GetGLMTransform() const;
-	private:
+	public:
+		FCamera() = default;
+
+		explicit FCamera(bool mainCamera): bMainCamera(mainCamera), ViewProjection()
+		{
+		}
+	};
+
+
+	struct FDebugCamera
+	{
+#if GUI
 		FTransform CameraTransform;
+#endif
+
+	};
+
+	class FCameraSystem : public FSystem
+	{
+
+	public:
+		FCameraSystem() = default;
+		~FCameraSystem() = default;
+		void Init();
+		void Run() ;
+		void Stop();
+
+		FCamera GetMainCamera()  ;
+
+
+#if GUI
+		void GUIInit();
+		void GUIStop();
+		void GUIRun();
+#endif
+	private:
+		bool bHasValid{ false };
+		Vec2 LastKnowMousePos;
+		FEntityHandle MainCameraEntity;
+
+
+		bool bTestRest{false};
 	};
 }

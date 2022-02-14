@@ -1,9 +1,8 @@
 #pragma once
+
 #include "GameManager.h"
 
-#include "Game.h"
-#include "GameManager.h"
-#include "Runtime/Containers/TArray.h"
+
 extern KREngine::FApplication* KREngine::CreateApplication();
 namespace KREngine
 {

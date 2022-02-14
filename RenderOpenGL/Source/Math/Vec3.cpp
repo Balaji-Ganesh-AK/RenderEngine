@@ -214,6 +214,11 @@ namespace KREngine
 		return glm::vec3( x, y, z );
 	}
 
+	vec3 vec3::AsVec3(const glm::vec3& other)
+	{
+		return vec3{other.x, other.y, other.z};
+	}
+
 	vec3 operator+( vec3 left, const vec3& right )
 	{
 		return left.Add( right );
@@ -252,6 +257,26 @@ namespace KREngine
 	vec3 operator/( vec3 left, float value )
 	{
 		return  vec3( left.x / value, left.y / value, left.z / value );
+	}
+
+	vec3 operator+(float value, vec3 left)
+	{
+		return  vec3(left.x + value, left.y + value, left.z + value);
+	}
+
+	vec3 operator-(float value, vec3 left)
+	{
+		return  vec3(left.x - value, left.y - value, left.z - value);
+	}
+
+	vec3 operator/(float value, vec3 left)
+	{
+		return  vec3(left.x / value, left.y / value, left.z / value);
+	}
+
+	vec3 operator*(float value, vec3 left)
+	{
+		return  vec3(left.x * value, left.y * value, left.z * value);
 	}
 
 	std::ostream& operator<<( std::ostream& stream, const vec3& other )

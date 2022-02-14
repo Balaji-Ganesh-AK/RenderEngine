@@ -1,11 +1,14 @@
 #include "FRenderingSystem.h"
 
+#include "Buffers.h"
 #include "GameManager.h"
+#include "Shader.h"
 #include "WindowsWindow.h"
 #include "Entity/Components/TransformComponent.h"
 #include "glm/gtx/transform.hpp"
-
-
+#include "ImGUI/imgui.h"
+#include "Runtime/Actors/StaticMesh/StaticMesh.h"
+#include "Runtime/Camera/FCamera.h"
 
 
 using namespace KREngine;
@@ -249,7 +252,7 @@ void FRenderingSystem::Init()
 
 }
 
-void FRenderingSystem::Run()
+void FRenderingSystem::Run(const FCamera& mainCamera)
 {
 #if GUI
 	Framebuffer->BindBuffer();
@@ -262,35 +265,40 @@ void FRenderingSystem::Run()
 	        //WorldProjection = glm::ortho( -Properties.GetWidth()/2, Properties.GetWidth()/2, -Properties.GetHeight()/2, Properties.GetHeight() / 2 ,-1.0f, 1.0f );
 	WorldProjection = glm::perspective( glm::radians(45.0f ), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f );
 
-	const glm::mat4 ViewProjection = glm::lookAt(CameraTransform.GetTransform().GetLocation().AsGLMVec3(),
-	                                             glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
+	const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
 
 
 	int slot = 0;
 	Shader->BindShader();
 	Material.Bind(slot);
-
-	for(const FEntityHandle Entity : EntityHandles)
+	if(mainCamera.bMainCamera)
 	{
-		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-		const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
-		// Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
-	   //Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
-	   // Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
-		Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-		Shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
-		/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
-		Shader->SetUniform3f("u_CameraPos", CameraTransform.GetTransform().GetLocation());
-		Shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
-		
-		static_mesh.VertexArray->BindBuffer();
+		for (const FEntityHandle Entity : EntityHandles)
+		{
+			const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+			const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
+			// Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
+		   //Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
+		   // Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
+			Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+			Shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
+			/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
+			Shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
+			Shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 
-		DrawCallCount++;
-		// 3 vertex two triangles.
-		(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+			static_mesh.VertexArray->BindBuffer();
 
-		// glDrawArrays( GL_TRIANGLES, 0, 36 );
+			DrawCallCount++;
+			// 3 vertex two triangles.
+			(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+
+			// glDrawArrays( GL_TRIANGLES, 0, 36 );
+		}
+	}
+	else
+	{
+		KRELogger::Error("No main camera found! ");
 	}
 	Framebuffer->UnBindBuffer();
 

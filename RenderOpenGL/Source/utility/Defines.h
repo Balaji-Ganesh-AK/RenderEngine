@@ -10,10 +10,14 @@ typedef int8_t int16;
 typedef uint64_t uint64;
 typedef int64_t int64;
 
+
+
 #define ENGINE_NAME "KREngine"
 #define FORCE_INLINE __forceinline
 
 #define DASSERT(x) if(!(x)) __debugbreak();
+
+#define BIT(x) (1<<x)
 
 //#define GLLOGERROR(x) GLClearError();\
 //	x;\
