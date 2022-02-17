@@ -19,6 +19,13 @@ typedef int64_t int64;
 
 #define BIT(x) (1<<x)
 
+
+
+
+#define DefaultTexturePath "../Content/Textures"
+ 
+
+
 //#define GLLOGERROR(x) GLClearError();\
 //	x;\
 //	DASSERT(GLLogError(#x, __FILE__, __LINE__));

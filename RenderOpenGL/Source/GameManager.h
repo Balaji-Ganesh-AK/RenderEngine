@@ -11,6 +11,9 @@
 
 namespace KREngine
 {
+	class FEditorComponentPanelSystem;
+	class FMaterialSystem;
+	class FTextureManager;
 	class FEvent;
 	class WindowsWindow;
 	class WindowsProperties;
@@ -55,12 +58,16 @@ namespace KREngine
 		{
 			return *Input;
 		}
+		static FTextureManager& GetTextureManager()
+		{
+			return *Get().TextureManager;
+		}
 		 
 
 	private:
 		
 		static FApplication* Instance;
-
+		
 		void EngineInit();
 		void EngineRun();
 		void EngineEnd();
@@ -84,7 +91,7 @@ namespace KREngine
 		std::unique_ptr<WindowsProperties> Properties;
 		std::unique_ptr<WindowsWindow> WindowWindow;
 		std::shared_ptr<FInput> Input;
-
+		std::unique_ptr<FTextureManager> TextureManager;
 
 		bool bShowDebugProfiler{ false };
 		bool bEnableVSync{ false };
@@ -97,7 +104,7 @@ namespace KREngine
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
 		std::shared_ptr<FTransformSystem> TransformSystem;
 		std::shared_ptr<FCameraSystem> CameraSystem;
-
+		std::shared_ptr<FEditorComponentPanelSystem> EditorPanelSystem;
 
 	};
 	FApplication* CreateApplication();

@@ -13,15 +13,14 @@ namespace KREngine
 
 
 	/*Batch rendering ku use agum*/
-
-
-
-	struct FRenderingComponent
+	struct FMaterialComponent
 	{
 	public:
 		std::shared_ptr<FShader> Shader;
 		FMaterials Material;
 	};
+
+
 
 	class FRenderingSystem : public FSystem
 	{
@@ -36,6 +35,7 @@ namespace KREngine
 		void GUIInit();
 		void GUIStop();
 		void GUIRun();
+
 
 
 	private:
@@ -112,10 +112,19 @@ namespace KREngine
 	//	FCamera CameraTransform;
 		std::string DefaultTexture = "../Content/Textures/awesomeface.png";
 		std::string SecondTexture = "../Content/Textures/awesomeface.png";
-		glm::mat4 WorldProjection;
 
 
-		std::shared_ptr<FShader> Shader;
-		FMaterials Material;
+		//std::shared_ptr<FShader> Shader;
+		//FMaterials Material;
+
+
+
+
+
+
+
+
+
+		
 	};
 }

@@ -2,6 +2,7 @@
 #include "GameManager.h"
 
 
+#include "Entity/Components/EditorComponentUI.h"
 #include "RenderingSystem/FRenderingSystem.h"
 #include "Entity/Components/EditorTagComponent.h"
 #include "Entity/Components/TransformComponent.h"
@@ -12,6 +13,7 @@
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Camera/FCamera.h"
 #include "Systems/Input/Input.h"
+#include "Systems/TextureSystem/TextureManager.h"
 
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
@@ -341,7 +343,8 @@ namespace KREngine
 			ImGui::End();
 
 			ImGui::Begin("Properties Panel");
-			TransformSystem->GUIRun();
+			EditorPanelSystem->GUIRun();
+			
 			ImGui::End();
 			ImGui::Begin("Content Browser");
 			ImGui::End();
@@ -425,16 +428,17 @@ namespace KREngine
 		Properties->EventCallBack = std::bind(&FApplication::OnEvent, this, std::placeholders::_1);
 		WindowWindow = std::make_unique< WindowsWindow>(*Properties);
 		Input.reset(FInput::Create(WindowWindow.get()));
-
+		TextureManager.reset(FTextureManager::Create());
+		
+		TextureManager->Init();
 
 
 
 		EntityManager::RegisterComponent<FName>();
 		EntityManager::RegisterComponent<FTransformComponent>();
 		EntityManager::RegisterComponent<FCamera>();
-		EntityManager::RegisterComponent<FRenderingComponent>();
+		EntityManager::RegisterComponent<FMaterialComponent>();
 		EntityManager::RegisterComponent<FStaticMesh>();
-
 
 
 		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
@@ -442,6 +446,8 @@ namespace KREngine
 		StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
 		TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
 		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
+		EditorPanelSystem = EntityManager::RegisterSystem<FEditorComponentPanelSystem>();
+
 
 		{
 			ComponentUID UID;
@@ -451,7 +457,7 @@ namespace KREngine
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			UID.set(EntityManager::GetComponentType<FRenderingComponent>());
+			UID.set(EntityManager::GetComponentType<FMaterialComponent>());
 			EntityManager::SetSystemComponents<FRenderingSystem>(UID);
 		}
 		{
@@ -473,6 +479,14 @@ namespace KREngine
 			EntityManager::SetSystemComponents<FCameraSystem>(UID);
 		}
 
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FMaterialComponent>());
+			EntityManager::SetSystemComponents<FEditorComponentPanelSystem>(UID);
+		}
+		
+
 		
 
 		Init();
@@ -493,14 +507,11 @@ namespace KREngine
 
 			EditorTagSystem->Run();
 			CameraSystem->Run();
-			StaticMeshSystem->Run();
+		
 			TransformSystem->Run();
 			RenderingSystem->Run(CameraSystem->GetMainCamera());
 
-			glfwSwapBuffers(WindowWindow->GetCurrentWindow());
-
-			/* Poll for and process events */
-			glfwPollEvents();
+			
 #endif
 		}
 		{

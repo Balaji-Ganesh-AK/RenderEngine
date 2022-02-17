@@ -17,7 +17,7 @@ namespace KREngine
 	using FEntityHandle = std::uint64_t;
 
 	/*MAX ENTITY COUNT this also in engine ini*/
-	constexpr FEntityHandle MAX_ENTITIES = 10;
+	constexpr FEntityHandle MAX_ENTITIES = 10000;
 
 
 
@@ -32,30 +32,7 @@ namespace KREngine
 	using ComponentUID = std::bitset<MAX_COMPONENTS>;
 
 
-	/*This is the atomic interface class for all the systems*/
-	class FGameSystem// NOLINT(cppcoreguidelines-special-member-functions)
-	{
-	public:
-		virtual ~FGameSystem() = default;
-		virtual void Init() = 0;
-		virtual void Run() = 0;
-		virtual void Stop() = 0;
 
-#ifdef GUI
-		virtual void GUIInit() {}
-		virtual void GUIRun() {}
-		virtual void GUIStop() {}
-#endif
-
-
-		const std::string& GetName() const
-		{ return Name; }
-	private:
-		const std::string Name;
-	};
-
-
-	
 
 
 	/*A custom Array for holding generic type of components*/
@@ -293,7 +270,7 @@ namespace KREngine
 			}
 			else
 			{
-				KRELogger::Error("Component already exists, not adding it again");
+				Logger::Error("Component already exists, not adding it again");
 			}
 		}
 		

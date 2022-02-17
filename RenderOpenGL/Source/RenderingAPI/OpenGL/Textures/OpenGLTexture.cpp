@@ -10,7 +10,7 @@
 
 namespace KREngine
 {
-	OpenGLTexture2D::OpenGLTexture2D(std::string& texturePath)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& texturePath)
 	{
 		TexturePath = texturePath;
 		OpenGLTexture2D::LoadTextures();

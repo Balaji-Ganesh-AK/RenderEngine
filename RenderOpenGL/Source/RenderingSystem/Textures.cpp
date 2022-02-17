@@ -5,7 +5,7 @@
 
 namespace KREngine
 {
-	FTexture2D* FTexture2D::Create(std::string& texturePath)
+	FTexture2D* FTexture2D::Create(const std::string& texturePath)
 	{
 		return new OpenGLTexture2D( texturePath );
 	}

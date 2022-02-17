@@ -1,9 +1,9 @@
 
-#include "utility/Pch.h"
 #include "Logger.h"
 
 #include <cstdarg>
 
+#include "utility/Pch.h"
 
 
 namespace KREngine
@@ -11,6 +11,7 @@ namespace KREngine
 #define COLOR_VERBOSE ( FOREGROUND_INTENSITY )
 #define COLOR_ERROR ( FOREGROUND_RED | FOREGROUND_INTENSITY )
 #define COLOR_FATAL ( FOREGROUND_RED | FOREGROUND_INTENSITY )
+#define COLOR_LOADING ( FOREGROUND_GREEN | FOREGROUND_INTENSITY )
 
 	
 	void Logger::Verbose(const char* format, ...)
@@ -21,6 +22,20 @@ namespace KREngine
 		va_start( Arguments, format );
 		Get().Print( format, Arguments );
 		va_end( Arguments );
+#endif
+
+
+	}
+
+
+	void Logger::Loader(const char* format, ...)
+	{
+#ifdef LOGGING
+		Get().UpdateTextColor(COLOR_LOADING);
+		va_list Arguments;
+		va_start(Arguments, format);
+		Get().PrintSameLine(format, Arguments);
+		va_end(Arguments);
 #endif
 
 
@@ -92,6 +107,30 @@ namespace KREngine
 
 			output +="\n";
 			fprintf( stdout, "%s", output.c_str() );
+		}
+	}
+
+	void Logger::PrintSameLine(const char* format, va_list arguments)
+	{
+		std::vector<char> buffer(BufferSize);
+		std::string output = GetTimeStamp();
+
+		if (true)
+		{
+			const int written = vsnprintf_s(buffer.data(), buffer.size(), _TRUNCATE, format, arguments);
+
+			if (written > 0)
+			{
+				buffer.resize(written);
+			}
+
+			const std::string line = std::string(buffer.begin(), buffer.end());
+			output += line;
+
+
+		//	output += "\n";
+			output = "\r" + output;
+			fprintf(stdout, "%s", output.c_str());
 		}
 	}
 

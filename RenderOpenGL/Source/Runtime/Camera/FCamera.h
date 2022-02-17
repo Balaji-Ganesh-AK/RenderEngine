@@ -11,6 +11,7 @@ namespace KREngine
 		bool bMainCamera = false;
 		float CameraSpeed{ 0.05f };
 		glm::mat4 ViewProjection;
+		//glm::mat4 WorldProjection;
 		glm::vec3 Direction{};
 		glm::vec3 CameraPosition{ 0.0f,0.0f,1.0f };
 		glm::vec3 CameraFront{ 0.0f,0.0f,-1.0f };
@@ -20,7 +21,7 @@ namespace KREngine
 	public:
 		FCamera() = default;
 
-		explicit FCamera(bool mainCamera): bMainCamera(mainCamera), ViewProjection()
+		explicit FCamera(bool mainCamera): bMainCamera(mainCamera), ViewProjection()//, WorldProjection()
 		{
 		}
 	};

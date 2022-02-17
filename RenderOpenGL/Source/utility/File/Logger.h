@@ -1,10 +1,12 @@
 #pragma once
 
 
+#include <string>
 
 #include "ctime"
 #include <windows.h>
 
+#include "utility/Defines.h"
 
 
 namespace KREngine
@@ -14,7 +16,8 @@ namespace KREngine
 	public:
 	
 
-		static void Verbose( const char* format, ... );
+		static void Verbose(const char* format, ...);
+		static void Loader( const char* format, ... );
 		static void Error( const char* format, ... );
 		static void Fatal( const char* format, ... );
 		~Logger();
@@ -28,6 +31,7 @@ namespace KREngine
 		
 		
 		void Print(const char* format, va_list arguments);
+		void PrintSameLine(const char* format, va_list arguments);
 
 		void UpdateTextColor( WORD newColor );
 		

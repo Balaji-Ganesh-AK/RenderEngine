@@ -239,13 +239,16 @@ void FRenderingSystem::Init()
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	/*Goes into camera component*/
-	WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
+	for (const FEntityHandle Entity : EntityHandles)
+	{
+		auto& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
+		auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+		shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
-
-	Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
-
-	int slot = 0;
-	Material.Init(Shader, slot);
+		int slot = 0;
+		material.Init(shader, slot);
+	}
+	
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
@@ -254,54 +257,85 @@ void FRenderingSystem::Init()
 
 void FRenderingSystem::Run(const FCamera& mainCamera)
 {
+
+	{
+		SCOPED_TIMER("Rendering loop");
+
 #if GUI
-	Framebuffer->BindBuffer();
+		Framebuffer->BindBuffer();
 #endif
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//glClearColor(1, 0, 0, 0);
-	//glfwPollEvents();
-	
-	  int32 DrawCallCount{ 0 };
-	        //WorldProjection = glm::ortho( -Properties.GetWidth()/2, Properties.GetWidth()/2, -Properties.GetHeight()/2, Properties.GetHeight() / 2 ,-1.0f, 1.0f );
-	WorldProjection = glm::perspective( glm::radians(45.0f ), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f );
-
-	const glm::mat4 ViewProjection = mainCamera.ViewProjection;
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClearColor(1, 0, 0, 0);
+		//glfwPollEvents();
+		int32 DrawCallCount{ 0 };
 
 
+		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-	int slot = 0;
-	Shader->BindShader();
-	Material.Bind(slot);
-	if(mainCamera.bMainCamera)
-	{
-		for (const FEntityHandle Entity : EntityHandles)
+		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
+
+		int slot = 0;
+
+		if (mainCamera.bMainCamera)
 		{
-			const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-			const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
-			// Shader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
-		   //Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
-		   // Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
-			Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-			Shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
-			/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
-			Shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
-			Shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 
-			static_mesh.VertexArray->BindBuffer();
+			for (const FEntityHandle Entity : EntityHandles)
+			{
+				const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
+				std::shared_ptr<FShader>& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
+				FMaterials& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+				if (shader)
+				{
+					int slot = 0;
+					shader->BindShader();
+					material.Bind(slot);
+					slot++;
+					// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
+					//Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
+					// Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
+					shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+					shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
+					/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
+					shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
+					shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
+				}
+			}
 
-			DrawCallCount++;
-			// 3 vertex two triangles.
-			(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+			for (const FEntityHandle Entity : EntityHandles)
+			{
+				int slot = 0;
+				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+				auto& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
+				auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+				shader->BindShader();
+				material.Bind(slot);
+				slot++;
+				static_mesh.VertexArray->BindBuffer();
 
-			// glDrawArrays( GL_TRIANGLES, 0, 36 );
+				DrawCallCount++;
+				// 3 vertex two triangles.
+				(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+
+				// glDrawArrays( GL_TRIANGLES, 0, 36 );
+			}
 		}
-	}
-	else
-	{
-		KRELogger::Error("No main camera found! ");
-	}
-	Framebuffer->UnBindBuffer();
+		else
+		{
+			Logger::Error("No main camera found! ");
+		}
+		Framebuffer->UnBindBuffer();
 
+
+	}
+
+	{
+		SCOPED_TIMER("Buffer Swap");
+
+		glfwSwapBuffers(FApplication::Get().GetWindowsWindow()->GetCurrentWindow());
+
+		/* Poll for and process events */
+		glfwPollEvents();
+	}
 	
 }
 
@@ -319,6 +353,8 @@ void FRenderingSystem::GUIStop()
 
 void FRenderingSystem::GUIRun()
 {
+	{
+		SCOPED_TIMER("Screen frame buffer");
 	ImGui::Begin("ScreenPort");
 	if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
 	{
@@ -330,4 +366,7 @@ void FRenderingSystem::GUIRun()
 	auto WindowSize = ImGui::GetWindowSize();
 	ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()),static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
 	ImGui::End();
+
+	}
+
 }

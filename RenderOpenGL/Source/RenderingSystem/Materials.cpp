@@ -1,5 +1,8 @@
 #include "Materials.h"
+
+#include "GameManager.h"
 #include "Shader.h"
+#include "Systems/TextureSystem/TextureManager.h"
 #include "utility/CommonInclude.h"
 namespace KREngine
 {
@@ -10,23 +13,23 @@ namespace KREngine
 
 	void FMaterials::Init( std::shared_ptr<FShader> shader, int& Slot)
 	{
-		Shader = shader;
-		Shader->BindShader();
-		TextureMap.insert( { "material.Diffuse" , FTexture2D::Create( DiffuseTexture ) } );
-		Shader->SetUniformInt( "material.Diffuse", Slot );	
+		shader->BindShader();
+		TextureMap.insert({ "material.Diffuse" , FApplication::GetTextureManager().GetTexture(DiffuseTexture) });
+		shader->SetUniformInt( "material.Diffuse", Slot );
 		Slot = Slot+ 1;
-		TextureMap.insert( { "u_Texture" , FTexture2D::Create( u_Texture ) } );
-		Shader->SetUniformInt( "u_Texture", Slot );
+		TextureMap.insert( { "u_Texture" , FApplication::GetTextureManager().GetTexture(u_Texture)} );
+		shader->SetUniformInt( "u_Texture", Slot );
 		Slot = Slot + 1;
 
-		TextureMap.insert( { "material.Specular" , FTexture2D::Create( SpecularTexture ) } );
-		Shader->SetUniformInt( "material.Specular", Slot );
+		TextureMap.insert( { "material.Specular" , FApplication::GetTextureManager().GetTexture(SpecularTexture) } );
+		shader->SetUniformInt( "material.Specular", Slot );
 		Slot = Slot + 1;
 		
 	}
 
 	void FMaterials::Bind( int& Slot ) const
 	{
+
 		for( const auto& texture: TextureMap )
 		{
 			texture.second->BindTexture( Slot );

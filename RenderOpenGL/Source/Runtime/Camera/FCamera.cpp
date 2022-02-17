@@ -2,6 +2,7 @@
 
 
 #include "GameManager.h"
+#include "glm/ext/matrix_clip_space.hpp"
 
 #include "Systems/Input/Input.h"
 #include "glm/ext/matrix_transform.hpp"
@@ -28,7 +29,7 @@ namespace KREngine
 			 {
 				 bHasValid = true;
 				 MainCameraEntity = entityHandle;
-
+				// camera.WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
 				 float sensitivity = 0.1f;
 
 				 Vec2 current_mouse_pos;
@@ -59,74 +60,78 @@ namespace KREngine
 	 {
 
 
-		if(bHasValid)
-		{
-			FCamera& MainCamera = EntityManager::GetComponent<FCamera>(MainCameraEntity);
-			if(FApplication::Get().GetInputSystem().IsMouseKeyPressed(Input::MouseCode::Button2))
-			{
-
-				if(!bTestRest)
-				{
-					FApplication::Get().GetInputSystem().GetMousePosition(LastKnowMousePos);
-					bTestRest = true;
-				}
-				Vec2 current_mouse_pos;
-				FApplication::Get().GetInputSystem().GetMousePosition(current_mouse_pos);
-
-				float sensitivity = 0.1f;
-
-
-				float xoffset = current_mouse_pos.x - LastKnowMousePos.x;
-				float yoffset = LastKnowMousePos.y - current_mouse_pos.y;
-				LastKnowMousePos = current_mouse_pos;
-				MainCamera.Rotator.x -= (xoffset * sensitivity);
-				MainCamera.Rotator.y +=( yoffset * sensitivity);
-
-
-				if (MainCamera.Rotator.y > 89.0f)
-					MainCamera.Rotator.y = 89.0f;
-				if (MainCamera.Rotator.y < -89.0f)
-					MainCamera.Rotator.y = -89.0f;
-
-
-				MainCamera.Direction.x = cos(glm::radians(MainCamera.Rotator.x) * cos(glm::radians(MainCamera.Rotator.y)));
-				MainCamera.Direction.y = sin(glm::radians(MainCamera.Rotator.y));
-				MainCamera.Direction.z = sin(glm::radians(MainCamera.Rotator.x)) * cos(glm::radians(MainCamera.Rotator.y));
-				MainCamera.CameraFront = glm::normalize(MainCamera.Direction);
-
-				if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::W))
-				{
-					MainCamera.CameraPosition += MainCamera.CameraSpeed * MainCamera.CameraFront;
-				}
-				if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::S))
-				{
-					MainCamera.CameraPosition -= MainCamera.CameraSpeed * MainCamera.CameraFront;
-				}
-				if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::A))
-				{
-					MainCamera.CameraPosition -= glm::normalize(glm::cross(MainCamera.CameraFront, MainCamera.CameraUp)) * MainCamera.CameraSpeed;
-				}
-				if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::D))
-				{
-					MainCamera.CameraPosition += glm::normalize(glm::cross(MainCamera.CameraFront, MainCamera.CameraUp)) * MainCamera.CameraSpeed;
-				}
-			}
-			else
-			{
-				bTestRest = false;
-			}
-			
-		}
-		
-
-
-		 for (const FEntityHandle entityHandle : EntityHandles)
 		 {
-			 auto& camera = EntityManager::GetComponent<FCamera>(entityHandle);
+			 SCOPED_TIMER("Camera loop");
 
-			
-			camera.ViewProjection = glm::lookAt(camera.CameraPosition,
-				 (camera.CameraPosition + camera.CameraFront), camera.CameraUp);
+			 if (bHasValid)
+			 {
+				 FCamera& MainCamera = EntityManager::GetComponent<FCamera>(MainCameraEntity);
+				 if (FApplication::Get().GetInputSystem().IsMouseKeyPressed(Input::MouseCode::Button2))
+				 {
+
+					 if (!bTestRest)
+					 {
+						 FApplication::Get().GetInputSystem().GetMousePosition(LastKnowMousePos);
+						 bTestRest = true;
+					 }
+					 Vec2 current_mouse_pos;
+					 FApplication::Get().GetInputSystem().GetMousePosition(current_mouse_pos);
+
+					 float sensitivity = 0.1f;
+
+
+					 float xoffset = current_mouse_pos.x - LastKnowMousePos.x;
+					 float yoffset = LastKnowMousePos.y - current_mouse_pos.y;
+					 LastKnowMousePos = current_mouse_pos;
+					 MainCamera.Rotator.x -= (xoffset * sensitivity);
+					 MainCamera.Rotator.y += (yoffset * sensitivity);
+
+
+					 if (MainCamera.Rotator.y > 89.0f)
+						 MainCamera.Rotator.y = 89.0f;
+					 if (MainCamera.Rotator.y < -89.0f)
+						 MainCamera.Rotator.y = -89.0f;
+
+
+					 MainCamera.Direction.x = cos(glm::radians(MainCamera.Rotator.x) * cos(glm::radians(MainCamera.Rotator.y)));
+					 MainCamera.Direction.y = sin(glm::radians(MainCamera.Rotator.y));
+					 MainCamera.Direction.z = sin(glm::radians(MainCamera.Rotator.x)) * cos(glm::radians(MainCamera.Rotator.y));
+					 MainCamera.CameraFront = glm::normalize(MainCamera.Direction);
+
+					 if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::W))
+					 {
+						 MainCamera.CameraPosition += MainCamera.CameraSpeed * MainCamera.CameraFront;
+					 }
+					 if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::S))
+					 {
+						 MainCamera.CameraPosition -= MainCamera.CameraSpeed * MainCamera.CameraFront;
+					 }
+					 if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::A))
+					 {
+						 MainCamera.CameraPosition -= glm::normalize(glm::cross(MainCamera.CameraFront, MainCamera.CameraUp)) * MainCamera.CameraSpeed;
+					 }
+					 if (FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::D))
+					 {
+						 MainCamera.CameraPosition += glm::normalize(glm::cross(MainCamera.CameraFront, MainCamera.CameraUp)) * MainCamera.CameraSpeed;
+					 }
+				 }
+				 else
+				 {
+					 bTestRest = false;
+				 }
+
+			 }
+
+
+
+			 for (const FEntityHandle entityHandle : EntityHandles)
+			 {
+				 auto& camera = EntityManager::GetComponent<FCamera>(entityHandle);
+
+
+				 camera.ViewProjection = glm::lookAt(camera.CameraPosition,
+					 (camera.CameraPosition + camera.CameraFront), camera.CameraUp);
+			 }
 		 }
 	 }
 

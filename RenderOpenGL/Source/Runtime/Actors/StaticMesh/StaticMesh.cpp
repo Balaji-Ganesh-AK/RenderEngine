@@ -36,11 +36,7 @@ namespace KREngine
 
 	void FStaticMeshSystem::Run()
 	{
-		for (const FEntityHandle& entity : EntityHandles)
-		{
-			auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(entity);
-		
-		}
+
 	}
 
 	void FStaticMeshSystem::Stop()

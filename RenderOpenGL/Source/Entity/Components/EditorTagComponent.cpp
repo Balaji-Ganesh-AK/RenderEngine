@@ -17,11 +17,15 @@ namespace KREngine
 
 	void FEditorTagSystem::GUIRun() const
 	{
-		for (FEntityHandle entity : EntityHandles)
 		{
-			auto& fName = EntityManager::GetComponent<FName>(entity);
-			
-			ImGui::BulletText("%s", fName.Name.c_str());
+			SCOPED_TIMER("Editor Gui ");
+
+			for (FEntityHandle entity : EntityHandles)
+			{
+				auto& fName = EntityManager::GetComponent<FName>(entity);
+
+				ImGui::BulletText("%s", fName.Name.c_str());
+			}
 		}
 		
 	}
