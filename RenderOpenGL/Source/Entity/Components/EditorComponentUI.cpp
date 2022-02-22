@@ -1,5 +1,6 @@
 #include "EditorComponentUI.h"
 
+#include "EditorTagComponent.h"
 #include "GameManager.h"
 #include "TransformComponent.h"
 #include "ImGUI/imgui.h"
@@ -16,63 +17,76 @@ namespace KREngine
 	void FEditorComponentPanelSystem::GUIRun()
 	{
 
-
-
+		if ( EntityManager::EntityCount() > 0)
 		{
-			if (ImGui::CollapsingHeader("Transform"))
+
+			if (EntityManager::HasComponent<FName>(CurrentSelectedEntity))
 			{
-				auto& transformcomponent = EntityManager::GetComponent<FTransformComponent>(0);
+				if (ImGui::CollapsingHeader("Entity Name"))
+				{
 
-				IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Translation", &transformcomponent.Transform.GetLocation().x), "Translation", );
+					auto& fName = EntityManager::GetComponent<FName>(CurrentSelectedEntity);
+
+					ImGui::BulletText("%s", fName.Name.c_str());
+				}
+			}
+			ImGui::Separator();
+			if (EntityManager::HasComponent<FTransformComponent>(CurrentSelectedEntity))
+			{
+				if (ImGui::CollapsingHeader("Transform"))
+				{
+
+					auto& transformcomponent = EntityManager::GetComponent<FTransformComponent>(CurrentSelectedEntity);
+
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Translation", &transformcomponent.Transform.GetLocation().x), "Translation", );
 
 
-				IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Rotation", &transformcomponent.Transform.GetRotation().x, 1, -360000, 360000), "Rotation", );
-				IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Scale", &transformcomponent.Transform.GetScale().x, 1, -360000, 360000), "Scale", );
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Rotation", &transformcomponent.Transform.GetRotation().x, 1, -360000, 360000), "Rotation", );
+					IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Scale", &transformcomponent.Transform.GetScale().x, 1, -360000, 360000), "Scale", );
+				}
 			}
 			ImGui::Separator();
 
 
-		}
-
-
-		{
-			SCOPED_TIMER("Materials update");
-			
 			{
-				if (ImGui::CollapsingHeader("Material Component"))
+				SCOPED_TIMER("Materials update");
+				if (EntityManager::HasComponent<FMaterialComponent>(CurrentSelectedEntity))
 				{
-					FMaterials& material = EntityManager::GetComponent<FMaterialComponent>(0).Material;
-					TextureName = material.DiffuseTexture;
-					if (ImGui::BeginCombo("##Texture", TextureName.c_str()))
+					if (ImGui::CollapsingHeader("Material Component"))
 					{
-						std::vector<std::string >TextureNames;
-						FApplication::GetTextureManager().GetTextureNames(TextureNames);
-						for (const std::string& textureName : TextureNames)
+						FMaterials& material = EntityManager::GetComponent<FMaterialComponent>(CurrentSelectedEntity).Material;
+						CurrentDisplayedTexture = material.DiffuseTexture;
+						if (ImGui::BeginCombo("##Texture", CurrentDisplayedTexture.c_str()))
 						{
-							bool is_selected = FApplication::GetTextureManager().HasTextureName(TextureName);
-							if(ImGui::Selectable(textureName.c_str(), is_selected))
+							std::vector<std::string >TextureNames;
+							FApplication::GetTextureManager().GetTextureNames(TextureNames);
+							for (const std::string& textureName : TextureNames)
 							{
-								TextureName = textureName;
-								material.TextureMap["material.Diffuse"] = FApplication::GetTextureManager().GetTexture(TextureName);
-							}
-							if (is_selected)
-							{
+								bool is_selected = FApplication::GetTextureManager().HasTextureName(CurrentDisplayedTexture);
+								if (ImGui::Selectable(textureName.c_str(), is_selected))
+								{
+									CurrentDisplayedTexture = textureName;
+									material.TexturePathToTextureMap["material.Diffuse"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
+								}
+								if (is_selected)
+								{
 
-								ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
-							}
+									ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)
+								}
 
+							}
+							ImGui::EndCombo();
 						}
-						ImGui::EndCombo();
+
+
 					}
-
-
+					ImGui::Separator();
 				}
-				ImGui::Separator();
-
 
 			}
 
 		}
+
 
 	}
 

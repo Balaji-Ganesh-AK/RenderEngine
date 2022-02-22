@@ -45,7 +45,7 @@ namespace KREngine
 		void Run() ;
 		void Stop();
 
-		FCamera GetMainCamera()  ;
+		FCamera& GetMainCamera()  ;
 
 
 #if GUI

@@ -139,7 +139,7 @@ namespace KREngine
 	 {
 	 }
 
-	 FCamera FCameraSystem::GetMainCamera() 
+	 FCamera& FCameraSystem::GetMainCamera() 
 	 {
 	 	FCamera MainCamera;
 		if(bHasValid)

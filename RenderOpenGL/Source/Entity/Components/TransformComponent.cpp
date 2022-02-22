@@ -21,7 +21,7 @@ namespace KREngine
 		{
 			SCOPED_TIMER("Transform System ");
 
-
+			 
 			for (const FEntityHandle entity : EntityHandles)
 			{
 				FTransform& transform = EntityManager::GetComponent<FTransformComponent>(entity).Transform;

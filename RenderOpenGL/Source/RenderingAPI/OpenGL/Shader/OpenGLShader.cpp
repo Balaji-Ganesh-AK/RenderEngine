@@ -1,5 +1,4 @@
 #include "OpenGLShader.h"
-
 #include <glad/glad.h>
 
 
@@ -10,6 +9,11 @@ namespace KREngine
 		RendererID = CreateShader( vertexShader, fragShader );
 
 		glUseProgram( RendererID );
+	}
+
+	OpenGLShader::OpenGLShader(const FShader* other)
+	{
+		RendererID = other->GetShaderRenderID();
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -53,6 +57,21 @@ namespace KREngine
 			glAttachShader( program, fragment_shader );
 			glLinkProgram( program );
 			glValidateProgram( program );
+
+			/*Save the shader code as an asset*/
+			//GLint length = 0;
+			//glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &length);
+			//std::vector<GLubyte> buffer(length);
+			//GLenum format = 0;
+			//glGetProgramBinary(program, length, NULL, &format, buffer.data());
+			//std::string fName = "TESTSHADER.bin";
+			//;
+			//std::cout << "Writing to " << "Binaries/Shaders/" + fName << ", binary format = " << format << std::endl;
+			//std::filesystem::create_directories("Binaries/Shaders");
+			//std::ofstream out(("Binaries/Shaders/" + fName).c_str(), std::ios::binary);
+			//out.write(reinterpret_cast<char*>(buffer.data()), length);
+			//out.close();
+
 			glDeleteShader( vertex_shader );
 			glDeleteShader( fragment_shader );
 

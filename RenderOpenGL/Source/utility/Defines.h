@@ -23,8 +23,8 @@ typedef int64_t int64;
 
 
 #define DefaultTexturePath "../Content/Textures"
- 
-
+#define DefaultShaderFolderPath "../Content/Shaders"
+#define DefaultCompliedShaderFolderPath "/Binaries/Shaders"
 
 //#define GLLOGERROR(x) GLClearError();\
 //	x;\

@@ -106,25 +106,7 @@ namespace KREngine
 
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 
-		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Default/DefaultVertexShader.GLSL";
-		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Default/DefaultFragmentShader.GLSL";
-		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
-	//	FCamera CameraTransform;
-		std::string DefaultTexture = "../Content/Textures/awesomeface.png";
-		std::string SecondTexture = "../Content/Textures/awesomeface.png";
-
-
-		//std::shared_ptr<FShader> Shader;
-		//FMaterials Material;
-
-
-
-
-
-
-
-
-
 		
+		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
 	};
 }

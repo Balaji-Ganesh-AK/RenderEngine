@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include "utility/Defines.h"
@@ -15,13 +16,14 @@ namespace KREngine
 		virtual void BindTexture( int slot) const = 0;
 		virtual void UnBindTexture() = 0;
 
-		static FTexture2D* Create(const std::string& texturePath);
+		static FTexture2D* Create(const std::filesystem::path&  path);
 
 
 		uint32 RendererID{ 0 };
 
 	protected:
 		virtual void LoadTextures()=0;
+		std::string DisplayName{"## Should not see this text ####"};
 		std::string TexturePath{ "Content/Textures/Checkerboard.png" };
 		int Width{ 0 };
 		int Height{ 0 };

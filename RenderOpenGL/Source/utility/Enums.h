@@ -46,3 +46,12 @@ enum EEventCategory
 	EventCategoryKeyboard = BIT(1),
 	EventCategoryMouse = BIT(2)
 };
+
+
+enum class EShaderType : uint8
+{
+	VertexShader = 0,
+	FragmentShader = 1,
+	None
+
+};

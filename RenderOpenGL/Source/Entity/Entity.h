@@ -94,22 +94,32 @@ namespace KREngine
 				Logger::Error("Trying to delete a component which is not added for entity handle %d", entityHandle);
 			}
 		}
+
+		bool HasComponent(FEntityHandle entityHandle) const
+		{
+			if (EntityToIndexMap.contains(entityHandle))
+			{
+				return true;
+			}
+			return false;
+		}
+
 		Component& GetData(FEntityHandle entityHandle)
 		{
-			Component returnComponent;
+			
 			if(EntityToIndexMap.contains(entityHandle))
 			{
 				
 				return  ComponentTypeArray[EntityToIndexMap[entityHandle]];
 			}
-			else
-			{
-				Logger::Error("Unknown entity %d", entityHandle);
-			}
 
-			return returnComponent;
+
+			Logger::Error("Entity does not contain this component 'Use HasComponent() function to check for a component' %d", entityHandle);
+			std::_Throw_Cpp_error(1);
 		}
 
+
+		
 	public:
 		~ComponentEntityArray() override
 		{
@@ -179,6 +189,11 @@ namespace KREngine
 		{
 			GetComponentArray<Component>()->Remove(entityHandle);
 		}
+		template <typename Component>
+		bool HasComponent(FEntityHandle entityHandle) 
+		{
+			return GetComponentArray<Component>()->HasComponent(entityHandle);
+		}
 
 		template <typename Component>
 		Component& GetComponent(FEntityHandle entityHandle)
@@ -212,6 +227,24 @@ namespace KREngine
 				return nullptr;
 			}
 		}
+
+
+		//template<typename T>
+		//ComponentEntityArray<T>* GetComponentArray()
+		//{
+		//	const char* typeName = typeid(T).name();
+
+		//	if (ComponentTypes.contains(typeName))
+		//	{
+		//		auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
+		//		return x.get();
+		//	}
+		//	else
+		//	{
+		//		Logger::Fatal("Component not registered");
+		//		return nullptr;
+		//	}
+		//}
 
 	};
 
@@ -315,6 +348,7 @@ namespace KREngine
 		ComponentUID GetComponentUID(FEntityHandle entityHandle);
 		uint64 GetEntityCount() const;
 
+
 	private:
 		uint64 EntityCount = { 0 };
 		std::queue<FEntityHandle> AvailableHandles;
@@ -380,7 +414,11 @@ namespace KREngine
 		{
 			return Get().GetComponentInternal<Component>(entityHandle);
 		}
-
+		template<typename Component>
+		static bool HasComponent(FEntityHandle entityHandle)
+		{
+			return Get().HasComponentInternal<Component>(entityHandle);
+		}
 
 	
 
@@ -421,6 +459,12 @@ namespace KREngine
 		Component& GetComponentInternal(FEntityHandle entityHandle)
 		{
 			return ComponentManager.GetComponent<Component>(entityHandle);
+		}
+
+		template<typename Component>
+		bool HasComponentInternal(FEntityHandle entityHandle)
+		{
+			return ComponentManager.HasComponent<Component>(entityHandle);
 		}
 
 		/*Gets the current entity count*/

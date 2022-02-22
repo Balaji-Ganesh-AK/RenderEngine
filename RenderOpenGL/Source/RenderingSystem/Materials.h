@@ -20,12 +20,18 @@ namespace KREngine
 	public:
 		FMaterials(  );
 
-		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TextureMap;
+		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TexturePathToTextureMap;
+
 		std::string DiffuseTexture = "DiffuseWoodCrate.png";
 		std::string SpecularTexture = "SpecularCrate.png";
 		std::string u_Texture = "awesomeface.png";
-		void Init( std::shared_ptr<FShader> shader, int& Slot );
-		void Bind( int& Slot) const;
+
+		std::shared_ptr<FShader> Shader;
+		std::filesystem::path DefaultShaderPath = "../Content/Shaders/Default/DefaultShader.GLSL";
+
+		void Init( int& Slot );
+		void Bind(int& Slot);
+		void UnBindShader( ) ;
 		
 		float& GetShininess();
 		

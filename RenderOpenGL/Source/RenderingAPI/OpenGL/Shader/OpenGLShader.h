@@ -7,6 +7,7 @@ namespace KREngine
 	{
 	public:
 		OpenGLShader( const std::string& vertexShader, const std::string& fragShader );
+		OpenGLShader(const FShader* other);
 		~OpenGLShader() override;
 		void BindShader() override;
 		void UnBindShader() override;

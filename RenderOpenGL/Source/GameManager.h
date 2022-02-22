@@ -11,6 +11,7 @@
 
 namespace KREngine
 {
+	class FShaderCompilerManager;
 	class FEditorComponentPanelSystem;
 	class FMaterialSystem;
 	class FTextureManager;
@@ -63,7 +64,10 @@ namespace KREngine
 			return *Get().TextureManager;
 		}
 		 
-
+		static FShaderCompilerManager& GetShaderCompilerManager()
+		{
+			return *Get().ShaderManager;
+		}
 	private:
 		
 		static FApplication* Instance;
@@ -92,6 +96,8 @@ namespace KREngine
 		std::unique_ptr<WindowsWindow> WindowWindow;
 		std::shared_ptr<FInput> Input;
 		std::unique_ptr<FTextureManager> TextureManager;
+		std::unique_ptr<FShaderCompilerManager> ShaderManager;
+
 
 		bool bShowDebugProfiler{ false };
 		bool bEnableVSync{ false };

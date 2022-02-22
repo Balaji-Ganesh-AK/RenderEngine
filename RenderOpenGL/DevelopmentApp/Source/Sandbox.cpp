@@ -27,10 +27,10 @@ namespace KREngine
 		entity1->AddComponent(FMaterialComponent{});
 
 
-		auto entity2 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-3");
-		entity2->AddComponent(FTransformComponent{});
-		entity2->AddComponent(FStaticMesh{});
-		entity2->AddComponent(FMaterialComponent{});
+		//auto entity2 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-3");
+		//entity2->AddComponent(FTransformComponent{});
+		//entity2->AddComponent(FStaticMesh{});
+		//entity2->AddComponent(FMaterialComponent{});
 
 		CameraEntity = new FEntity(EntityManager::CreateEntity(), "Camera");
 		CameraEntity->AddComponent(FCamera{true});

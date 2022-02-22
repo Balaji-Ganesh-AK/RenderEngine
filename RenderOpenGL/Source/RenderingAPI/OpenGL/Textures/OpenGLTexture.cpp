@@ -1,18 +1,14 @@
-
-
-
 #include "OpenGLTexture.h"
-
 #include "utility/GLFWIncludes.h"
 #include "ThirdParty/stb_image.h"
-
 #include "utility/KRELogger.h"
 
 namespace KREngine
 {
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& texturePath)
+	OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& texturePath)
 	{
-		TexturePath = texturePath;
+		TexturePath = texturePath.generic_string();
+		DisplayName = texturePath.filename().string();
 		OpenGLTexture2D::LoadTextures();
 		OpenGLTexture2D::BindTexture();
 	}

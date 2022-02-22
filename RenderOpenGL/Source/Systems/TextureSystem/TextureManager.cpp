@@ -24,7 +24,7 @@ namespace KREngine
 					if (texture_path.path().extension().compare(it))
 					{
 						Logger::Verbose("..... Loading texture from file ....%s", texture_path.path().generic_string().c_str());
-						FTexture2D* texture_id = FTexture2D::Create(texture_path.path().generic_string());
+						FTexture2D* texture_id = FTexture2D::Create(texture_path.path());
 						TextureNameToID[texture_path.path().filename().string()] = texture_id->RendererID;
 						TextureMap[texture_id->RendererID].reset(texture_id);
 						TextureNameToFullPath[texture_path.path().filename().string()] = texture_path.path();

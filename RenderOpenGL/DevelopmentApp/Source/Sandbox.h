@@ -14,8 +14,8 @@ namespace KREngine
 		void Init() override;
 		void Run() override;
 		void End() override;
-		void Test() {};
-		~TestGame() {};
+		void Test() {}
+		~TestGame() override {}
 
 	private:
 

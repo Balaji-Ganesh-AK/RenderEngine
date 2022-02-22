@@ -13,7 +13,7 @@ namespace KREngine
 
 
 	private:
-
-		std::string TextureName;
+		FEntityHandle CurrentSelectedEntity {0};
+		std::string CurrentDisplayedTexture;
 	};
 }

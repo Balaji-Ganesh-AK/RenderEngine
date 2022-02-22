@@ -13,6 +13,7 @@
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Camera/FCamera.h"
 #include "Systems/Input/Input.h"
+#include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
 
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
@@ -423,14 +424,28 @@ namespace KREngine
 
 	void FApplication::EngineInit()
 	{
+	
+
+
 
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
 		Properties->EventCallBack = std::bind(&FApplication::OnEvent, this, std::placeholders::_1);
 		WindowWindow = std::make_unique< WindowsWindow>(*Properties);
+
+		/*Load everything before starting the GUI*/
+		/*Loading textures needs GLFW for OPENGL*/
+	/*TODO: Create a sync for each loading and make each manager run its own thread*/
+		{
+
+			TextureManager.reset(FTextureManager::Create());
+			TextureManager->Init();
+			ShaderManager.reset(FShaderCompilerManager::Create());
+			ShaderManager->Init();
+		}
+
 		Input.reset(FInput::Create(WindowWindow.get()));
-		TextureManager.reset(FTextureManager::Create());
-		
-		TextureManager->Init();
+
+
 
 
 

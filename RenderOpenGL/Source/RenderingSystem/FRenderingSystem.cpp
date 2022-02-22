@@ -9,6 +9,7 @@
 #include "ImGUI/imgui.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Camera/FCamera.h"
+#include "Systems/ShaderSystem/ShaderSystem.h"
 
 
 using namespace KREngine;
@@ -241,12 +242,11 @@ void FRenderingSystem::Init()
 	/*Goes into camera component*/
 	for (const FEntityHandle Entity : EntityHandles)
 	{
-		auto& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
+		
 		auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
-		shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
 		int slot = 0;
-		material.Init(shader, slot);
+		material.Init( slot);
 	}
 	
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
@@ -273,21 +273,19 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
-
 		int slot = 0;
-
 		if (mainCamera.bMainCamera)
 		{
 
 			for (const FEntityHandle Entity : EntityHandles)
 			{
 				const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
-				std::shared_ptr<FShader>& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
+				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 				FMaterials& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+				std::shared_ptr<FShader>& shader = material.Shader;
 				if (shader)
 				{
 					int slot = 0;
-					shader->BindShader();
 					material.Bind(slot);
 					slot++;
 					// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
@@ -298,26 +296,31 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 					/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
 					shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
 					shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
+					//material.UnBindShader();
+					static_mesh.VertexArray->BindBuffer();
+
+					DrawCallCount++;
+					// 3 vertex two triangles.
+					(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
 				}
 			}
+		
+			//for (const FEntityHandle Entity : EntityHandles)
+			//{
+			//	int slot = 0;
+			//	const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+			//	
+			//	auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+			//	material.Bind(slot);
+			//	slot++;
+			//	static_mesh.VertexArray->BindBuffer();
 
-			for (const FEntityHandle Entity : EntityHandles)
-			{
-				int slot = 0;
-				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-				auto& shader = EntityManager::GetComponent<FMaterialComponent>(Entity).Shader;
-				auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
-				shader->BindShader();
-				material.Bind(slot);
-				slot++;
-				static_mesh.VertexArray->BindBuffer();
+			//	DrawCallCount++;
+			//	// 3 vertex two triangles.
+			//	(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
 
-				DrawCallCount++;
-				// 3 vertex two triangles.
-				(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-
-				// glDrawArrays( GL_TRIANGLES, 0, 36 );
-			}
+			//	// glDrawArrays( GL_TRIANGLES, 0, 36 );
+			//}
 		}
 		else
 		{
