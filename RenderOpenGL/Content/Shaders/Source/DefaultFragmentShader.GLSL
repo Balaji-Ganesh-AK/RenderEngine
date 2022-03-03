@@ -15,3 +15,5 @@
         color =texture( material.Diffuse, f_Texture );
          //*vec4( u_ObjectColor)
     }
+
+##Shader End

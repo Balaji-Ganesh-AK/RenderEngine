@@ -3,7 +3,7 @@
 
 namespace KREngine
 {
-	FLight::FLight()
+	/*FLight::FLight()
 	{
 		
 	}
@@ -46,5 +46,5 @@ namespace KREngine
 	void FLight::SetUseAmbientColor(bool value)
 	{
 		bUseAmbientColor = value;
-	}
+	}*/
 }

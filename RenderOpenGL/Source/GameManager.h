@@ -11,7 +11,9 @@
 
 namespace KREngine
 {
-	class FShaderCompilerManager;
+	class FDefaultLitShader;
+	class FDefaultUnLitShader;
+	class FShaderManager;
 	class FEditorComponentPanelSystem;
 	class FMaterialSystem;
 	class FTextureManager;
@@ -55,7 +57,7 @@ namespace KREngine
 			return WindowWindow.get();
 		}
 		
-		FInput& GetInputSystem() 
+		FInput& GetInputSystem() const
 		{
 			return *Input;
 		}
@@ -64,7 +66,7 @@ namespace KREngine
 			return *Get().TextureManager;
 		}
 		 
-		static FShaderCompilerManager& GetShaderCompilerManager()
+		static FShaderManager& GetShaderManager()
 		{
 			return *Get().ShaderManager;
 		}
@@ -96,7 +98,7 @@ namespace KREngine
 		std::unique_ptr<WindowsWindow> WindowWindow;
 		std::shared_ptr<FInput> Input;
 		std::unique_ptr<FTextureManager> TextureManager;
-		std::unique_ptr<FShaderCompilerManager> ShaderManager;
+		std::unique_ptr<FShaderManager> ShaderManager;
 
 
 		bool bShowDebugProfiler{ false };
@@ -107,6 +109,9 @@ namespace KREngine
 
 		std::shared_ptr<FEditorTagSystem> EditorTagSystem;
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
+		std::shared_ptr<FDefaultUnLitShader> DefaultShaderSystem;
+		std::shared_ptr<FDefaultLitShader> DefaultLitShaderSystem;
+
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
 		std::shared_ptr<FTransformSystem> TransformSystem;
 		std::shared_ptr<FCameraSystem> CameraSystem;

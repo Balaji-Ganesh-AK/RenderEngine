@@ -5,12 +5,12 @@
 
 namespace KREngine
 {
-		FShaderCompilerManager* FShaderCompilerManager::Create()
+		FShaderManager* FShaderManager::Create()
 		{
-			return new FShaderCompilerManager();
+			return new FShaderManager();
 		}
 
-		void FShaderCompilerManager::Init()
+		void FShaderManager::Init()
 		{
 
 			{
@@ -22,13 +22,8 @@ namespace KREngine
 						if (shader_path.path().extension().generic_string() == it)
 						{
 							Logger::Verbose("..... Loading Shader from file ....%s", shader_path.path().generic_string().c_str());
-							FShaderRawData shaderRawData = ReaderShaderFile(shader_path.path());
-							FShader* shader = FShader::CreateShader(shaderRawData);
-							
-							ShaderPathToID[shader_path.path().generic_string()] = shader->GetShaderRenderID();
-							ShaderMap[shader->GetShaderRenderID()].reset(shader);
-							ShaderNameToFullPath[shader_path.path().filename().string()] = shader_path.path();
-							ShaderFullPathToName[shader_path.path().generic_string()] = shader_path.path().filename().string();
+							/*Read the complied shader data here, if any exist*/
+							ReaderShaderFile(shader_path);
 						}
 
 					}
@@ -37,7 +32,17 @@ namespace KREngine
 			}
 		}
 
-		void FShaderCompilerManager::BindShader(uint32 shaderID)
+		FShaderRawData FShaderManager::GetShaderRawDataFromFile(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath)
+		{
+			FShaderRawData return_data;
+
+			return_data.VertexShaderCode = ReaderShaderFile(VertexShaderPath);
+			return_data.FragmentShaderCode = ReaderShaderFile(FragmentShaderPath);
+
+			return return_data;
+		}
+
+		void FShaderManager::BindShader(uint32 shaderID)
 		{
 			if (ShaderMap.contains(shaderID))
 			{
@@ -46,67 +51,45 @@ namespace KREngine
 
 		}
 
-		FShaderCompilerManager::FShaderCompilerManager()
+		FShaderManager::FShaderManager()
 		{
 		}
 
-		void FShaderCompilerManager::LoadShader(const std::string path)
+		void FShaderManager::LoadShader(const std::string path)
 		{
 		}
 
-		FShaderRawData FShaderCompilerManager::ReaderShaderFile(const std::filesystem::path& shaderPath)
+		std::string FShaderManager::ReaderShaderFile(const std::filesystem::path& shaderPath)
 		{
-			std::ifstream shaderFile;
-
-			//shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-			FShaderRawData raw_data;
-			//try
+			if (!ShaderFullPathToShaderCode.contains(shaderPath.generic_string()))
 			{
-				/** Open and read the files*/
-				//std::cout << "Shader error! Failed to read the file " << std::filesystem::absolute(vertexFilePath.relative_path()) <<std::endl;
+				std::ifstream shaderFile;
 				shaderFile.open((shaderPath.relative_path()));
-
-
-				std::string line;
-				EShaderType type = EShaderType::None;
-				std::stringstream shader_stream[2];
-
-				while (std::getline(shaderFile, line))
+				std::stringstream shader_stream;
 				{
-					if (line.find("#Shader End") == std::string::npos)
+					std::string line;
+					EShaderType type = EShaderType::None;
+					while (std::getline(shaderFile, line))
 					{
-
-
-						if (line.find("#Shader") != std::string::npos)
+						if (line.find("##Shader End") == std::string::npos)
 						{
-							if (line.find("Vertex") != std::string::npos)
-							{
-								type = EShaderType::VertexShader;
-							}
-							else if (line.find("Fragment") != std::string::npos)
-							{
-								type = EShaderType::FragmentShader;
-							}
+
+							shader_stream << line << '\n';
+
 						}
 						else
 						{
-							shader_stream[static_cast<uint8>(type)] << line << '\n';
+							/*TODO CHECK THIS SHIT*/
+							shaderFile.clear();
+							shaderFile.close();
 						}
-					}
-					else
-					{
-						/*TODO CHECK THIS SHIT*/
-						shaderFile.clear();
-						shaderFile.close();
-					}
 
+					}
 				}
 
-				raw_data.FragmentShader = shader_stream[static_cast<uint8>(EShaderType::FragmentShader)].str();
-				raw_data.VertexShader = shader_stream[static_cast<uint8>(EShaderType::VertexShader)].str();
+				ShaderFullPathToShaderCode[shaderPath.generic_string()] = shader_stream.str();
 
-
-				return raw_data;
 			}
+			return ShaderFullPathToShaderCode[shaderPath.generic_string()];
 		}
 }

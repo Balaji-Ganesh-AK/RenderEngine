@@ -3,17 +3,17 @@
 #include "RenderingAPI/OpenGL/Shader/OpenGLShader.h"
 #include <sstream>
 
+#include "GameManager.h"
+#include "Systems/ShaderSystem/ShaderSystem.h"
 
 
-
-
-KREngine::FShader* KREngine::FShader::CreateShader(const FShaderRawData& fShaderRawData)
+/*TODO Send in the complied code here*/
+KREngine::FShader* KREngine::FShader::CreateShader(const std::filesystem::path& VertexShaderPath, const std::filesystem::path& FragmentShaderPath)
 {
-	return new OpenGLShader(fShaderRawData.VertexShader, fShaderRawData.FragmentShader);
+
+	FShaderRawData shader_raw_data = FApplication::GetShaderManager().GetShaderRawDataFromFile( VertexShaderPath, FragmentShaderPath) ;
+
+	return new OpenGLShader(shader_raw_data.VertexShaderCode, shader_raw_data.FragmentShaderCode);
 
 }
 
-KREngine::FShader* KREngine::FShader::CopyShader(const FShader* other)
-{
-	return new OpenGLShader(other);
-}

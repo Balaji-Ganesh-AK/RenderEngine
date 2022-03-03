@@ -12,6 +12,7 @@
 #include "RenderingSystem/WindowsWindow.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Camera/FCamera.h"
+#include "Shaders/DefaultShader.h"
 #include "Systems/Input/Input.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
@@ -424,22 +425,18 @@ namespace KREngine
 
 	void FApplication::EngineInit()
 	{
-	
-
-
-
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
 		Properties->EventCallBack = std::bind(&FApplication::OnEvent, this, std::placeholders::_1);
 		WindowWindow = std::make_unique< WindowsWindow>(*Properties);
 
 		/*Load everything before starting the GUI*/
 		/*Loading textures needs GLFW for OPENGL*/
-	/*TODO: Create a sync for each loading and make each manager run its own thread*/
+		/*TODO: Create a sync for each loading and make each manager run its own thread*/
 		{
 
 			TextureManager.reset(FTextureManager::Create());
 			TextureManager->Init();
-			ShaderManager.reset(FShaderCompilerManager::Create());
+			ShaderManager.reset(FShaderManager::Create());
 			ShaderManager->Init();
 		}
 
@@ -455,9 +452,18 @@ namespace KREngine
 		EntityManager::RegisterComponent<FMaterialComponent>();
 		EntityManager::RegisterComponent<FStaticMesh>();
 
+		/*Shader component register*/
+		EntityManager::RegisterComponent<FDefaultShaderComponent>();
+		EntityManager::RegisterComponent<FDefaultUnLitShaderComponent>();
+		
 
 		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
 		RenderingSystem = EntityManager::RegisterSystem<FRenderingSystem>();
+
+		DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitShader>();
+		DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitShader>();
+
+
 		StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
 		TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
 		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
@@ -473,7 +479,24 @@ namespace KREngine
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
 			UID.set(EntityManager::GetComponentType<FMaterialComponent>());
+			UID.set(EntityManager::GetComponentType<FStaticMesh>());
 			EntityManager::SetSystemComponents<FRenderingSystem>(UID);
+		}
+		/*Default unlit shader*/
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FMaterialComponent>());
+			UID.set(EntityManager::GetComponentType<FDefaultUnLitShaderComponent>());
+			EntityManager::SetSystemComponents<FDefaultUnLitShader>(UID);
+		}
+		/*Default lit shader */
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FMaterialComponent>());
+			UID.set(EntityManager::GetComponentType<FDefaultShaderComponent>());
+			EntityManager::SetSystemComponents<FDefaultLitShader>(UID);
 		}
 		{
 			ComponentUID UID;
@@ -505,6 +528,9 @@ namespace KREngine
 		
 
 		Init();
+		/*shader init*/
+		DefaultShaderSystem->Init();
+		DefaultLitShaderSystem->Init();
 
 		RenderingSystem->Init();
 		StaticMeshSystem->Init();
@@ -524,6 +550,12 @@ namespace KREngine
 			CameraSystem->Run();
 		
 			TransformSystem->Run();
+
+			/*Shader update loop*/
+			DefaultShaderSystem->Run(CameraSystem->GetMainCamera());
+			DefaultLitShaderSystem->Run(CameraSystem->GetMainCamera());
+
+			/*Rendering system update loop*/
 			RenderingSystem->Run(CameraSystem->GetMainCamera());
 
 			

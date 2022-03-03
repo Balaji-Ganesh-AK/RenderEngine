@@ -5,29 +5,45 @@
 
 namespace KREngine
 {
-	class FLight
+	struct FLight
 	{
-	private:
-		FColor LightColor{ 1.0f,1.0f,1.0f,1.0f };
+		FColor LightColor{ 0.5f,0.5f,0.5f,1.0f };
 		FColor AmbientColor;
-		float AmbientStrength =0.1f;
+		float AmbientStrength = 0.1f;
 		bool bUseAmbientColor{ false };
+		/*Can be moved out of this*/
+		FVector Location{};
+	};
+
+	class FLightSystem: public FSystem
+	{
 
 	public:
-		FLight();
-		FColor& GetLightColor();
-		void SetLightColor( const FColor& lightColor );
+		//void Init();
+		//void Update();
+		//void End();
+
+	//private:
+	//	FColor LightColor{ 1.0f,1.0f,1.0f,1.0f };
+	//	FColor AmbientColor;
+	//	float AmbientStrength =0.1f;
+	//	bool bUseAmbientColor{ false };
+
+	//public:
+	//	FLight();
+	//	FColor& GetLightColor();
+	//	void SetLightColor( const FColor& lightColor );
 
 
-		FColor& GetAmbientColor();
-		void SetAmbientColor( const FColor& ambientColor );
+	//	FColor& GetAmbientColor();
+	//	void SetAmbientColor( const FColor& ambientColor );
 
-		/*Gets the value for the shader, total color value*/
-		FColor GetShaderColor() const;
+	//	/*Gets the value for the shader, total color value*/
+	//	FColor GetShaderColor() const;
 
-		/*Whether to use ambient color for this light source*/
-		void SetUseAmbientColor( bool value );
-		bool GetUseAmbientColor() { return bUseAmbientColor; }
-		
+	//	/*Whether to use ambient color for this light source*/
+	//	void SetUseAmbientColor( bool value );
+	//	bool GetUseAmbientColor() { return bUseAmbientColor; }
+	//	
 	};
 }

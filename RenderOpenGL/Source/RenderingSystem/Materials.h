@@ -6,6 +6,7 @@
 #include "Math/Vec3.h"
 namespace KREngine
 {
+	class IShaderProgram;
 	class FShader;
 
 	class FMaterials
@@ -27,7 +28,16 @@ namespace KREngine
 		std::string u_Texture = "awesomeface.png";
 
 		std::shared_ptr<FShader> Shader;
-		std::filesystem::path DefaultShaderPath = "../Content/Shaders/Default/DefaultShader.GLSL";
+
+		/*Used for calling binding functions*/
+		uint32 ShaderID;
+
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultLitVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultLitFragmentShader.GLSL";
+
+	/*	std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShader.GLSL";*/
+
 
 		void Init( int& Slot );
 		void Bind(int& Slot);

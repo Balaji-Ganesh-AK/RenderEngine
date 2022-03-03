@@ -10,6 +10,8 @@ namespace KREngine
 
 	}
 
+
+
 	/*vec4::vec4(FColor color) 
 	{
 		x = ( color.r );

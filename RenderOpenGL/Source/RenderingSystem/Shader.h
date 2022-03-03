@@ -10,13 +10,15 @@ namespace KREngine
 	struct FShaderRawData
 	{
 	public:
-		std::string VertexShader;
-		std::string FragmentShader;
+		std::string VertexShaderCode;
+		std::string FragmentShaderCode;
 	};
 
-	struct FShaderColorData
+	struct FShaderStruct
 	{
-		
+	public:
+		std::string VertexShaderPath;
+		std::string FragmentShaderPath;
 	};
 
 	class FShader
@@ -24,8 +26,7 @@ namespace KREngine
 	public:
 		virtual ~FShader() = default;
 		
-		static FShader* CreateShader(const FShaderRawData& fShaderRawData);
-		static FShader* CopyShader(const FShader* other);
+		static FShader* CreateShader(const std::filesystem::path& VertexShaderPath , const std::filesystem::path& FragmentShaderPath);
 
 		virtual void BindShader() =0;
 		virtual void UnBindShader() =0 ;
@@ -47,6 +48,22 @@ namespace KREngine
 	protected:
 
 		uint32 RendererID;
+	};
+
+	/*Base interface class for all shader programs*/
+	class IShaderProgram
+	{
+	public:
+		virtual ~IShaderProgram() = default;
+		virtual void Init() =0;
+		virtual void Update() =0;
+		virtual void End() = 0;
+		virtual void SetShader(FShader* shader)
+		{
+			Shader.reset(shader);
+		}
+	private:
+		std::unique_ptr<FShader> Shader;
 	};
 
 

@@ -239,16 +239,7 @@ void FRenderingSystem::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-	/*Goes into camera component*/
-	for (const FEntityHandle Entity : EntityHandles)
-	{
-		
-		auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
 
-		int slot = 0;
-		material.Init( slot);
-	}
-	
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
@@ -276,51 +267,22 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 		int slot = 0;
 		if (mainCamera.bMainCamera)
 		{
-
 			for (const FEntityHandle Entity : EntityHandles)
 			{
-				const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
+				int slot = 0;
 				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-				FMaterials& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
-				std::shared_ptr<FShader>& shader = material.Shader;
-				if (shader)
-				{
-					int slot = 0;
-					material.Bind(slot);
-					slot++;
-					// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
-					//Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
-					// Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
-					shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-					shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
-					/*Shader->SetUniform3f("u_LightPos", RenderingObjectList[1].Transform.GetLocation());*/
-					shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
-					shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
-					//material.UnBindShader();
-					static_mesh.VertexArray->BindBuffer();
+				
+				auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+				material.Bind(slot);
+				slot++;
+				static_mesh.VertexArray->BindBuffer();
 
-					DrawCallCount++;
-					// 3 vertex two triangles.
-					(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-				}
+				DrawCallCount++;
+				// 3 vertex two triangles.
+				(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+
+				// glDrawArrays( GL_TRIANGLES, 0, 36 );
 			}
-		
-			//for (const FEntityHandle Entity : EntityHandles)
-			//{
-			//	int slot = 0;
-			//	const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-			//	
-			//	auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
-			//	material.Bind(slot);
-			//	slot++;
-			//	static_mesh.VertexArray->BindBuffer();
-
-			//	DrawCallCount++;
-			//	// 3 vertex two triangles.
-			//	(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-
-			//	// glDrawArrays( GL_TRIANGLES, 0, 36 );
-			//}
 		}
 		else
 		{

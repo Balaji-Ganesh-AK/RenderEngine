@@ -2,6 +2,7 @@
 
 #include "GameManager.h"
 #include "Shader.h"
+#include "Shaders/DefaultShader.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
 #include "utility/CommonInclude.h"
@@ -14,7 +15,8 @@ namespace KREngine
 
 	void FMaterials::Init(int& Slot)
 	{
-		Shader.reset(FShader::CopyShader(FApplication::GetShaderCompilerManager().GetShader(DefaultShaderPath).get()));
+		Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
+
 		Shader->BindShader();
 		TexturePathToTextureMap.insert({ "material.Diffuse" , FApplication::GetTextureManager().GetTexture(DiffuseTexture) });
 		Shader->SetUniformInt( "material.Diffuse", Slot );
@@ -28,6 +30,7 @@ namespace KREngine
 		Slot = Slot + 1;
 		
 	}
+
 
 	void FMaterials::Bind( int& Slot )
 	{
