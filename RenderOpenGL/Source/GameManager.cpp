@@ -351,6 +351,8 @@ namespace KREngine
 			ImGui::Begin("Content Browser");
 			ImGui::End();
 
+			DefaultLitShaderSystem->GUIRun();
+
 			ImGui::Begin("Actor menu");
 			ImGui::End();
 

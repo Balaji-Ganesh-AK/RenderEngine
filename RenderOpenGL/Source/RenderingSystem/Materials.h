@@ -25,7 +25,7 @@ namespace KREngine
 
 		std::string DiffuseTexture = "DiffuseWoodCrate.png";
 		std::string SpecularTexture = "SpecularCrate.png";
-		std::string u_Texture = "awesomeface.png";
+		std::string u_Texture = "wall.jpg";
 
 		std::shared_ptr<FShader> Shader;
 
@@ -48,5 +48,10 @@ namespace KREngine
 		FVector& GetAmbient() ;
 		FVector& GetDiffuse() ;
 		FVector& GetSpecular() ;
+
+		void SetShininess(float shininess)
+		{
+			Shininess = shininess;
+		}
 	};
 }

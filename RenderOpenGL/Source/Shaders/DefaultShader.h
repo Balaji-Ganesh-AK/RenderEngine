@@ -22,7 +22,7 @@ namespace KREngine
 		void End();
 
 	private:
-		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
+		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
 	};
 
 
@@ -39,9 +39,10 @@ namespace KREngine
 		void Init();
 		void Run(const FCamera& mainCamera);
 		void End();
+		void GUIRun();
 
 	private:
-		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
+		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
 		FLight Light;
 	};
 }

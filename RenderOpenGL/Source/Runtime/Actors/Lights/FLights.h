@@ -10,9 +10,10 @@ namespace KREngine
 		FColor LightColor{ 0.5f,0.5f,0.5f,1.0f };
 		FColor AmbientColor;
 		float AmbientStrength = 0.1f;
+		float Shininess = 1.0f;
 		bool bUseAmbientColor{ false };
 		/*Can be moved out of this*/
-		FVector Location{};
+		FVector Location{0.0f,0.0f,0.0f};
 	};
 
 	class FLightSystem: public FSystem

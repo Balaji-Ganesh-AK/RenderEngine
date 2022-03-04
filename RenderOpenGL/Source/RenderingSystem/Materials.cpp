@@ -20,14 +20,15 @@ namespace KREngine
 		Shader->BindShader();
 		TexturePathToTextureMap.insert({ "material.Diffuse" , FApplication::GetTextureManager().GetTexture(DiffuseTexture) });
 		Shader->SetUniformInt( "material.Diffuse", Slot );
+		TexturePathToTextureMap.insert({ "material.Specular" , FApplication::GetTextureManager().GetTexture(SpecularTexture) });
+		Shader->SetUniformInt("material.Specular", Slot);
+		Slot = Slot + 1;
 		Slot = Slot+ 1;
 		TexturePathToTextureMap.insert( { "u_Texture" , FApplication::GetTextureManager().GetTexture(u_Texture)} );
 		Shader->SetUniformInt( "u_Texture", Slot );
 		Slot = Slot + 1;
 
-		TexturePathToTextureMap.insert( { "material.Specular" , FApplication::GetTextureManager().GetTexture(SpecularTexture) } );
-		Shader->SetUniformInt( "material.Specular", Slot );
-		Slot = Slot + 1;
+		
 		
 	}
 
@@ -35,7 +36,7 @@ namespace KREngine
 	void FMaterials::Bind( int& Slot )
 	{
 		Shader->BindShader();
-		
+		Shader->SetUniformF("material.Shininess", Shininess);
 
 		for( const auto& texture: TexturePathToTextureMap )
 		{

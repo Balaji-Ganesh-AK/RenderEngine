@@ -239,7 +239,7 @@ void FRenderingSystem::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
-
+	glEnable(GL_DEPTH_CLAMP);
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
@@ -263,18 +263,18 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
-		int slot = 0;
+		
 		if (mainCamera.bMainCamera)
 		{
 			for (const FEntityHandle Entity : EntityHandles)
 			{
-				int slot = 0;
+				
 				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 				
 				auto& material = EntityManager::GetComponent<FMaterialComponent>(Entity).Material;
+				int slot = 0;
 				material.Bind(slot);
-				slot++;
+				
 				static_mesh.VertexArray->BindBuffer();
 
 				DrawCallCount++;

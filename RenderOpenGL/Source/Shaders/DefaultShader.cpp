@@ -32,8 +32,8 @@ namespace KREngine
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
-		int slot = 0;
+		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
+
 		if (mainCamera.bMainCamera)
 		{
 
@@ -48,7 +48,7 @@ namespace KREngine
 					{
 						int slot = 0;
 						material.Bind(slot);
-						slot++;
+						
 						// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
 						//Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
 						// Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
@@ -93,24 +93,28 @@ namespace KREngine
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 100.0f);
+
+		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 		/*REFACTOR: This should go away asap*/
-		if (EntityManager::HasComponent<FMaterialComponent>(0)&& EntityManager::HasComponent<FDefaultShaderComponent>(0) &&  (EntityManager::HasComponent<FDefaultShaderComponent>(1)))
+		if (EntityManager::HasComponent<FMaterialComponent>(0)&& EntityManager::HasComponent<FMaterialComponent>(1) &&  EntityManager::HasComponent<FDefaultShaderComponent>(0) &&  (EntityManager::HasComponent<FDefaultShaderComponent>(1)))
 		{
-			/*if(EntityManager::GetComponent<FMaterialComponent>(0).Shader&& EntityManager::GetComponent<FMaterialComponent>(1).Shader)
+			
+
+			/*if(EntityManager::GetComponent<FMaterialComponent>(0).Shader&& EntityManager::GetComponent<FMaterialComponent>(1).Shader)*/
 			{
 				
-			EntityManager::GetComponent<FMaterialComponent>(0).Shader->BindShader();
-		EntityManager::GetComponent<FMaterialComponent>(0).Shader->SetUniformInt("u_Light", 0);
-
-		EntityManager::GetComponent<FMaterialComponent>(1).Shader->BindShader();
-		EntityManager::GetComponent<FMaterialComponent>(1).Shader->SetUniformInt("u_Light", 1);
-		EntityManager::GetComponent<FMaterialComponent>(1).Shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.r, Light.LightColor.r, Light.LightColor.a));
-			}*/
+			EntityManager::GetComponent<FMaterialComponent>(0).Material.Shader->BindShader();
+		EntityManager::GetComponent<FMaterialComponent>(0).Material.Shader->SetUniformInt("u_Light", 1);
+		EntityManager::GetComponent<FMaterialComponent>(0).Material.Shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
+														   
+		EntityManager::GetComponent<FMaterialComponent>(1).Material.Shader->BindShader();
+		EntityManager::GetComponent<FMaterialComponent>(1).Material.Shader->SetUniformInt("u_Light", 0);
+		EntityManager::GetComponent<FMaterialComponent>(1).Material.Shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
+			}
 		}
 		if (mainCamera.bMainCamera)
 		{
-			int slot = 0;
+			
 			for (const FEntityHandle Entity : EntityHandles)
 			{
 				
@@ -121,17 +125,18 @@ namespace KREngine
 					std::shared_ptr<FShader>& shader = material.Shader;
 					if (shader)
 					{
-						
+						int slot = 0;
 						material.Bind(slot);
-						slot++;
+						
 						// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
 						//Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
 						// Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
 					
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-						shader->SetUniformMat4("u_Model", /*ViewProjection**/ model_projection);
+						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
 						shader->SetUniform3f("u_LightPos", Light.Location);
-						shader->SetUniformF("material.Specular", 32);
+						material.SetShininess(Light.Shininess);
+						shader->SetUniformF("material.Specular", material.GetShininess());
 						shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 					}
@@ -143,5 +148,14 @@ namespace KREngine
 
 	void FDefaultLitShader::End()
 	{
+	}
+
+	void FDefaultLitShader::GUIRun()
+	{
+		ImGui::Begin("TESTING MENU");
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##LightColor", &Light.LightColor.r, 0.01, -1, 1), "LightColor", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##ObjectColor", &Color.r, 0.01, -1, 1), "ObjectColor", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat("##Shininess", &Light.Shininess, 2, 2, 1024), "Shininess", );
+		ImGui::End();
 	}
 }
