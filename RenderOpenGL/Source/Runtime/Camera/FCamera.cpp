@@ -163,7 +163,7 @@ namespace KREngine
 		return MainCamera;
 		
 	 }
-
+#ifdef  GUI
 	 void FCameraSystem::GUIInit()
 	 {
 	 }
@@ -175,4 +175,6 @@ namespace KREngine
 	 void FCameraSystem::GUIRun()
 	 {
 	 }
+#endif
+
 }

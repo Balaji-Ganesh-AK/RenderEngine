@@ -43,7 +43,7 @@ namespace KREngine
 	FTransformSystem::~FTransformSystem()
 	{
 	}
-
+#ifdef  GUI
 	void FTransformSystem::GUIInit()
 	{
 
@@ -59,4 +59,6 @@ namespace KREngine
 	{
 	
 	}
+#endif
+
 }

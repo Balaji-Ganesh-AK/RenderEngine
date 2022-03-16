@@ -1,19 +1,20 @@
 #version 330 core
     layout( location = 0 ) out vec4 color;
-    in vec4 f_Color;
+    in vec3 f_Normal;
     in vec2 f_Texture;
-    struct Material
-    {     
-        sampler2D Diffuse;
-    };
-    uniform vec4 u_Color;
-    uniform vec4 u_ObjectColor;
-    uniform Material material;
+    in vec3 f_FragPos;
 
-    void main()
+    struct FMaterial
     {
-        color =texture( material.Diffuse, f_Texture );
-         //*vec4( u_ObjectColor)
+        sampler2D BaseTexture;
+        vec4 ObjectColor;
+    };
+    uniform FMaterial Material;
+ 
+    void main()
+    {     
+        color =texture( Material.BaseTexture, f_Texture ) * vec4(  Material.ObjectColor );
+               
     }
 
 ##Shader End

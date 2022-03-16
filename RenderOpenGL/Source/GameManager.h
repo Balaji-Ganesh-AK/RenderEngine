@@ -11,8 +11,9 @@
 
 namespace KREngine
 {
-	class FDefaultLitShader;
-	class FDefaultUnLitShader;
+	class FTransformSystem;
+	class FDefaultUnLitMaterialSystem;
+	class FDefaultLitMaterialSystem;
 	class FShaderManager;
 	class FEditorComponentPanelSystem;
 	class FMaterialSystem;
@@ -23,7 +24,6 @@ namespace KREngine
 	class FRenderingSystem;
 	class FCameraSystem;
 	class FInput;
-	class FTransformSystem;
 	class FStaticMeshSystem;
 	class FEditorTagSystem;
 
@@ -109,9 +109,8 @@ namespace KREngine
 
 		std::shared_ptr<FEditorTagSystem> EditorTagSystem;
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
-		std::shared_ptr<FDefaultUnLitShader> DefaultShaderSystem;
-		std::shared_ptr<FDefaultLitShader> DefaultLitShaderSystem;
-
+		std::shared_ptr<FDefaultUnLitMaterialSystem> DefaultShaderSystem;
+		std::shared_ptr<FDefaultLitMaterialSystem> DefaultLitShaderSystem;
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
 		std::shared_ptr<FTransformSystem> TransformSystem;
 		std::shared_ptr<FCameraSystem> CameraSystem;

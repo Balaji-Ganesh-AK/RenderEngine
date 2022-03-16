@@ -95,6 +95,8 @@ namespace KREngine
 		return EntityHandler.CreateEntity();
 	}
 
+
+
 	uint64 EntityManager::EntityCountInternal() const
 	{
 		return EntityHandler.GetEntityCount();

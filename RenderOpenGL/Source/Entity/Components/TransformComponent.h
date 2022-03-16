@@ -10,6 +10,13 @@ namespace KREngine
 	public:
 		FTransform Transform;
 		glm::mat4 ModelProjection;
+	public:
+		FTransformComponent(const FTransform& transform): Transform(transform)
+		{
+			
+		}
+		FTransformComponent() = default;
+		
 	};
 
 	class FTransformSystem : public FSystem

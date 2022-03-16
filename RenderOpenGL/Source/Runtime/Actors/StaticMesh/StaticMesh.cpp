@@ -29,7 +29,6 @@ namespace KREngine
 			static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int));
 
 			static_mesh.VertexArray->SetLayOut(layout);
-
 			static_mesh.VertexArray->BindBufferLayout();
 		}
 	}
@@ -46,7 +45,7 @@ namespace KREngine
 	FStaticMeshSystem::~FStaticMeshSystem()
 	{
 	}
-
+#ifdef  GUI
 	void FStaticMeshSystem::GUIInit()
 	{
 		
@@ -61,6 +60,7 @@ namespace KREngine
 	{
 	
 	}
+#endif
 
 	void FStaticMeshSystem::LoadMesh()
 	{

@@ -1,32 +1,25 @@
 #pragma once
 #include <memory>
 
-#include "Materials.h"
 #include "Entity/Entity.h"
 
 
 namespace KREngine
 {
+	class FTransformSystem;
+	class FDefaultLitMaterialSystem;
+	class FDefaultUnLitMaterialSystem;
+	class FStaticMeshSystem;
 	struct FCamera;
 
 	class FFrameBuffer;
-
-
-	/*Batch rendering ku use agum*/
-	struct FMaterialComponent
-	{
-	public:
-		std::shared_ptr<FShader> Shader;
-		FMaterials Material;
-	};
-
 
 
 	class FRenderingSystem : public FSystem
 	{
 
 	public:
-		FRenderingSystem() = default;
+		FRenderingSystem();
 		~FRenderingSystem()= default;
 		void Init();
 		void Run(const FCamera& mainCamera);
@@ -102,6 +95,11 @@ namespace KREngine
 //		FLight GlobalLight;
 
 	private:
+
+	
+		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
+		std::shared_ptr<FDefaultUnLitMaterialSystem> DefaultShaderSystem;
+		std::shared_ptr<FDefaultLitMaterialSystem> DefaultLitShaderSystem;
 
 
 		std::shared_ptr<FFrameBuffer> Framebuffer;

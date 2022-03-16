@@ -14,6 +14,7 @@ namespace KREngine
 		bool bUseAmbientColor{ false };
 		/*Can be moved out of this*/
 		FVector Location{0.0f,0.0f,0.0f};
+		FVector Direction{0.2f,-1.0f,-0.3f};
 	};
 
 	class FLightSystem: public FSystem
