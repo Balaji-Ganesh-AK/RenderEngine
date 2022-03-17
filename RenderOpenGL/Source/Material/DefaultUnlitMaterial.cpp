@@ -90,9 +90,6 @@ namespace KREngine
 
 
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
-		
-		if (mainCamera.bMainCamera)
-		{
 
 			for (const FEntityHandle Entity : EntityHandles)
 			{
@@ -110,18 +107,9 @@ namespace KREngine
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
 						shader->SetUniform4f("Material.ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
-					
-
-						//static_mesh.VertexArray->BindBuffer();
-						//// 3 vertex two triangles.
-						//(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-						//material.UnBind();
-	
 					}
 				}
 			}
-
-		}
 	}
 
 	void FDefaultUnLitMaterialSystem::End()

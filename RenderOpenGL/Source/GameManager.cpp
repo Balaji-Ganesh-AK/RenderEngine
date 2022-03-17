@@ -227,7 +227,7 @@ namespace KREngine
 
 		EditorTagSystem->GUIInit();
 
-		
+		StaticMeshSystem->GUIInit();
 		RenderingSystem->GUIInit();
 	}
 
@@ -492,7 +492,7 @@ namespace KREngine
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
+			UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
 			//UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
 			EntityManager::SetSystemComponents<FRenderingSystem>(UID);
@@ -541,13 +541,15 @@ namespace KREngine
 		Init();
 		CameraSystem->Init();
 		/*shader init*/
-		DefaultLitShaderSystem->Init();
 		DefaultShaderSystem->Init();
-		StaticMeshSystem -> Init();
+		DefaultLitShaderSystem->Init();
+		
 		//EntityManager::GetSystem<FStaticMeshSystem>()->Init();
 	
-		
+		StaticMeshSystem->Init();
 		RenderingSystem->Init();
+		
+
 	}
 
 	void FApplication::EngineRun()
@@ -565,8 +567,8 @@ namespace KREngine
 			TransformSystem->Run();
 
 			/*Shader update loop*/
-			DefaultLitShaderSystem->Run(CameraSystem->GetMainCamera());
 			DefaultShaderSystem->Run(CameraSystem->GetMainCamera());
+			DefaultLitShaderSystem->Run(CameraSystem->GetMainCamera());
 
 			/*Rendering system update loop*/
 			RenderingSystem->Run(CameraSystem->GetMainCamera());

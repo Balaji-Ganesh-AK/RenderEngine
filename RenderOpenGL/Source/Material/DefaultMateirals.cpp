@@ -111,9 +111,6 @@ namespace KREngine
 
 	void FDefaultLitMaterialSystem::Run(const FCamera& mainCamera)
 	{
-		Framebuffer->BindBuffer();
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
 
 
 		/*Default shader update */
@@ -122,24 +119,18 @@ namespace KREngine
 
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 
-		if (mainCamera.bMainCamera)
-		{
-
 			for (const FEntityHandle Entity : EntityHandles)
 			{
 				if (EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity) && EntityManager::HasComponent<FTransformComponent>(Entity) && EntityManager::HasComponent<FStaticMesh>(Entity))
 				{
-					const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 					const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
 					FDefaultLitMaterial& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).Material;
 					std::shared_ptr<FShader>& shader = material.Shader;
 					if (shader)
 					{
 						
-						shader->BindShader();
-						// hader->SetUniform4f( "u_Color", vec4( clear_color.x, clear_color.y, clear_color.z, clear_color.w ) );
-						//Shader->SetUniform4f( "u_ObjectColor",vec4(Color.r,Color.g,Color.b, Color.a) );
-						// Shader->SetUniform4f( "u_Color",vec4( GlobalLight.GetShaderColor().r, GlobalLight.GetShaderColor().g, GlobalLight.GetShaderColor().b, GlobalLight.GetShaderColor().a) );
+						int slot = 0;
+						material.Bind(slot);
 
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
@@ -151,29 +142,12 @@ namespace KREngine
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
 						shader->SetUniformF("material.Shininess", 32);
-
-						int slot = 0;
-						material.Bind(slot);
-				
-						//glfwPollEvents();
-						int32 DrawCallCount{ 0 };
-
-						const glm::mat4 ViewProjection = mainCamera.ViewProjection;
-						static_mesh.VertexArray->BindBuffer();
-						DrawCallCount++;
-						// 3 vertex two triangles.
-						(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
 						
 
 					}
 				}
 			}
-		}
-		else
-		{
-			Logger::Error("No main camera found! ");
-		}
-		Framebuffer->UnBindBuffer();
+		
 	}
 
 

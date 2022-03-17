@@ -248,21 +248,14 @@ FRenderingSystem::FRenderingSystem()
 //}
 void FRenderingSystem::Init()
 {
-	{
-		
-	//DefaultLitShaderSystem->Init();
-	
-	//TransformSystem->Init();
-	//DefaultShaderSystem->Init();
 
-	//DefaultLitShaderSystem->Init();
-	}
-	//StaticMeshSystem->Init();
+
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_DEPTH_CLAMP);
-
+	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
+		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
 
 	/*shader init*/
@@ -275,73 +268,47 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 {
 	{
 		SCOPED_TIMER("Rendering loop");
-		/*Shader update loop*/
 
-//#if GUI
-//		Framebuffer->BindBuffer();
-//#endif
-//		
-//		glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
-//		glClear(GL_COLOR_BUFFER_BIT);
-//		
-//	
-//	
-//		//glfwPollEvents();
-//		int32 DrawCallCount{ 0 };
-//		//DefaultLitShaderSystem->Run(mainCamera);
-//	
-//
-//		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
-//		if (mainCamera.bMainCamera)
-//		{
-//			for (const FEntityHandle Entity : EntityHandles)
-//			{
-//				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-//				if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(Entity))
-//				{
-//					
-//					auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(Entity).Material;
-//					int slot = 0;
-//					material.Bind(slot);
-//
-//					static_mesh.VertexArray->BindBuffer();
-//
-//					DrawCallCount++;
-//					// 3 vertex two triangles.
-//					(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-//				}
-//				
-//				if(EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity))
-//				{
-//					FDefaultLitMaterial& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).
-//						Material;
-//					int slot = 0;
-//					material.Bind(slot);
-//
-//					static_mesh.VertexArray->BindBuffer();
-//
-//					DrawCallCount++;
-//					// 3 vertex two triangles.
-//					(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-//				}
-//
-//				
-//
-//				// glDrawArrays( GL_TRIANGLES, 0, 36 );
-//			}
-//		}
-//		else
-//		{
-//			Logger::Error("No main camera found! ");
-//		}
-//
-//		Framebuffer->UnBindBuffer();
+#if GUI
+		Framebuffer->BindBuffer();
+#endif
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glClearColor(1, 0, 0, 0);
+		//glfwPollEvents();
+		int32 DrawCallCount{ 0 };
+
+
+		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
+
+
+		if (mainCamera.bMainCamera)
+		{
+			for (const FEntityHandle Entity : EntityHandles)
+			{
+
+				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+
+				auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(Entity).Material;
+				int slot = 0;
+				material.Bind(slot);
+
+				static_mesh.VertexArray->BindBuffer();
+
+				DrawCallCount++;
+				// 3 vertex two triangles.
+				(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+
+				// glDrawArrays( GL_TRIANGLES, 0, 36 );
+			}
+		}
+		else
+		{
+			Logger::Error("No main camera found! ");
+		}
+		Framebuffer->UnBindBuffer();
 
 
 	}
-#if GUI
-		
-#endif
 	{
 		//SCOPED_TIMER("Buffer Swap");
 				/* Poll for and process events */
@@ -370,21 +337,21 @@ void FRenderingSystem::GUIStop()
 void FRenderingSystem::GUIRun()
 {
 	//TransformSystem->GUIRun();
-	//{
-	//	SCOPED_TIMER("Screen frame buffer");
-	//ImGui::Begin("ScreenPort");
-	//if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
-	//{
-	//	test = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
-	//	Framebuffer->OnWindowResize(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
-	//}
+	{
+		SCOPED_TIMER("Screen frame buffer");
+	ImGui::Begin("ScreenPort");
+	if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
+	{
+		test = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
+		Framebuffer->OnWindowResize(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
+	}
 
-	//const uint32 textureID = Framebuffer->GetTextureRendererID();
-	//auto WindowSize = ImGui::GetWindowSize();
-	//ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()),static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
-	//ImGui::End();
+	const uint32 textureID = Framebuffer->GetTextureRendererID();
+	auto WindowSize = ImGui::GetWindowSize();
+	ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()),static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
+	ImGui::End();
 
-	//}
+	}
 
 }
 #endif
