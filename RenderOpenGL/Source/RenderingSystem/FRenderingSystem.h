@@ -100,7 +100,7 @@ namespace KREngine
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
 		std::shared_ptr<FDefaultUnLitMaterialSystem> DefaultShaderSystem;
 		std::shared_ptr<FDefaultLitMaterialSystem> DefaultLitShaderSystem;
-
+		std::shared_ptr<FTransformSystem> TransformSystem;
 
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 

@@ -22,7 +22,9 @@ FRenderingSystem::FRenderingSystem()
 	//TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
 	//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
 //	DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
-	
+	StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
+	TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
+	DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
 	//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
 }
 
@@ -248,7 +250,7 @@ FRenderingSystem::FRenderingSystem()
 //}
 void FRenderingSystem::Init()
 {
-
+	DefaultShaderSystem->Init();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
@@ -259,13 +261,15 @@ void FRenderingSystem::Init()
 
 
 	/*shader init*/
-
+	StaticMeshSystem->Init();
 	
 
 }
 
 void FRenderingSystem::Run(const FCamera& mainCamera)
 {
+	TransformSystem->Run();
+
 	{
 		SCOPED_TIMER("Rendering loop");
 
@@ -283,24 +287,47 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 
 		if (mainCamera.bMainCamera)
 		{
-			for (const FEntityHandle Entity : EntityHandles)
-			{
-
-				const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-
-				auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(Entity).Material;
-				int slot = 0;
-				material.Bind(slot);
-
-				static_mesh.VertexArray->BindBuffer();
-
-				DrawCallCount++;
-				// 3 vertex two triangles.
-				(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-
-				// glDrawArrays( GL_TRIANGLES, 0, 36 );
-			}
+			DefaultShaderSystem->Run(mainCamera);
 		}
+		//
+		//	for (const FEntityHandle Entity : EntityHandles)
+		//	{
+
+		//		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+
+		//		auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(Entity).Material;
+		//		int slot = 0;
+		//		material.Bind(slot);
+
+		//		static_mesh.VertexArray->BindBuffer();
+
+		//		DrawCallCount++;
+		//		// 3 vertex two triangles.
+		//		(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+
+		//		// glDrawArrays( GL_TRIANGLES, 0, 36 );
+		//	}
+		//	for (const FEntityHandle Entity : EntityHandles)
+		//	{
+
+		//		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+		//		if(EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity))
+		//		{
+		//			
+		//
+		//		auto& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).Material;
+		//		int slot = 0;
+		//		material.Bind(slot);
+
+		//		static_mesh.VertexArray->BindBuffer();
+
+		//		DrawCallCount++;
+		//		// 3 vertex two triangles.
+		//		(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+		//		}
+		//		// glDrawArrays( GL_TRIANGLES, 0, 36 );
+		//	}
+		
 		else
 		{
 			Logger::Error("No main camera found! ");
@@ -326,7 +353,7 @@ void FRenderingSystem::Stop()
 #ifdef GUI
 void FRenderingSystem::GUIInit()
 {
-	//TransformSystem->GUIInit();
+	TransformSystem->GUIInit();
 	StaticMeshSystem->GUIInit();
 }
 
@@ -336,7 +363,7 @@ void FRenderingSystem::GUIStop()
 
 void FRenderingSystem::GUIRun()
 {
-	//TransformSystem->GUIRun();
+	TransformSystem->GUIRun();
 	{
 		SCOPED_TIMER("Screen frame buffer");
 	ImGui::Begin("ScreenPort");

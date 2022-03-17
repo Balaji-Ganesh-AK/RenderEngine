@@ -107,6 +107,13 @@ namespace KREngine
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
 						shader->SetUniform4f("Material.ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
+						const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
+
+						static_mesh.VertexArray->BindBuffer();
+						// 3 vertex two triangles.
+						(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+						
+
 					}
 				}
 			}

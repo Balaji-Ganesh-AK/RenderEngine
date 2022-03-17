@@ -58,7 +58,7 @@ namespace KREngine
 		Vec2 LastKnowMousePos;
 		FEntityHandle MainCameraEntity;
 
-
+		FCamera MainCamera;
 		bool bTestRest{false};
 	};
 }

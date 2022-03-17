@@ -141,7 +141,6 @@ namespace KREngine
 
 	 FCamera& FCameraSystem::GetMainCamera() 
 	 {
-	 	FCamera MainCamera;
 		if(bHasValid)
 		{
 			MainCamera = EntityManager::GetComponent<FCamera>(MainCameraEntity);

@@ -31,8 +31,8 @@ namespace KREngine
 		entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});
 		entity1->AddComponent(FStaticMesh{});
-		//entity1->AddComponent(DefaultLitMaterialComponent{});
 		entity1->AddComponent(DefaultUnLitMaterialComponent{});
+		//entity1->AddComponent(DefaultUnLitMaterialComponent{});
 
 
 		/*for(int i = 0; i < 500; i++)
