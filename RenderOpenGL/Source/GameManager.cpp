@@ -467,7 +467,7 @@ namespace KREngine
 		//DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
 		//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
 		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
-		RenderingSystem = EntityManager::RegisterSystem<FRenderingSystem>();
+		RenderingSystem = std::make_shared<FRenderingSystem>();
 		/*TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();*/
 	
 
@@ -486,32 +486,36 @@ namespace KREngine
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
 
-			EntityManager::SetSystemComponents<FStaticMeshSystem>(UID);
+			ComponentUID OUID;
+			OUID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
+			OUID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
+			EntityManager::SetSystemComponents<FStaticMeshSystem>(UID, OUID);
 		}
 
-		{
-			ComponentUID UID;
-			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			//UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
-			UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
-			UID.set(EntityManager::GetComponentType<FStaticMesh>());
-			EntityManager::SetSystemComponents<FRenderingSystem>(UID);
-		}
+		//{
+		//	ComponentUID UID;
+		//	UID.set(EntityManager::GetComponentType<FTransformComponent>());
+		//	//UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
+		//	UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
+		//	UID.set(EntityManager::GetComponentType<FStaticMesh>());
+		//	EntityManager::SetSystemComponents<FRenderingSystem>(UID);
+		//}
 
 		/*Default unlit shader*/
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
+			UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
 			EntityManager::SetSystemComponents<FDefaultUnLitMaterialSystem>(UID);
 		}
 		/*Default lit shader */
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
+			UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
+
 			EntityManager::SetSystemComponents<FDefaultLitMaterialSystem>(UID);
 		}
 		

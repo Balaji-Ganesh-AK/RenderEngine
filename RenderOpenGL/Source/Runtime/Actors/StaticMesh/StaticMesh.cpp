@@ -1,8 +1,11 @@
 #include "StaticMesh.h"
 
+#include "Material/DefaultMateirals.h"
+#include "Material/DefaultUnlitMaterial.h"
 #include "RenderingSystem/Buffers.h"
 namespace KREngine
 {
+
 	void FStaticMeshSystem::Init()
 	{
 
@@ -35,7 +38,16 @@ namespace KREngine
 
 	void FStaticMeshSystem::Run()
 	{
+		for (const FEntityHandle& entity : EntityHandles)
+		{
+			
 
+			if(EntityManager::HasComponent<DefaultUnLitMaterialComponent>(entity) || EntityManager::HasComponent<DefaultLitMaterialComponent>(entity))
+			{
+				
+				
+			}
+			}
 	}
 
 	void FStaticMeshSystem::Stop()

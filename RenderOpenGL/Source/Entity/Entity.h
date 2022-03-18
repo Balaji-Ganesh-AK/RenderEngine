@@ -275,25 +275,25 @@ namespace KREngine
 			}
 			return nullptr;
 		}
-		template<typename SystemType>
-		void RegisterSystem(ComponentUID uid)
-		{
-		
-		
-			if(const char* type_name = typeid(SystemType).name(); SystemRegistry.contains(type_name))
-			{
-				
-				ComponentToComponentUID[type_name] = uid;
-				
-			}
-			else
-			{
-				Logger::Error("Already register system");
-			}
-		}
+		//template<typename SystemType>
+		//void RegisterSystem(ComponentUID uid)
+		//{
+		//
+		//
+		//	if(const char* type_name = typeid(SystemType).name(); SystemRegistry.contains(type_name))
+		//	{
+		//		
+		//		ComponentToComponentUID[type_name] = uid;
+		//		
+		//	}
+		//	else
+		//	{
+		//		Logger::Error("Already register system");
+		//	}
+		//}
 
 		template<typename Component>
-		void SetComponentUID(ComponentUID componentUid)
+		void SetComponentUID(ComponentUID componentUid, ComponentUID optionalComponentUid = MAX_COMPONENTS)
 		{
 			const char* type_name = typeid(Component).name();
 
@@ -305,6 +305,13 @@ namespace KREngine
 			{
 				Logger::Error("Component already exists, not adding it again");
 			}
+			if(optionalComponentUid != MAX_COMPONENTS)
+			{
+				if (!OptionalComponentToComponentUID.contains(type_name))
+				{
+					OptionalComponentToComponentUID[type_name] = optionalComponentUid;
+				}
+			}
 		}
 		
 		void OnEntitySignatureChanged(FEntityHandle handle, ComponentUID entityUid)
@@ -314,8 +321,8 @@ namespace KREngine
 				auto const& type_name = system.first;
 				auto const& system_pointer = system.second;
 				auto& registered_entity_uid = ComponentToComponentUID[type_name];
-
-				if((entityUid & registered_entity_uid) == registered_entity_uid)
+				auto& registered_optional_uid = OptionalComponentToComponentUID[type_name];
+				if((entityUid & registered_entity_uid) == registered_entity_uid || (entityUid & registered_optional_uid) == registered_entity_uid)
 				{
 					system_pointer->EntityHandles.insert(handle);
 				}
@@ -327,6 +334,7 @@ namespace KREngine
 		}
 	private:
 		std::unordered_map<const char*, ComponentUID> ComponentToComponentUID;
+		std::unordered_map<const char*, ComponentUID> OptionalComponentToComponentUID;
 		
 		std::unordered_map<const char*, std::shared_ptr<FSystem>> SystemRegistry;
 	};
@@ -398,9 +406,9 @@ namespace KREngine
 
 
 		template <typename Component>
-		static void SetSystemComponents(ComponentUID componentUid)
+		static void SetSystemComponents(ComponentUID componentUid, ComponentUID optionalComponentUid = MAX_COMPONENTS)
 		{
-			Get().SetSystemComponentsInternal<Component>(componentUid);
+			Get().SetSystemComponentsInternal<Component>(componentUid, optionalComponentUid);
 		}
 
 		template <typename Component>
@@ -444,9 +452,9 @@ namespace KREngine
 
 
 		template<typename Component>
-		void SetSystemComponentsInternal(ComponentUID componentUid)
+		void SetSystemComponentsInternal(ComponentUID componentUid , ComponentUID optionalComponentUid = MAX_COMPONENTS)
 		{
-			SystemManager.SetComponentUID<Component>(componentUid);
+			SystemManager.SetComponentUID<Component>(componentUid, optionalComponentUid);
 		}
 
 		template <typename Component>

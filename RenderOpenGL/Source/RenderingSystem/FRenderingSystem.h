@@ -15,7 +15,7 @@ namespace KREngine
 	class FFrameBuffer;
 
 
-	class FRenderingSystem : public FSystem
+	class FRenderingSystem /*: public FSystem*/
 	{
 
 	public:

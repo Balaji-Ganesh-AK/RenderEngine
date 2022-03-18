@@ -25,7 +25,7 @@ FRenderingSystem::FRenderingSystem()
 	StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
 	TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
 	DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
-	//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
+	DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
 }
 
 //FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
@@ -251,6 +251,7 @@ FRenderingSystem::FRenderingSystem()
 void FRenderingSystem::Init()
 {
 	DefaultShaderSystem->Init();
+	DefaultLitShaderSystem->Init();
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
@@ -288,6 +289,8 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 		if (mainCamera.bMainCamera)
 		{
 			DefaultShaderSystem->Run(mainCamera);
+			DefaultLitShaderSystem->Run(mainCamera);
+			//StaticMeshSystem->Run();
 		}
 		//
 		//	for (const FEntityHandle Entity : EntityHandles)
@@ -364,6 +367,7 @@ void FRenderingSystem::GUIStop()
 void FRenderingSystem::GUIRun()
 {
 	TransformSystem->GUIRun();
+	DefaultLitShaderSystem->GUIRun();
 	{
 		SCOPED_TIMER("Screen frame buffer");
 	ImGui::Begin("ScreenPort");
