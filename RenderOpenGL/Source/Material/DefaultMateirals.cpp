@@ -36,7 +36,7 @@ namespace KREngine
 		Shader->SetUniformInt("u_Texture", Slot);
 		Slot = Slot + 1;
 
-
+		Shader->UnBindShader();
 
 	}
 
@@ -44,7 +44,7 @@ namespace KREngine
 	void FDefaultLitMaterial::Bind(int& Slot)
 	{
 
-		//Shader->BindShader();
+		Shader->BindShader();
 
 		for (const auto& texture : TexturePathToTextureMap)
 		{
@@ -105,8 +105,7 @@ namespace KREngine
 				material.Init(slot);
 			}
 		}
-		Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
-			FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
+
 	}
 
 	void FDefaultLitMaterialSystem::Run(const FCamera& mainCamera)
@@ -123,6 +122,7 @@ namespace KREngine
 			{
 				if (EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity) && EntityManager::HasComponent<FTransformComponent>(Entity) && EntityManager::HasComponent<FStaticMesh>(Entity))
 				{
+					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 					const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
 					FDefaultLitMaterial& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).Material;
 					std::shared_ptr<FShader>& shader = material.Shader;
@@ -137,13 +137,17 @@ namespace KREngine
 						shader->SetUniform3f("u_LightPos", Light.Location);
 						shader->SetUniform3f("Light.u_LightDirection", Light.Direction);
 						material.SetShininess(Light.Shininess);
-						shader->SetUniformF("material.Specular", material.GetShininess());
+						
 						shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
 						shader->SetUniformF("material.Shininess", 32);
 						
-
+						static_mesh.VertexArray->BindBuffer();
+						// 3 vertex two triangles.
+						(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+						static_mesh.VertexArray->UnBindBuffer();
+						material.UnBind();
 					}
 				}
 			}
@@ -157,26 +161,12 @@ namespace KREngine
 
 	void FDefaultLitMaterialSystem::GUIRun()
 	{
-/*		ImGui::Begin("TESTING MENU");
+		ImGui::Begin("TESTING MENU");
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##LightColor", &Light.LightColor.r, 0.01, -1, 1), "LightColor", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##ObjectColor", &Color.r, 0.01, -1, 1), "ObjectColor", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat("##Shininess", &Light.Shininess, 2, 2, 1024), "Shininess", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Direction", &Light.Direction.x), "Direction", );
-		ImGui::End()*/;
-		{
-			SCOPED_TIMER("Screen frame buffer");
-			ImGui::Begin("ScreenPort");
-			if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
-			{
-				test = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
-				Framebuffer->OnWindowResize(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
-			}
-
-			const uint32 textureID = Framebuffer->GetTextureRendererID();
-			auto WindowSize = ImGui::GetWindowSize();
-			ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()),static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
-			ImGui::End();
-
-		}
+		ImGui::End();
+		
 	}
 }
