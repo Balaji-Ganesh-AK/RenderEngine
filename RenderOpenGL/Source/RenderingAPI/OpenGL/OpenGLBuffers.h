@@ -17,7 +17,7 @@ namespace KREngine
 		~OpenGLVertexBuffer() override;
 
 	private:
-		uint32 BufferCount{1};
+		int BufferSize{1};
 	};
 
 	class OpenGLIndexBuffer : public FIndexBuffer

@@ -9,6 +9,7 @@
 #include "Systems/TextureSystem/TextureManager.h"
 #include "glm/gtx/transform.hpp"
 #include "RenderingSystem/Buffers.h"
+#include "RenderingSystem/FRenderer.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 
 namespace KREngine
@@ -78,12 +79,38 @@ namespace KREngine
 
 				int slot = 0;
 				material.Init(slot);
+				/*TODO: extract this function to read the file and return the layout used fo this mesh*/
+				VertexBufferLayout layout{
+								BufferElement{"v_Pos", EShaderDataType::FVec3, true},
+								BufferElement{"v_Texture", EShaderDataType::FVec2, true},
+								BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+								//BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+				};
+
+				/*TODO fetch all the entities with static mesh component
+				 * TODO: Should work for runtime after setting up event system.
+				 */
+				for (const FEntityHandle& entity : EntityHandles)
+				{
+					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(entity);
+
+					static_mesh.VertexArray = FVertexArray::Create();
+					//static_mesh.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float)));
+					//static_mesh.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int)));
+					static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float));
+					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int));
+
+					static_mesh.VertexArray->SetLayOut(layout);
+					static_mesh.VertexArray->BindBufferLayout();
+					static_mesh.VertexArray->UnBindBuffer();
+					material.UnBind();
+				}
 			}
 		}
 	
 	}
 
-	void FDefaultUnLitMaterialSystem::Run(const FCamera& mainCamera)
+	void FDefaultUnLitMaterialSystem::Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer)
 	{
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
@@ -108,7 +135,8 @@ namespace KREngine
 						shader->SetUniform4f("Material.ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						static_mesh.VertexArray->BindBuffer();
 						// 3 vertex two triangles.
-						(glDrawElements(GL_TRIANGLES, static_mesh.IndexBufferData->GetIndexBufferCount(), GL_UNSIGNED_INT, nullptr));
+						renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+						//(glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), GL_UNSIGNED_INT, nullptr));
 						static_mesh.VertexArray->UnBindBuffer();
 						material.UnBind();
 					}

@@ -5,7 +5,7 @@
 
 KREngine::OpenGLVertexBuffer::OpenGLVertexBuffer(float* VertexPos, uint32 count )
 {
-	glGenBuffers( BufferCount, &RendererID );
+	glGenBuffers( BufferSize, &RendererID );
 	glBindBuffer( GL_ARRAY_BUFFER, RendererID );
 	glBufferData( GL_ARRAY_BUFFER, count * sizeof( float ), VertexPos, GL_STATIC_DRAW );
 }
@@ -26,7 +26,7 @@ void KREngine::OpenGLVertexBuffer::SetData()
 
 KREngine::OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
-	glDeleteBuffers( BufferCount, &RendererID );
+	glDeleteBuffers( BufferSize, &RendererID );
 }
 //************************************************************** Index Buffer *********************************
 

@@ -73,7 +73,7 @@ namespace KREngine
 	{
 	public:
 		void Init();
-		void Run(const FCamera& mainCamera/*, const FRenderer& renderer*/);
+		void Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer);
 		void End();
 		void GUIRun();
 

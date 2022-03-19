@@ -20,6 +20,19 @@ namespace KREngine
 
 	};
 
+	struct FRenderSettings
+	{
+		uint32 MaxTrianglePerDrawCall = 10000;
+		uint32 MaxVertexCount = 3 * MaxTrianglePerDrawCall;
+		uint32 MaxIndexCount = 3 * MaxTrianglePerDrawCall;
+		uint8 MaxTextureSlots = 32;
+	};
+	/*Contains all the info needed to render*/
+	struct FRenderData
+	{
+		FRenderSettings Settings;
+		
+	};
 	/*Base render interface class*/
 	class FRenderer
 	{
@@ -30,9 +43,9 @@ namespace KREngine
 		static FRenderer* CreateRenderer();
 
 		/*Submit to the GPU*/
-		virtual void Draw(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount) const =0 ;
-
-		virtual void DrawIndexed(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount, uint32_t instanceID) const = 0 ;
+		/*Bind all the buffers before calling this step*/
+		virtual void Draw(const uint32 indexBufferCount) const =0 ;
+		virtual void DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const = 0 ;
 
 
 		/*Init*/

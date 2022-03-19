@@ -283,9 +283,8 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 
 		if (mainCamera.bMainCamera)
 		{
-			DefaultLitShaderSystem->Run(mainCamera);
-			DefaultShaderSystem->Run(mainCamera);
-			StaticMeshSystem->Run();
+			DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			DefaultShaderSystem->Run(mainCamera, Renderer);
 		}
 		else
 		{

@@ -9,8 +9,8 @@ namespace KREngine
 	public:
 		OpenGLRenderer();
 		~OpenGLRenderer() {};
-		void Draw(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount) const override;
-		void DrawIndexed(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount, uint32_t instanceID) const override;
+		void Draw( const uint32 indexBufferCount) const override;
+		void DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const override;
 		void Init() override;
 		void ClearColor() override;
 		void SetClearColor(FColor color) override;

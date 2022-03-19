@@ -11,15 +11,15 @@ namespace KREngine
 	{
 	}
 
-	void OpenGLRenderer::Draw(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount) const
+	void OpenGLRenderer::Draw(const uint32 indexBufferCount) const
 	{
-		vertexArray->BindBuffer();
+		
 		glDrawElements(GL_TRIANGLES, indexBufferCount, GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenGLRenderer::DrawIndexed(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount, uint32_t instanceID) const 
+	void OpenGLRenderer::DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const 
 	{
-		vertexArray->BindBuffer();
+		
 		glDrawElements(GL_TRIANGLES, indexBufferCount, GL_UNSIGNED_INT, nullptr);
 	}
 
