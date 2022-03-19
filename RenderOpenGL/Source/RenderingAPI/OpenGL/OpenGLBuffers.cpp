@@ -30,9 +30,9 @@ KREngine::OpenGLVertexBuffer::~OpenGLVertexBuffer()
 }
 //************************************************************** Index Buffer *********************************
 
-KREngine::OpenGLIndexBuffer::OpenGLIndexBuffer( unsigned int* indices, uint32 count )
+KREngine::OpenGLIndexBuffer::OpenGLIndexBuffer( unsigned int* indices, uint32 count ) : BufferCount(count)
 {
-	glGenBuffers( BufferCount, &RendererID );
+	glGenBuffers(BufferSize, &RendererID );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, RendererID );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, count * sizeof( unsigned int ), indices, GL_STATIC_DRAW );
 

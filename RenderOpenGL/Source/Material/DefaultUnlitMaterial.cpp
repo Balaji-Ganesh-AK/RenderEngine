@@ -108,7 +108,7 @@ namespace KREngine
 						shader->SetUniform4f("Material.ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						static_mesh.VertexArray->BindBuffer();
 						// 3 vertex two triangles.
-						(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+						(glDrawElements(GL_TRIANGLES, static_mesh.IndexBufferData->GetIndexBufferCount(), GL_UNSIGNED_INT, nullptr));
 						static_mesh.VertexArray->UnBindBuffer();
 						material.UnBind();
 					}

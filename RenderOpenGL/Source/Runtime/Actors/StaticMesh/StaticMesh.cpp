@@ -38,16 +38,7 @@ namespace KREngine
 
 	void FStaticMeshSystem::Run()
 	{
-		for (const FEntityHandle& entity : EntityHandles)
-		{
-			
-
-			if(EntityManager::HasComponent<DefaultUnLitMaterialComponent>(entity) || EntityManager::HasComponent<DefaultLitMaterialComponent>(entity))
-			{
-				
-				
-			}
-			}
+		
 	}
 
 	void FStaticMeshSystem::Stop()

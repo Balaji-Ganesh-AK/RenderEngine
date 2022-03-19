@@ -8,6 +8,7 @@
 
 namespace KREngine
 {
+	class FRenderer;
 	class FFrameBuffer;
 	class FTexture2D;
 
@@ -72,7 +73,7 @@ namespace KREngine
 	{
 	public:
 		void Init();
-		void Run(const FCamera& mainCamera);
+		void Run(const FCamera& mainCamera/*, const FRenderer& renderer*/);
 		void End();
 		void GUIRun();
 

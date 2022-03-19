@@ -1,6 +1,7 @@
 #include "FRenderingSystem.h"
 
 #include "Buffers.h"
+#include "FRenderer.h"
 #include "GameManager.h"
 #include "Shader.h"
 #include "WindowsWindow.h"
@@ -11,6 +12,7 @@
 #include "Material/DefaultUnlitMaterial.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Camera/FCamera.h"
+#include "RenderingSystem/FRenderer.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 
 
@@ -19,13 +21,11 @@ using namespace KREngine;
 FRenderingSystem::FRenderingSystem()
 {
 
-	//TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
-	//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
-//	DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
 	StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
 	TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();
 	DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
 	DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
+	Renderer.reset(FRenderer::CreateRenderer());
 }
 
 //FRenderingSystem::FRenderingSystem( WindowsWindow * window ): WorldProjection()
@@ -252,11 +252,8 @@ void FRenderingSystem::Init()
 {
 	DefaultShaderSystem->Init();
 	DefaultLitShaderSystem->Init();
+	Renderer->Init();
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_DEPTH_CLAMP);
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
@@ -277,9 +274,7 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 #if GUI
 		Framebuffer->BindBuffer();
 #endif
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glClearColor(1, 0, 0, 0);
-		//glfwPollEvents();
+		Renderer->ClearColor();
 		int32 DrawCallCount{ 0 };
 
 
@@ -288,49 +283,10 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 
 		if (mainCamera.bMainCamera)
 		{
-			DefaultShaderSystem->Run(mainCamera);
 			DefaultLitShaderSystem->Run(mainCamera);
-			//StaticMeshSystem->Run();
+			DefaultShaderSystem->Run(mainCamera);
+			StaticMeshSystem->Run();
 		}
-		//
-		//	for (const FEntityHandle Entity : EntityHandles)
-		//	{
-
-		//		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-
-		//		auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(Entity).Material;
-		//		int slot = 0;
-		//		material.Bind(slot);
-
-		//		static_mesh.VertexArray->BindBuffer();
-
-		//		DrawCallCount++;
-		//		// 3 vertex two triangles.
-		//		(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-
-		//		// glDrawArrays( GL_TRIANGLES, 0, 36 );
-		//	}
-		//	for (const FEntityHandle Entity : EntityHandles)
-		//	{
-
-		//		const FStaticMesh& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-		//		if(EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity))
-		//		{
-		//			
-		//
-		//		auto& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).Material;
-		//		int slot = 0;
-		//		material.Bind(slot);
-
-		//		static_mesh.VertexArray->BindBuffer();
-
-		//		DrawCallCount++;
-		//		// 3 vertex two triangles.
-		//		(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
-		//		}
-		//		// glDrawArrays( GL_TRIANGLES, 0, 36 );
-		//	}
-		
 		else
 		{
 			Logger::Error("No main camera found! ");
@@ -358,6 +314,7 @@ void FRenderingSystem::GUIInit()
 {
 	TransformSystem->GUIInit();
 	StaticMeshSystem->GUIInit();
+	
 }
 
 void FRenderingSystem::GUIStop()

@@ -89,8 +89,10 @@ namespace KREngine
 		virtual void BindBuffer() = 0;
 		virtual void UnBindBuffer() = 0;
 		virtual void SetData() = 0;
+		virtual uint32 GetIndexBufferCount() = 0;
 	protected:
 		uint32 RendererID{0};
+		
 		int* Indices = nullptr;
 
 	};

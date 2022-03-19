@@ -30,9 +30,14 @@ namespace KREngine
 
 		virtual void SetData() override;
 		~OpenGLIndexBuffer() override;
+		uint32 GetIndexBufferCount() override
+		{
+			return BufferCount;
+		}
 
 	private:
-		uint32 BufferCount{ 1 };
+		int BufferSize{ 1 };
+		uint32 BufferCount{ 0 };
 	};
 
 	class OpenGLVertexArray: public FVertexArray

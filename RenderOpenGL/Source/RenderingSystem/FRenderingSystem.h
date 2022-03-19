@@ -6,6 +6,7 @@
 
 namespace KREngine
 {
+	class FRenderer;
 	class FTransformSystem;
 	class FDefaultLitMaterialSystem;
 	class FDefaultUnLitMaterialSystem;
@@ -101,10 +102,11 @@ namespace KREngine
 		std::shared_ptr<FDefaultUnLitMaterialSystem> DefaultShaderSystem;
 		std::shared_ptr<FDefaultLitMaterialSystem> DefaultLitShaderSystem;
 		std::shared_ptr<FTransformSystem> TransformSystem;
-
+		
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 
-		
+		std::shared_ptr<FRenderer> Renderer;
+		//FRenderer* Renderer;
 		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
 	};
 }

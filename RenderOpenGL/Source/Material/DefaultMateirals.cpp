@@ -8,6 +8,7 @@
 #include "Runtime/Camera/FCamera.h"
 #include "Math/Color.h"
 #include "RenderingSystem/Buffers.h"
+#include "RenderingSystem/FRenderer.h"
 #include "RenderingSystem/Textures.h"
 #include "Systems/TextureSystem/TextureManager.h"
 
@@ -108,7 +109,7 @@ namespace KREngine
 
 	}
 
-	void FDefaultLitMaterialSystem::Run(const FCamera& mainCamera)
+	void FDefaultLitMaterialSystem::Run(const FCamera& mainCamera/*, const FRenderer& renderer*/)
 	{
 
 
@@ -144,8 +145,9 @@ namespace KREngine
 						shader->SetUniformF("material.Shininess", 32);
 						
 						static_mesh.VertexArray->BindBuffer();
+						
 						// 3 vertex two triangles.
-						(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
+						(glDrawElements(GL_TRIANGLES, static_mesh.IndexBufferData->GetIndexBufferCount(), GL_UNSIGNED_INT, nullptr));
 						static_mesh.VertexArray->UnBindBuffer();
 						material.UnBind();
 					}

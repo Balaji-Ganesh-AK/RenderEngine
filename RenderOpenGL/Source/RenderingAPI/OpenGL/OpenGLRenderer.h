@@ -1,0 +1,21 @@
+#pragma once
+#include "RenderingSystem/FRenderer.h"
+
+
+namespace KREngine
+{
+	class OpenGLRenderer: public FRenderer
+	{
+	public:
+		OpenGLRenderer();
+		~OpenGLRenderer() {};
+		void Draw(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount) const override;
+		void DrawIndexed(const std::shared_ptr<FVertexArray>& vertexArray, const uint32 indexBufferCount, uint32_t instanceID) const override;
+		void Init() override;
+		void ClearColor() override;
+		void SetClearColor(FColor color) override;
+		void SetViewPort(FViewPort viewport) override;
+	private:
+
+	};
+}
