@@ -23,6 +23,7 @@ namespace KREngine
 
 	void FDefaultLitMaterial::Init(int& Slot)
 	{
+
 		Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
 		Shader->BindShader();
@@ -92,9 +93,16 @@ namespace KREngine
 	void FDefaultLitMaterialSystem::Init()
 	{
 		/*REFACTOR: This should go away asap*/
-
+		FScopedTimer Timer("Default lit system init");
 		Light.Location = EntityManager::GetComponent<FTransformComponent>(1).Transform.GetLocation();
 
+		/*TODO: extract this function to read the file and return the layout used fo this mesh*/
+		VertexBufferLayout layout{
+						BufferElement{"v_Pos", EShaderDataType::FVec3, true},
+						BufferElement{"v_Texture", EShaderDataType::FVec2, true},
+						BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+						//BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+		};
 
 		for (const FEntityHandle Entity : EntityHandles)
 		{
@@ -104,14 +112,7 @@ namespace KREngine
 
 				int slot = 0;
 				material.Init(slot);
-				/*TODO: extract this function to read the file and return the layout used fo this mesh*/
-				VertexBufferLayout layout{
-								BufferElement{"v_Pos", EShaderDataType::FVec3, true},
-								BufferElement{"v_Texture", EShaderDataType::FVec2, true},
-								BufferElement{"v_Normal", EShaderDataType::FVec3, true},
-								//BufferElement{"v_Normal", EShaderDataType::FVec3, true},
-				};
-
+			
 				/*TODO fetch all the entities with static mesh component
 				 * TODO: Should work for runtime after setting up event system.
 				 */
@@ -142,7 +143,7 @@ namespace KREngine
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-
+		std::vector< glm::mat4> Translations;
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 
 			for (const FEntityHandle Entity : EntityHandles)
@@ -150,7 +151,8 @@ namespace KREngine
 				if (EntityManager::HasComponent<DefaultLitMaterialComponent>(Entity) && EntityManager::HasComponent<FTransformComponent>(Entity) && EntityManager::HasComponent<FStaticMesh>(Entity))
 				{
 					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
-					const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).ModelProjection;
+					const glm::mat4& model_projection = EntityManager::GetComponent<FTransformComponent>(Entity).
+						ModelProjection;
 					FDefaultLitMaterial& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(Entity).Material;
 					std::shared_ptr<FShader>& shader = material.Shader;
 					if (shader)
@@ -161,7 +163,10 @@ namespace KREngine
 
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
-						shader->SetUniform3f("u_LightPos", Light.Location);
+						shader->SetUniform3f("Light.Position", Light.Location);
+						shader->SetUniformF("Light.Constant", Light.Constant);
+						shader->SetUniformF("Light.Linear", Light.Linear);
+						shader->SetUniformF("Light.Quadratic", Light.Quadratic/10000);
 						shader->SetUniform3f("Light.u_LightDirection", Light.Direction);
 						material.SetShininess(Light.Shininess);
 						
@@ -169,15 +174,20 @@ namespace KREngine
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
 						shader->SetUniformF("material.Shininess", 32);
-						
-						static_mesh.VertexArray->BindBuffer();
-						
-						// 3 vertex two triangles.
-						renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
-					//	(glDrawElements(GL_TRIANGLES, , GL_UNSIGNED_INT, nullptr));
-						static_mesh.VertexArray->UnBindBuffer();
-						material.UnBind();
+						Translations.push_back(model_projection);
+					
 					}
+
+					static_mesh.VertexArray->BindBuffer();
+
+					// 3 vertex two triangles.
+					int x = 0;
+
+					//glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount() * 32, &Translations[] GL_UNSIGNED_INT, nullptr);
+					renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+					//	(glDrawElements(GL_TRIANGLES, , GL_UNSIGNED_INT, nullptr));
+					static_mesh.VertexArray->UnBindBuffer();
+					material.UnBind();
 				}
 			}
 		
@@ -195,6 +205,8 @@ namespace KREngine
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##ObjectColor", &Color.r, 0.01, -1, 1), "ObjectColor", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat("##Shininess", &Light.Shininess, 2, 2, 1024), "Shininess", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Direction", &Light.Direction.x), "Direction", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat("##AttenutaionLinear", &Light.Linear, 0.001, 0, 1), "Linear", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat("##AttenutaionQuad", &Light.Quadratic, 1, 0, 10000), "Quad", );
 		ImGui::End();
 		
 	}

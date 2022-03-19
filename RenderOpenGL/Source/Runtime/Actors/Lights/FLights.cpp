@@ -1,50 +1,26 @@
 #include "FLights.h"
 
+#include "GameManager.h"
+#include "ImGUI/imgui.h"
 
 namespace KREngine
 {
-	/*FLight::FLight()
+
+	void FLightSystem::Init()
+	{
+	}
+
+	void FLightSystem::Update()
+	{
+	}
+
+	void FLightSystem::End()
+	{
+	}
+#ifdef GUI
+	void FLightSystem::GUIRun()
 	{
 		
 	}
-
-	FColor& FLight::GetLightColor()
-	{
-		return LightColor;
-	}
-
-	void FLight::SetLightColor(const FColor& lightColor)
-	{
-		LightColor = lightColor;
-	}
-
-	FColor& FLight::GetAmbientColor()
-	{
-		return AmbientColor;
-	}
-
-	void FLight::SetAmbientColor(const FColor& ambientColor)
-	{
-		AmbientColor = ambientColor;
-	}
-
-	FColor FLight::GetShaderColor() const
-	{
-		return LightColor;
-
-		if(bUseAmbientColor)
-		{
-			return FColor( LightColor.r * AmbientStrength, LightColor.g * AmbientStrength, LightColor.b * AmbientStrength,LightColor.a );
-			
-		}
-		else
-		{
-			return LightColor;
-		}
-	}
-
-	void FLight::SetUseAmbientColor(bool value)
-	{
-		bUseAmbientColor = value;
-	}*/
+#endif
 }

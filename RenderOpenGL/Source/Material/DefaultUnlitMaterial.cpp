@@ -69,7 +69,7 @@ namespace KREngine
 
 	void FDefaultUnLitMaterialSystem::Init()
 	{
-		/*REFACTOR: This should go away asap*/
+		FScopedTimer Timer("Default unlit system init");
 
 		for (const FEntityHandle Entity : EntityHandles)
 		{

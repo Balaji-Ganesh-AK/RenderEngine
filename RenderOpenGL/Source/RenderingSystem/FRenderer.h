@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "Buffers.h"
 #include "utility/Defines.h"
 
 
@@ -31,6 +32,8 @@ namespace KREngine
 	struct FRenderData
 	{
 		FRenderSettings Settings;
+		VertexBufferLayout VertexBufferLayout;
+
 		
 	};
 	/*Base render interface class*/
@@ -45,7 +48,7 @@ namespace KREngine
 		/*Submit to the GPU*/
 		/*Bind all the buffers before calling this step*/
 		virtual void Draw(const uint32 indexBufferCount) const =0 ;
-		virtual void DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const = 0 ;
+		virtual void DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const = 0 ;
 
 
 		/*Init*/

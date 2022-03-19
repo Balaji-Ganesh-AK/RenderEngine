@@ -16,6 +16,10 @@
         int u_Light;
         vec3 u_LightDirection;
         vec3 Position;
+
+       	float Constant;
+		float Linear;		
+		float Quadratic;
     };
 
     in vec3 f_Normal;
@@ -24,7 +28,7 @@
 
     uniform vec4 u_LightColor;
     uniform vec4 u_ObjectColor;
-    uniform vec3 u_LightPos;
+  //  uniform vec3 u_LightPos;
     uniform vec3 u_CameraPos;
     
 
@@ -35,8 +39,8 @@
     void main()
     {
         //Attuenation calculation
-        //float distance = length(Light.po)
-    
+        float distance = length(Light.Position - f_FragPos);
+        float attenuation = 1.0/(Light.Constant + Light.Linear * distance + Light.Quadratic* (distance * distance));
            
             //Ambient
             float AmbientStrength =0.1f;
@@ -62,7 +66,7 @@
       
         //    
         
-          vec3 result = ( Ambient +Diffuse+Specular );
+          vec3 result = ( Ambient*attenuation + Diffuse*attenuation + Specular*attenuation );
             //vec3 result = ( Ambient +Diffuse );
 
          //   color = texture( u_Texture, f_Texture ) * vec4( result , 1.0) ;

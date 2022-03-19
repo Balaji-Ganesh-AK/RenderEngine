@@ -17,10 +17,10 @@ namespace KREngine
 		glDrawElements(GL_TRIANGLES, indexBufferCount, GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenGLRenderer::DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const 
+	void OpenGLRenderer::DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const 
 	{
 		
-		glDrawElements(GL_TRIANGLES, indexBufferCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, indexBufferCount * instanceTotalCount, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRenderer::Init()

@@ -10,7 +10,7 @@ namespace KREngine
 		OpenGLRenderer();
 		~OpenGLRenderer() {};
 		void Draw( const uint32 indexBufferCount) const override;
-		void DrawIndexed( const uint32 indexBufferCount, uint32_t instanceID) const override;
+		void DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const override;
 		void Init() override;
 		void ClearColor() override;
 		void SetClearColor(FColor color) override;

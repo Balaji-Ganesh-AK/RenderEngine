@@ -13,39 +13,36 @@ namespace KREngine
 		float Shininess = 1.0f;
 		bool bUseAmbientColor{ false };
 		/*Can be moved out of this*/
-		FVector Location{0.0f,0.0f,0.0f};
+		FVector Location{0.0f,-100.0f,0.0f};
 		FVector Direction{0.2f,-1.0f,-0.3f};
+		/*For attenuation, needs refactoring*/
+		/*
+		 * Formula
+		 * att = 1.0/ C + L * D + Q * D * D
+		 *
+		 *D = Distance.
+		 */
+		/*Constant C*/
+		float Constant = 1.0;
+		/*Linear L*/
+		float Linear = 0.09f;
+		/*Quadratic Q*/
+		float Quadratic = 0.032f;
+
 	};
 
 	class FLightSystem: public FSystem
 	{
 
 	public:
-		//void Init();
-		//void Update();
-		//void End();
+		void Init();
+		void Update();
+		void End();
 
-	//private:
-	//	FColor LightColor{ 1.0f,1.0f,1.0f,1.0f };
-	//	FColor AmbientColor;
-	//	float AmbientStrength =0.1f;
-	//	bool bUseAmbientColor{ false };
-
-	//public:
-	//	FLight();
-	//	FColor& GetLightColor();
-	//	void SetLightColor( const FColor& lightColor );
+#ifdef GUI
+		void GUIRun();
+#endif
 
 
-	//	FColor& GetAmbientColor();
-	//	void SetAmbientColor( const FColor& ambientColor );
-
-	//	/*Gets the value for the shader, total color value*/
-	//	FColor GetShaderColor() const;
-
-	//	/*Whether to use ambient color for this light source*/
-	//	void SetUseAmbientColor( bool value );
-	//	bool GetUseAmbientColor() { return bUseAmbientColor; }
-	//	
 	};
 }

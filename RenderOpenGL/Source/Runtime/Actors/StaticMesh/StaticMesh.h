@@ -20,6 +20,9 @@ namespace KREngine
 		FIndexBuffer* IndexBufferData= nullptr;
 		FVertexArray* VertexArray=nullptr;
 
+	
+		uint32 MaxInstances = 10000;
+
 		uint32 Indices [3 * 4 * 3] = {
 			/**Front*/		0,1,2,
 			/**Front*/		2,3,0,
