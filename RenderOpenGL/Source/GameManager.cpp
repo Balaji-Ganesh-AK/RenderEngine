@@ -461,6 +461,8 @@ namespace KREngine
 		EntityManager::RegisterComponent<DefaultLitMaterialComponent>();
 		EntityManager::RegisterComponent<DefaultUnLitMaterialComponent>();
 		EntityManager::RegisterComponent<FStaticMesh>();
+		EntityManager::RegisterComponent<FPointLight>();
+		
 
 		//EntityManager::RegisterSystem<FStaticMeshSystem>();
 		//StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
@@ -515,8 +517,9 @@ namespace KREngine
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
 			UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
-
-			EntityManager::SetSystemComponents<FDefaultLitMaterialSystem>(UID);
+			ComponentUID OUID;
+			OUID.set(EntityManager::GetComponentType<FPointLight>());
+			EntityManager::SetSystemComponents<FDefaultLitMaterialSystem>(UID, OUID);
 		}
 		
 		{

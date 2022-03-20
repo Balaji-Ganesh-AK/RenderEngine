@@ -23,7 +23,8 @@ namespace KREngine
 		entity = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-1");
 		entity->AddComponent(FTransformComponent{});
 		entity->AddComponent(FStaticMesh{});
-		entity->AddComponent(DefaultUnLitMaterialComponent{});
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
 		//entity->AddComponent(DefaultUnLitMaterialComponent{});
 		
 		

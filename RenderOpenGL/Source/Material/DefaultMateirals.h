@@ -15,11 +15,11 @@ namespace KREngine
 	class FDefaultLitMaterial : public IMaterial
 	{
 	private:
-		float Shininess = { 32.0f };
+		float Shininess = {2.0f };
 
-		FVector Ambient{ 1.0f,0.5f,0.3f };
-		FVector Diffuse{ 0.1f,0.1f,0.1f };
-		FVector Specular{ 0.5f,0.5f,0.3f };
+		//FVector Ambient{ 1.0f,0.5f,0.3f };
+		//FVector Diffuse{ 0.1f,0.1f,0.1f };
+		//FVector Specular{ 0.5f,0.5f,0.3f };
 
 	public:
 		FDefaultLitMaterial();
@@ -48,11 +48,6 @@ namespace KREngine
 
 		float& GetShininess();
 
-		FVector& GetAmbient();
-
-		FVector& GetDiffuse();
-
-		FVector& GetSpecular();
 
 		void SetShininess(float shininess)
 		{
@@ -79,9 +74,13 @@ namespace KREngine
 
 	private:
 		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
-		FLight Light;
+		FPointLight Light;
+		FDirectionalLight DirectionalLight;
 		float test = 0.0;
 		std::shared_ptr<FFrameBuffer> Framebuffer;
+
+		bool PointLight = false;
+		bool bHasDirectionalLight = false;
 	};
 
 }

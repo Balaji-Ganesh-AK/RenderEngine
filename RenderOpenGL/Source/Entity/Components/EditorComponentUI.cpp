@@ -68,7 +68,7 @@ namespace KREngine
 								if (ImGui::Selectable(textureName.c_str(), is_selected))
 								{
 									CurrentDisplayedTexture = textureName;
-									material.TexturePathToTextureMap["material.u_Texture"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
+									material.TexturePathToTextureMap["material.Diffuse"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
 								}
 								if (is_selected)
 								{
