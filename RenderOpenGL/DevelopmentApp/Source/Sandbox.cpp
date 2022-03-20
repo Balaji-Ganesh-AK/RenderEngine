@@ -35,7 +35,7 @@ namespace KREngine
 		//entity1->AddComponent(DefaultUnLitMaterialComponent{});
 
 
-		for(int i = 0; i < 320; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			std::string name = "Test light boi-" ;
 			name += std::to_string(i);

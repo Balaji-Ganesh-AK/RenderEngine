@@ -20,6 +20,9 @@
        	float Constant;
 		float Linear;		
 		float Quadratic;
+
+        float CutOff;
+        float OuterCutOff;
     };
 
     in vec3 f_Normal;
@@ -41,16 +44,25 @@
         //Attuenation calculation
         float distance = length(Light.Position - f_FragPos);
         float attenuation = 1.0/(Light.Constant + Light.Linear * distance + Light.Quadratic* (distance * distance));
-           
-            //Ambient
-            float AmbientStrength =0.1f;
-            //vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *AmbientStrength * vec3( texture( material.Diffuse, f_Texture ) );
-            vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *AmbientStrength;
+        vec3 LightDir = normalize(Light.Position - f_FragPos);
+        float theta = dot(LightDir, normalize(-Light.u_LightDirection));
+        float epsilon = Light.CutOff - Light.OuterCutOff;
+        float intensity = clamp((theta - Light.OuterCutOff)/ epsilon, 0.0, 1.0);
+
+          //Ambient
+          float AmbientStrength =0.1f;
+          //vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *AmbientStrength * vec3( texture( material.Diffuse, f_Texture ) );
+           vec3 Ambient = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) *AmbientStrength;
+
+      //   if(theta > Light.CutOff)
+         //{
+   
+       
 //            //Diffuse
 //           
              vec3 Norm = normalize( f_Normal );
 //
-            vec3 LightDir = normalize(Light.u_LightDirection );
+          //  vec3 LightDir = normalize(Light.u_LightDirection );
 
             float DiffuseStrength = max( dot( Norm, LightDir ),0.0 );
              vec3 Diffuse = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * ( DiffuseStrength);
@@ -66,14 +78,19 @@
       
         //    
         
-          vec3 result = ( Ambient*attenuation + Diffuse*attenuation + Specular*attenuation );
+          vec3 result = ( Ambient*attenuation + Diffuse*attenuation *intensity + Specular*attenuation *intensity );
+        //  vec3 result = ( Ambient*attenuation + Diffuse*attenuation *intensity + Specular*attenuation *intensity );
             //vec3 result = ( Ambient +Diffuse );
 
          //   color = texture( u_Texture, f_Texture ) * vec4( result , 1.0) ;
            //  color =  vec4( result , 1.0) ;
            color = texture( u_Texture, f_Texture ) * vec4( result , 1.0) * ( u_ObjectColor );
            // color =  vec4( result , 1.0)/* * ( u_ObjectColor )*/;
-        
+//              }
+//              else
+//              {
+//                color = texture( u_Texture, f_Texture )* vec4(Ambient, 1.0 );
+//              }
         
     }
 

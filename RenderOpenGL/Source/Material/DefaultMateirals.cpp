@@ -163,17 +163,20 @@ namespace KREngine
 
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
-						shader->SetUniform3f("Light.Position", Light.Location);
+						//shader->SetUniform3f("Light.Position", Light.Location);
+						shader->SetUniform3f("Light.Position", FVector::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniformF("Light.Constant", Light.Constant);
 						shader->SetUniformF("Light.Linear", Light.Linear);
 						shader->SetUniformF("Light.Quadratic", Light.Quadratic/10000);
-						shader->SetUniform3f("Light.u_LightDirection", Light.Direction);
+						shader->SetUniform3f("Light.u_LightDirection", FVector::AsVec3(mainCamera.CameraFront));
+						shader->SetUniformF("Light.OuterCutOff", glm::cos(glm::radians(12.5f)));
+						shader->SetUniformF("Light.CutOff", glm::cos(glm::radians(8.5f)));
 						material.SetShininess(Light.Shininess);
 						
 						shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						shader->SetUniform4f("u_LightColor", vec4(Light.LightColor.r, Light.LightColor.g, Light.LightColor.b, Light.LightColor.a));
-						shader->SetUniformF("material.Shininess", 32);
+						shader->SetUniformF("material.Shininess", material.GetShininess());
 						Translations.push_back(model_projection);
 					
 					}
