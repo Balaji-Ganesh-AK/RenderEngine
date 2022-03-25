@@ -84,7 +84,7 @@ namespace KREngine
 		Style->GrabMinSize = 5.0f;
 		Style->GrabRounding = 3.0f;
 
-
+		//Dont use
 		if (0)
 		{
 			Style->Colors[ImGuiCol_Text] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
@@ -133,6 +133,7 @@ namespace KREngine
 			//Style->Colors [ImGuiCol_TooltipBg] = ImVec4( 1.00f, 1.00f, 1.00f, 0.94f );
 			// Style->Colors [ImGuiCol_ModalWindowDarkening] = ImVec4( 0.20f, 0.20f, 0.20f, 0.35f );
 		}
+		//GOOD
 		if (1)
 		{
 			auto& colors = ImGui::GetStyle().Colors;
@@ -564,22 +565,9 @@ namespace KREngine
 
 		{
 			SCOPED_TIMER("Engine Loop");
-#if GUI
-#endif		 
-
-
 			EditorTagSystem->Run();
 			CameraSystem->Run();
-
-			/*Shader update loop*/
-			//DefaultShaderSystem->Run(CameraSystem->GetMainCamera());
-			//DefaultLitShaderSystem->Run(CameraSystem->GetMainCamera());
-
-			/*Rendering system update loop*/
 			RenderingSystem->Run(CameraSystem->GetMainCamera());
-
-			
-
 		}
 		{
 			SCOPED_TIMER("Game Loop");

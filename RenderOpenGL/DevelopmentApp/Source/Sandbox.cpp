@@ -25,20 +25,19 @@ namespace KREngine
 		entity->AddComponent(FStaticMesh{});
 		entity->AddComponent(FPointLight{});
 		entity->AddComponent(DefaultLitMaterialComponent{});
-		//entity->AddComponent(DefaultUnLitMaterialComponent{});
+		
 		
 		
 
 		entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});
 		entity1->AddComponent(FStaticMesh{});
-		entity1->AddComponent(DefaultLitMaterialComponent{});
-		//entity1->AddComponent(DefaultUnLitMaterialComponent{});
+		entity1->AddComponent(DefaultUnLitMaterialComponent{});
 
 
-		for(int i = 0; i < 100; i++)
+		for(int i = 3; i < 100; i++)
 		{
-			std::string name = "Test light boi-" ;
+			std::string name = "Static-Mesh--" ;
 			name += std::to_string(i);
 			auto temp = new FEntity(EntityManager::CreateEntity(), name);
 			FTransform Temp;

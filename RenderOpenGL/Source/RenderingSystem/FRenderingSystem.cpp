@@ -275,7 +275,7 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 		Framebuffer->BindBuffer();
 #endif
 		Renderer->ClearColor();
-		int32 DrawCallCount{ 0 };
+
 
 
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;

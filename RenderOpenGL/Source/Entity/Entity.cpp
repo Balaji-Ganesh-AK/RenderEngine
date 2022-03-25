@@ -106,13 +106,13 @@ namespace KREngine
 	FEntity::FEntity(const FEntityHandle& handle,const std::string name): EntityHandle(handle)
 	{
 
-		std::string tempName = name;
+		std::string entity_with_count = name;
 		/*Adding a default name for all the entity*/
 		if(name.empty())
 		{
-			tempName = "Entity_" + std::to_string(EntityManager::EntityCount());
+			entity_with_count = "Entity_" + std::to_string(EntityManager::EntityCount());
 		}
-		EntityManager::AddComponent(handle, FName{ tempName });
+		EntityManager::AddComponent(handle, FName{ name });
 	}
 
 	FEntity::~FEntity()

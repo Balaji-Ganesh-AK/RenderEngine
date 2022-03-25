@@ -156,7 +156,7 @@
            
          vec3 LightDir = normalize(-DirectionalLight.Direction);
          float DiffuseStrength = max( dot( Normal, LightDir ),0.0 );
-    //     vec3 Diffuse = vec3( u_LightColor.x, u_LightColor.y, u_LightColor.z ) * ( DiffuseStrength);
+   
          vec3 Diffuse = (DirectionalLight.Diffuse) * ( DiffuseStrength) * vec3(texture(material.Diffuse, f_Texture));
    
 
@@ -169,40 +169,32 @@
             float SpecularStrength = pow( max( dot( ViewDirection, ReflectDir ), 0.0 ), 0.0f );
 
            vec3 Specular = DirectionalLight.Specular *( SpecularStrength  ) * vec3(texture(material.Specular, f_Texture));
-           //vec3 Result = Ambient+ Diffuse+ Specular ;
+          
           return (Ambient+ Diffuse+ Specular);
 
     }
 
      vec3 CalulatePointLight(FPointLight PointLight, vec3 Normal, vec3 ViewDirection, FMaterial material, vec3 FragPosition)
-     {  
-     
+     {        
+        vec3 LightDir = normalize(PointLight.Position - FragPosition);
+        float DiffuseStrength = max( dot( Normal, LightDir ),0.0 );
        
-       vec3 LightDir = normalize(PointLight.Position - FragPosition);
-         float DiffuseStrength = max( dot( Normal, LightDir ),0.0 );
-       
-         vec3 Diffuse = (PointLight.Diffuse) * ( DiffuseStrength) * vec3(texture(material.Diffuse, f_Texture));
-//    
-//
-//         float AmbientStrength =0.1f;
-//
-         vec3 Ambient = PointLight.Ambient * vec3(texture(material.Diffuse, f_Texture));
-//         // Specular 
-//    
-            vec3 ReflectDir = reflect( -LightDir, Normal );
-            float SpecularStrength = pow( max( dot( ViewDirection, ReflectDir ), 0.0 ), 0.0f );
-//
-           vec3 Specular = PointLight.Specular *( SpecularStrength  ) * vec3(texture(material.Specular, f_Texture));
-//
-//           //Attuenation calculation
-        float Distance = length(PointLight.Position - FragPosition);
+        vec3 Diffuse = (PointLight.Diffuse) * ( DiffuseStrength) * vec3(texture(material.Diffuse, f_Texture));
+        vec3 Ambient = PointLight.Ambient * vec3(texture(material.Diffuse, f_Texture));
+       // Specular 
+   
+       vec3 ReflectDir = reflect( -LightDir, Normal );
+       float SpecularStrength = pow( max( dot( ViewDirection, ReflectDir ), 0.0 ), 0.0f );
+
+       vec3 Specular = PointLight.Specular *( SpecularStrength  ) * vec3(texture(material.Specular, f_Texture));
+
+       //Attuenation calculation
+       float Distance = length(PointLight.Position - FragPosition);
        float Attenuation = 1.0/(PointLight.Constant + PointLight.Linear * Distance + PointLight.Quadratic* (Distance * Distance));
        Ambient *=Attenuation;
        Diffuse *=Attenuation;
        Specular *=Attenuation;
            
         return (Diffuse+Ambient+Specular);
-//        vec3 Test;
-//        return Test;
      }
 ##Shader End

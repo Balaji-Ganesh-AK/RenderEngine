@@ -22,6 +22,12 @@ namespace KREngine
 		if ( EntityManager::EntityCount() > 0)
 		{
 
+			/*Needs to go when we have mouse picking.*/
+			IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", &tempID), "Entity ID", );
+			CurrentSelectedEntity = tempID;
+
+
+
 			if (EntityManager::HasComponent<FName>(CurrentSelectedEntity))
 			{
 				if (ImGui::CollapsingHeader("Entity Name"))

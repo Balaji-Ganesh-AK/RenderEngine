@@ -218,7 +218,7 @@ namespace KREngine
 
 	void FDefaultLitMaterialSystem::GUIRun()
 	{
-		ImGui::Begin("TESTING MENU");
+		ImGui::Begin("Light MENU");
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Ambient Color", &DirectionalLight.AmbientColor.r, 0.1, -1, 1), "Ambient Color", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Diffuse Color", &DirectionalLight.DiffuseColor.r, 0.1, -1, 1), "Diffuse Color", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Specular Color", &DirectionalLight.SpecularColor.r, 0.1, -1, 1), "Specular Color", );

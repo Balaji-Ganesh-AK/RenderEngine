@@ -14,6 +14,7 @@ namespace KREngine
 
 	private:
 		FEntityHandle CurrentSelectedEntity {0};
+		int tempID = 0;
 		std::string CurrentDisplayedTexture;
 	};
 }
