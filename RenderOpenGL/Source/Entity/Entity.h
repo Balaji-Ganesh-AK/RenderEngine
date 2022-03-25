@@ -6,6 +6,7 @@
 
 #include "utility/Pch.h"
 #include <map>
+#include <queue>
 
 
 namespace KREngine

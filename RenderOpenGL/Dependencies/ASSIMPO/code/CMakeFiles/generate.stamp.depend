@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.18/Modules/FindPackageMessage.cmake
+E:/Personal Projects/RenderEngine/RenderOpenGL/Dependencies/ASSIMPO/cmake-modules/FindRT.cmake
+E:/Personal Projects/RenderEngine/RenderOpenGL/Dependencies/ASSIMPO/code/CMakeLists.txt

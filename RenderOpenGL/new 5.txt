@@ -26,3 +26,15 @@ glfw3.lib;opengl32.lib;%(AdditionalDependencies)
 $(SolutionDir)bin\$(Configuration)\$(Platform)\$(ProjectName)\
 
 $(SolutionDir)\Intermediate\
+
+
+
+E:\Personal Projects\RenderEngine\RenderOpenGL\bin\Debug\x64\RenderOpenGL;%(AdditionalLibraryDirectories)
+
+
+$(SolutionDir)\
+externalproject "Assimp"
+			location "$(SolutionDir)Dependencies/ASSIMPO/"	
+			uuid "57940020-8E99-AEB6-271F-61E0F7F6B73B"
+			kind "StaticLib"
+			language "C++"

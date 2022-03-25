@@ -42,8 +42,13 @@ project "RenderOpenGL"
 	removefiles { "**/foo.h", "**/CMakeCXXCompilerId.cpp" }
 	links
 	{		
-			"$(SolutionDir)Dependencies/GLFW/lib-vc2019/glfw3"
+			"$(SolutionDir)Dependencies/GLFW/lib-vc2019/glfw3",
+			"$(SolutionDir)Dependencies/ASSIMPO/lib/Release/assimp-vc142-mt"
+			-- "$(SolutionDir)Dependencies/ASSIMPO/lib/Debug/assimp-vc142-mt"
+			
 	}
+	
+
 	
 	includedirs 
 	{
@@ -52,12 +57,15 @@ project "RenderOpenGL"
 		"$(SolutionDir)/Dependencies/",
 		"$(SolutionDir)/Dependencies/GLFW/include",
 		"$(SolutionDir)/Dependencies/glad",
+		"$(SolutionDir)/Dependencies/ASSIMPO/include",
 		"$(SolutionDir)/Source/",
 		"$(SolutionDir)/../"
+		
 	}
-	
+
+			
 	filter "system:windows"
-		cppdialect "C++17"
+		cppdialect "C++20"
 		systemversion "latest"
 		
 		defines
@@ -98,7 +106,10 @@ project "RenderOpenGL"
 				"msvcmrt.lib"
 			}
 			optimize "On"
-
+			
+	
+	
+	
 project "DevelopmentApp"
 	location "DevelopmentApp"
 	kind "ConsoleApp"
@@ -133,7 +144,7 @@ project "DevelopmentApp"
 		"$(SolutionDir)/../"
 	}
 	filter "system:windows"
-		cppdialect "C++17"
+		cppdialect "C++20"
 		systemversion "latest"
 		
 		defines
