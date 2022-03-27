@@ -24,6 +24,7 @@ namespace KREngine
 		entity->AddComponent(FTransformComponent{});
 		entity->AddComponent(FStaticMesh{});
 		entity->AddComponent(FPointLight{});
+		
 		entity->AddComponent(DefaultLitMaterialComponent{});
 		
 		

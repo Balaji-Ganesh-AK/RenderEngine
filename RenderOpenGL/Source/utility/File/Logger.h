@@ -18,7 +18,8 @@ namespace KREngine
 
 		static void Verbose(const char* format, ...);
 		static void Loader( const char* format, ... );
-		static void Error( const char* format, ... );
+		static void Error(const char* format, ...);
+	//	static void Warning( const char* format, ... );
 		static void Fatal( const char* format, ... );
 		~Logger();
 	private:

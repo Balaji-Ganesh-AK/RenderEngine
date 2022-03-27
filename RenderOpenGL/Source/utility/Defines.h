@@ -23,6 +23,7 @@ typedef int64_t int64;
 
 
 #define DefaultTexturePath "../Content/Textures"
+#define DefaultAssetPath "../Content/Assets"
 #define DefaultShaderFolderPath "../Content/Shaders"
 #define DefaultCompliedShaderFolderPath "/Binaries/Shaders"
 

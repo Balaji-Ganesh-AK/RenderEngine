@@ -14,7 +14,7 @@
 #include "Runtime/Camera/FCamera.h"
 #include "RenderingSystem/FRenderer.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
-
+ 
 
 using namespace KREngine;
 
@@ -283,8 +283,8 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 
 		if (mainCamera.bMainCamera)
 		{
-			DefaultLitShaderSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
+			DefaultLitShaderSystem->Run(mainCamera, Renderer);
 		}
 		else
 		{

@@ -11,6 +11,7 @@ namespace KREngine
 #define COLOR_VERBOSE ( FOREGROUND_INTENSITY )
 #define COLOR_ERROR ( FOREGROUND_RED | FOREGROUND_INTENSITY )
 #define COLOR_FATAL ( FOREGROUND_RED | FOREGROUND_INTENSITY )
+#define COLOR_WARNING ( FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY )
 #define COLOR_LOADING ( FOREGROUND_GREEN | FOREGROUND_INTENSITY )
 
 	
@@ -26,6 +27,20 @@ namespace KREngine
 
 
 	}
+
+
+	/*void Logger::Warning(const char* format, ...)
+	{
+#ifdef LOGGING
+		Get().UpdateTextColor(COLOR_WARNING);
+		va_list Arguments;
+		va_start(Arguments, format);
+		Get().Print(format, Arguments);
+		va_end(Arguments);
+#endif
+
+
+	}*/
 
 
 	void Logger::Loader(const char* format, ...)

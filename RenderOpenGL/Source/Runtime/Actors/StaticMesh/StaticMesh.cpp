@@ -1,15 +1,26 @@
 #include "StaticMesh.h"
 
+#include "GameManager.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
 #include "RenderingSystem/Buffers.h"
+#include "Systems/AssetSystem/AssetSystem.h"
+
 namespace KREngine
 {
+	FStaticMesh::FStaticMesh()
+	{
+		Model = FApplication::GetAssetManager().GetModel("Default");
+	}
+
+	FStaticMesh::FStaticMesh(const std::string& Name)
+	{
+		Model = FApplication::GetAssetManager().GetModel(Name);
+	}
 
 	void FStaticMeshSystem::Init()
 	{
-
-
+	
 		
 	}
 
@@ -40,6 +51,7 @@ namespace KREngine
 	{
 	
 	}
+
 #endif
 
 	void FStaticMeshSystem::LoadMesh()

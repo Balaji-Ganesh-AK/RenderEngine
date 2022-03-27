@@ -11,6 +11,7 @@
 
 namespace KREngine
 {
+	class FAssetManager;
 	class FTransformSystem;
 	class FDefaultUnLitMaterialSystem;
 	class FDefaultLitMaterialSystem;
@@ -70,6 +71,10 @@ namespace KREngine
 		{
 			return *Get().ShaderManager;
 		}
+		static FAssetManager& GetAssetManager()
+		{
+			return *Get().AssetManager;
+		}
 	private:
 		
 		static FApplication* Instance;
@@ -99,6 +104,7 @@ namespace KREngine
 		std::shared_ptr<FInput> Input;
 		std::unique_ptr<FTextureManager> TextureManager;
 		std::unique_ptr<FShaderManager> ShaderManager;
+		std::unique_ptr<FAssetManager> AssetManager;
 
 
 		bool bShowDebugProfiler{ false };

@@ -10,6 +10,7 @@
 #include "RenderingSystem/Buffers.h"
 #include "RenderingSystem/FRenderer.h"
 #include "RenderingSystem/Textures.h"
+#include "Systems/AssetSystem/AssetSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
 
 
@@ -40,6 +41,8 @@ namespace KREngine
 
 		Shader->UnBindShader();
 
+
+		
 	}
 
 
@@ -105,13 +108,53 @@ namespace KREngine
 				auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 
 					static_mesh.VertexArray = FVertexArray::Create();
+
+				/*Check if we vertex pos count tex cord count and normal count matches, if not mark the component and don't draw it */
+				if(static_mesh.Model->VertexPosition.size() == static_mesh.Model->TexCord.size() && static_mesh.Model->VertexPosition.size() == static_mesh.Model->Normal.size())
+				{
+					for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
+					{
+
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPosition[i].x);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPosition[i].y);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPosition[i].z);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->TexCord[i].x);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->TexCord[i].y);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->Normal[i].x);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->Normal[i].y);
+						static_mesh.VertexBuffer.push_back(static_mesh.Model->Normal[i].z);
+
+					}
+
+				}
+				else
+				{
+					Logger::Error("Mesh does not look good, please check the mesh! ");
+					for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
+					{
+
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+						static_mesh.VertexBuffer.push_back(0);
+
+					}
+				}
+					
+			
+
 					//static_mesh.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float)));
 					//static_mesh.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int)));
-					static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float));
-					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int));
+				static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.VertexBuffer.data(), static_mesh.VertexBuffer.size());
+				static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Model->Indices, sizeof(static_mesh.Model->Indices) / sizeof(unsigned int));
 
 					static_mesh.VertexArray->SetLayOut(layout);
 					static_mesh.VertexArray->BindBufferLayout();
+				
 					static_mesh.VertexArray->UnBindBuffer();
 					material.UnBind();
 				
@@ -193,19 +236,14 @@ namespace KREngine
 						
 						
 						Translations.push_back(model_projection);
-					
+						static_mesh.VertexArray->BindBuffer();
+						// 3 vertex two triangles.
+						renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+						//(glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), GL_UNSIGNED_INT, nullptr));
+						static_mesh.VertexArray->UnBindBuffer();
+						material.UnBind();
 					}
-
-					static_mesh.VertexArray->BindBuffer();
-
-					// 3 vertex two triangles.
-					int x = 0;
-
-					//glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount() * 32, &Translations[] GL_UNSIGNED_INT, nullptr);
-					renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
-					//	(glDrawElements(GL_TRIANGLES, , GL_UNSIGNED_INT, nullptr));
-					static_mesh.VertexArray->UnBindBuffer();
-					material.UnBind();
+				
 				}
 			}
 		

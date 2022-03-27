@@ -14,6 +14,7 @@
 #include "Runtime/Camera/FCamera.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
+#include "Systems/AssetSystem/AssetSystem.h"
 #include "Systems/Input/Input.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
@@ -448,6 +449,8 @@ namespace KREngine
 			TextureManager->Init();
 			ShaderManager.reset(FShaderManager::Create());
 			ShaderManager->Init();
+			AssetManager.reset(FAssetManager::Create());
+			AssetManager->Init();
 		}
 
 		Input.reset(FInput::Create(WindowWindow.get()));

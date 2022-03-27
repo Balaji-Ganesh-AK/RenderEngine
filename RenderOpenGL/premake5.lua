@@ -35,6 +35,8 @@ project "RenderOpenGL"
 		"Dependencies/KHR/**.h",
 		"Dependencies/GLFW/lib-vc2019/**.lib",
 		"Dependencies/GLFW/include/**.h",
+		"Dependencies/FBX/lib-vc2019/**.lib",
+		"Dependencies/FBX/include/**.h",
 		"Content/**.GLSL",
 		"Config/**.ini",
 		"**.md"
@@ -43,8 +45,8 @@ project "RenderOpenGL"
 	links
 	{		
 			"$(SolutionDir)Dependencies/GLFW/lib-vc2019/glfw3",
-			"$(SolutionDir)Dependencies/ASSIMPO/lib/Release/assimp-vc142-mt"
-			-- "$(SolutionDir)Dependencies/ASSIMPO/lib/Debug/assimp-vc142-mt"
+			
+			--"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/release/libfbxsdk-md",
 			
 	}
 	
@@ -54,10 +56,11 @@ project "RenderOpenGL"
 	{
 		"$(SolutionDir)/Dependencies/glm",
 		"$(SolutionDir)/Dependencies/GLFW/lib-vc2019/",
+		"$(SolutionDir)/Dependencies/FBX/lib/vs2019/x64/release/",
+		"$(SolutionDir)/Dependencies/FBX/include",
 		"$(SolutionDir)/Dependencies/",
 		"$(SolutionDir)/Dependencies/GLFW/include",
 		"$(SolutionDir)/Dependencies/glad",
-		"$(SolutionDir)/Dependencies/ASSIMPO/include",
 		"$(SolutionDir)/Source/",
 		"$(SolutionDir)/../"
 		
@@ -85,7 +88,11 @@ project "RenderOpenGL"
 			}
 			links
 			{
-				"opengl32.lib"
+				"opengl32.lib",
+			"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/debug/libfbxsdk-md",
+			"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/debug/libxml2-md",
+			"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/debug/zlib-md"
+			
 			}
 			symbols "on"
 		filter "configurations:Release"
@@ -103,7 +110,10 @@ project "RenderOpenGL"
 			{
 				"opengl32.lib",
 				"msvcrt.lib",
-				"msvcmrt.lib"
+				"msvcmrt.lib",
+				"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/release/libfbxsdk-md",
+			"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/release/libxml2-md",
+			"$(SolutionDir)Dependencies/FBX/lib/vs2019/x64/release/zlib-md"
 			}
 			optimize "On"
 			
@@ -120,13 +130,13 @@ project "DevelopmentApp"
 	
 	links
 	{	
-		"RenderOpenGL"
-		
+		"RenderOpenGL",
+	
 	}
 	
 	libdirs 
 	{
-		"$(SolutionDir)bin/$(Configuration)/$(Platform)/RenderOpenGL"
+		"$(SolutionDir)bin/$(Configuration)/$(Platform)/RenderOpenGL",
 	}
 	files
 	{
@@ -140,6 +150,7 @@ project "DevelopmentApp"
 		"../Source/",
 		"$(SolutionDir)/Source/",
 		"$(SolutionDir)/Dependencies/GLFW/include",
+		"$(SolutionDir)/Dependencies/FBX/include",
 		"$(SolutionDir)/Dependencies/glad",
 		"$(SolutionDir)/../"
 	}

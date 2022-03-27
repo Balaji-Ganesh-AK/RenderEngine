@@ -11,6 +11,7 @@
 #include "RenderingSystem/Buffers.h"
 #include "RenderingSystem/FRenderer.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
+#include "Systems/AssetSystem/AssetSystem.h"
 
 namespace KREngine
 {
@@ -90,21 +91,20 @@ namespace KREngine
 				/*TODO fetch all the entities with static mesh component
 				 * TODO: Should work for runtime after setting up event system.
 				 */
-				for (const FEntityHandle& entity : EntityHandles)
-				{
-					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(entity);
+				
+					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 
 					static_mesh.VertexArray = FVertexArray::Create();
 					//static_mesh.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float)));
 					//static_mesh.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int)));
-					static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float));
-					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int));
+					static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.VertexBuffer.data(), static_mesh.VertexBuffer.size());
+					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Model->Indices, sizeof(static_mesh.Model->Indices) / sizeof(unsigned int));
 
 					static_mesh.VertexArray->SetLayOut(layout);
 					static_mesh.VertexArray->BindBufferLayout();
 					static_mesh.VertexArray->UnBindBuffer();
 					material.UnBind();
-				}
+				
 			}
 		}
 	
