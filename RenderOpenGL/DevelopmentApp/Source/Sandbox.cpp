@@ -24,7 +24,6 @@ namespace KREngine
 		entity->AddComponent(FTransformComponent{});
 		entity->AddComponent(FStaticMesh{});
 		entity->AddComponent(FPointLight{});
-		
 		entity->AddComponent(DefaultLitMaterialComponent{});
 		
 		
@@ -32,11 +31,11 @@ namespace KREngine
 
 		entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});
-		entity1->AddComponent(FStaticMesh{});
-		entity1->AddComponent(DefaultUnLitMaterialComponent{});
+		entity1->AddComponent(FStaticMesh{ });
+		entity1->AddComponent(DefaultLitMaterialComponent{});
 
 
-		for(int i = 3; i < 100; i++)
+		/*for(int i = 3; i < 100; i++)
 		{
 			std::string name = "Static-Mesh--" ;
 			name += std::to_string(i);
@@ -50,7 +49,7 @@ namespace KREngine
 			temp->AddComponent(FTransformComponent{ Temp });
 			temp->AddComponent(FStaticMesh{});
 			temp->AddComponent(DefaultLitMaterialComponent{});
-		}
+		}*/
 
 		CameraEntity = new FEntity(EntityManager::CreateEntity(), "Camera");
 		CameraEntity->AddComponent(FCamera{true});

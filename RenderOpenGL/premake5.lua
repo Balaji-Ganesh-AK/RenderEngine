@@ -25,6 +25,8 @@ project "RenderOpenGL"
 		"Content/**.png",
 		"Content/**.jpg",
 		"Glad/**.c",
+		"Dependencies/rapidjson/**.h",
+		"Dependencies/rapidjson/**.cpp",
 		"Dependencies/ImGUI/**.h",
 		"Dependencies/ImGUI/**.cpp",
 		"Dependencies/glm/glm/**.hpp",

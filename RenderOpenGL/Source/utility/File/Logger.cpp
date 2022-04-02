@@ -29,7 +29,7 @@ namespace KREngine
 	}
 
 
-	/*void Logger::Warning(const char* format, ...)
+	void Logger::Warning(const char* format, ...)
 	{
 #ifdef LOGGING
 		Get().UpdateTextColor(COLOR_WARNING);
@@ -40,7 +40,7 @@ namespace KREngine
 #endif
 
 
-	}*/
+	}
 
 
 	void Logger::Loader(const char* format, ...)

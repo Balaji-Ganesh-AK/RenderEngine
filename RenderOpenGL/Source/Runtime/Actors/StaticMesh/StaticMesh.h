@@ -36,7 +36,7 @@ namespace KREngine
 
 
 
-//			0.0f,0.0f,0.0f,0.0f, 0.0f,		0.0f,0.0f,-1.0f,
+//0.0f,0.0f,0.0f,           0.0f, 0.0f,		0.0f,0.0f,-1.0f,
 //1.0f,0.0f,0.0f,			1.0f, 0.0f,		0.0f,0.0f,-1.0f,
 //1.0f,1.0f,0.0f,			1.0f, 1.0f,		0.0f,0.0f,-1.0f,
 //0.0f,1.0f,0.0f,			0.0f, 1.0f,		0.0f,0.0f,-1.0f,
@@ -68,12 +68,12 @@ namespace KREngine
 
 		};
 	private:
-			void InitVertexArray(const VertexBufferLayout& vertex_buffer)
+			/*void InitVertexArray(const VertexBufferLayout& vertex_buffer)
 			{
 				VertexBuffer.reserve(vertex_buffer.GetStride());
 
 			
-			}
+			}*/
 
 		
 
