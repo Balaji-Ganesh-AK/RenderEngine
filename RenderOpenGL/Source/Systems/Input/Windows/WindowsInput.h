@@ -1,4 +1,6 @@
 #pragma once
+#include <bitset>
+
 #include "Systems/Input/Input.h"
 
 namespace KREngine

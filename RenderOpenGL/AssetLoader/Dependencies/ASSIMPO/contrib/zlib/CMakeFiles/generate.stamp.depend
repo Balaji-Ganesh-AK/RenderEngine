@@ -1,0 +1,9 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.18/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.18/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.18/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.18/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-3.18/Modules/CheckTypeSize.cmake
+E:/Personal Projects/RenderEngine/RenderOpenGL/AssetLoader/Dependencies/ASSIMPO/contrib/zlib/CMakeLists.txt
+E:/Personal Projects/RenderEngine/RenderOpenGL/AssetLoader/Dependencies/ASSIMPO/contrib/zlib/zconf.h.cmakein
+E:/Personal Projects/RenderEngine/RenderOpenGL/AssetLoader/Dependencies/ASSIMPO/contrib/zlib/zlib.pc.cmakein

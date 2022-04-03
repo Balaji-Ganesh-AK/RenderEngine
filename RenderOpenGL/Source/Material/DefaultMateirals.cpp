@@ -12,7 +12,7 @@
 #include "RenderingSystem/Textures.h"
 #include "Systems/AssetSystem/AssetSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
-
+#include <glm/glm.hpp>
 
 namespace KREngine
 {
@@ -262,9 +262,9 @@ namespace KREngine
 						
 						
 						shader->SetUniformF("material.Shininess", material.GetShininess());
-						shader->SetUniform3f("CameraPosition", FVector::AsVec3(mainCamera.CameraPosition));
+						shader->SetUniform3f("CameraPosition", VectorHelper::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform3f("CameraFront",vec3(-mainCamera.CameraFront.x, -mainCamera.CameraFront.y, -mainCamera.CameraFront.z));
-						shader->SetUniform3f("u_CameraPos", FVector::AsVec3(mainCamera.CameraPosition));
+						shader->SetUniform3f("u_CameraPos", VectorHelper::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 
 

@@ -1,5 +1,6 @@
 #pragma once
-#include "Math/Vec2.h"
+
+#include "RenderOpenGL/Utility/Source/Math/Vec2.h"
 #include "utility/InputCodes.h"
 
 

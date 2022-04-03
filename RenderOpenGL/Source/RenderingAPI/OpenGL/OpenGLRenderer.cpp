@@ -3,6 +3,7 @@
 
 #include "Math/Color.h"
 #include "RenderingSystem/Buffers.h"
+#include "RenderOpenGL/Utility/Source/Math/Color.h"
 
 
 namespace KREngine

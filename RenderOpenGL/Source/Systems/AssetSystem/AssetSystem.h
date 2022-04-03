@@ -7,7 +7,7 @@
 #include "fbxsdk/scene/geometry/fbxnode.h"
 
 #include "Math/Vec3.h"
-#include "utility/Defines.h"
+
 
 
 
@@ -22,23 +22,24 @@ namespace KREngine
 	struct FModel
 	{
 		uint32 Indices[3 * 4 * 3] = {
+
 			/**Front*/		 0, 1, 3,
-			/**Front*/		3,1,0,
+			/**Front*/		3, 1, 2,
 
-			///**Back*/		 1, 5, 2,
-			///**Back*/		2, 5, 6,
+			/**Back*/		 1, 5, 2,
+			/**Back*/		2, 5, 6,
 
-			///**SideRight*/		 5, 4, 6,
-			///**SideRight*/		6, 4, 7,
+			/**SideRight*/		 5, 4, 6,
+			/**SideRight*/		6, 4, 7,
 
-			///**SideLeft*/		 4, 0, 7, 
-			///**SideLeft*/		7, 0, 3,
+			/**SideLeft*/		 4, 0, 7, 
+			/**SideLeft*/		7, 0, 3,
 
-			///**UP*/				  3, 2, 7,
-			///**UP*/				 7, 2, 6,
+			/**UP*/				  3, 2, 7,
+			/**UP*/				 7, 2, 6,
 
-			///**DOWN*/			 4, 5, 0,
-			///**DOWN*/			 0, 5, 1
+			/**DOWN*/			 4, 5, 0,
+			/**DOWN*/			 0, 5, 1
 		};
 
 		
@@ -46,32 +47,38 @@ namespace KREngine
 		std::vector<uint32> TexIndices
 		{
 			0,1,2,
-			2,3,1
+
+			3,1,2,
+			 //0, 1, 2,
+				//2, 3, 0,
+
+
 		};
 
 		std::vector<uint32> IndexPositions{
+
 			/**Front*/		 0, 1, 2,
-			/**Front*/		2,3,0,
+			/**Front*/		2, 3, 0,
 
-			/**Back*/		  0, 1, 2,
-			/**Back*/		2,3,0,
+			/**Back*/		 1, 5, 2,
+			/**Back*/		2, 5, 6,
 
-			/**SideRight*/		  0, 1, 2,
-			/**SideRight*/		2,3,0,
+			/**SideRight*/		 5, 4, 6,
+			/**SideRight*/		6, 4, 7,
 
-			/**SideLeft*/		  0, 1, 2,
-			/**SideLeft*/		2,3,0,
+			/**SideLeft*/		 4, 0, 7,
+			/**SideLeft*/		7, 0, 3,
 
-			/**UP*/				   0, 1, 2,
-			/**UP*/				 2,3,0,
+			/**UP*/				  3, 2, 7,
+			/**UP*/				 7, 2, 6,
 
-			/**DOWN*/			 0, 1, 2,
-			/**DOWN*/			2,3,0
-
+			/**DOWN*/			 4, 5, 0,
+			/**DOWN*/			 0, 5, 1
 		};
 
 		std::vector<FVector> VertexPosition =
 		{
+
 
 			{0.0f,0.0f,0.0f},
 			{1.0f,0.0f,0.0f},
@@ -81,7 +88,16 @@ namespace KREngine
 			{0.0f,0.0f,1.0f},
 			{1.0f,0.0f,1.0f},
 			{1.0f,1.0f,1.0f},
-			{0.0f,1.0f,1.0f}
+			{0.0f,1.0f,1.0f},
+
+		/*	{-1, -1, -1},
+			{1, -1, -1},
+			{1, 1, -1},
+			{-1, 1, -1},
+			{-1, -1, 1},
+			{1, -1, 1},
+			{1, 1, 1},
+			{-1, 1, 1}*/
 
 			//{-1, -1, -1}, //0
 			//{1, -1, -1}, //1
@@ -178,10 +194,10 @@ namespace KREngine
 		{
 
 
-			{0.625000, 0.750000},
-			{0.375000, 0.750000},
-			{0.625000, 0.500000},
-			{0.125000, 0.500000},
+			{0,0},
+			{1,0},
+			{1, 1},
+			{0, 1},
 
 
 		/*	{0.0f, 0.0f},

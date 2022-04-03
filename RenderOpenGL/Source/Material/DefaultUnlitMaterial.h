@@ -9,7 +9,7 @@
 #include "RenderingSystem/Shader.h"
 #include "Runtime/Actors/Lights/FLights.h"
 #include "Runtime/Camera/FCamera.h"
-#include "utility/Defines.h"
+
 
 namespace KREngine
 {

@@ -1,5 +1,6 @@
 #pragma once
 #include "../../RenderingSystem/WindowsWindow.h"
+#include "RenderOpenGL/Utility/Source/Defines.h"
 
 class OpenGLWindow
 {

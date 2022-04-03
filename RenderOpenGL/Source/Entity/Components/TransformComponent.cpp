@@ -27,11 +27,11 @@ namespace KREngine
 				FTransform& transform = EntityManager::GetComponent<FTransformComponent>(entity).Transform;
 				auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entity).ModelProjection;
 				model_projection = glm::mat4(1.0f);
-				model_projection = glm::translate(model_projection, transform.GetLocation().AsGLMVec3());
+				model_projection = glm::translate(model_projection, VectorHelper::AsGLMVec3(transform.GetLocation()));
 				model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 				model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 				model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-				model_projection = glm::scale(model_projection, transform.GetScale().AsGLMVec3());
+				model_projection = glm::scale(model_projection, VectorHelper::AsGLMVec3(transform.GetScale()));
 			}
 		}
 	}

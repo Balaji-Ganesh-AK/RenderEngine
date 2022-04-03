@@ -12,6 +12,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+// ReSharper disable All
 #ifndef RAPIDJSON_IEEE754_
 #define RAPIDJSON_IEEE754_
 
@@ -22,7 +23,7 @@ namespace internal {
 
 class Double {
 public:
-    Double() {}
+    Double() {}  
     Double(double d) : d_(d) {}
     Double(uint64_t u) : u_(u) {}
 
@@ -35,7 +36,7 @@ public:
     }
 
     bool Sign() const { return (u_ & kSignMask) != 0; }
-    uint64_t Significand() const { return u_ & kSignificandMask; }
+    uint64_t Significand() const { return u_ & kSignificandMask; }  // NOLINT(modernize-use-nodiscard)
     int Exponent() const { return static_cast<int>(((u_ & kExponentMask) >> kSignificandSize) - kExponentBias); }
 
     bool IsNan() const { return (u_ & kExponentMask) == kExponentMask && Significand() != 0; }

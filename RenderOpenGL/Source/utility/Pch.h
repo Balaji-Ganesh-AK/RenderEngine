@@ -25,8 +25,8 @@
 
 
 
-#include "utility/Defines.h"
-#include "utility/File/Logger.h"
+
+#include "RenderOpenGL/Utility/Source/Logger.h"
 #include "utility/LogTimer.h"
 #include "../utility/Enums.h"
 
@@ -38,11 +38,11 @@
 
 
 /*======================================Custom Utility=====================*/
-#include "Math/Vec4.h"
-#include "Math/Color.h"
+#include "RenderOpenGL/Utility/Source/Math/Vec4.h"
+#include "RenderOpenGL/Utility/Source/Math/Color.h"
+#include "RenderOpenGL/Utility/Source/Math/Vec3.h"
+#include "RenderOpenGL/Utility/Source/Math/Vec2.h"
 
-#include "Math/Vec3.h"
-#include "Math/Vec2.h"
 //#include "Systems/Input/Input.h"
 //
 //

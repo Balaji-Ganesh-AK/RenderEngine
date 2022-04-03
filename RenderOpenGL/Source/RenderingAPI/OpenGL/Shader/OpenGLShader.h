@@ -1,4 +1,5 @@
 #pragma once
+#include "glm/fwd.hpp"
 #include "RenderingSystem/Shader.h"
 
 namespace KREngine

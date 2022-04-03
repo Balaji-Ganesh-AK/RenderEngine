@@ -1,6 +1,5 @@
 #pragma once
 #include "RenderingSystem/Shader.h"
-#include "utility/Defines.h"
 #include "utility/CommonInclude.h"
 #include "utility/Enums.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "RenderingSystem/Buffers.h"
-
+#include "RenderOpenGL/Utility/Source/Defines.h"
 
 
 namespace KREngine

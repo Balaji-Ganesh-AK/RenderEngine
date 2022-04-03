@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include "utility/Defines.h"
 #include "utility/KRELogger.h"
 #include "utility/LogTimer.h"
 #include "utility/Enums.h"

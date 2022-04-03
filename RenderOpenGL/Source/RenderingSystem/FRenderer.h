@@ -2,7 +2,8 @@
 #include <memory>
 
 #include "Buffers.h"
-#include "utility/Defines.h"
+#include "RenderOpenGL/Utility/Source/Defines.h"
+
 
 
 namespace KREngine

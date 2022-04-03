@@ -3,6 +3,12 @@
 #include "fbxsdk/fileio/fbximporter.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "utility/File/Logger.h"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
+
+
 
 namespace KREngine
 {
@@ -77,6 +83,23 @@ namespace KREngine
 
 	void FAssetManager::LoadAssets(const std::string path)
 	{
+		const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
+		rapidjson::Document d;
+		d.Parse(json);
+
+		rapidjson::Value& s = d["stars"];
+		s.SetInt(s.GetInt() + 1);
+
+		// 3. Stringify the DOM
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		d.Accept(writer);
+
+
+
+		Logger::Verbose("Testing %s", buffer.GetString());
+
+
 		std::filesystem::path TestModel = "../Content/Models/Test.fbx";
 		
 		const std::string Name = "Default";

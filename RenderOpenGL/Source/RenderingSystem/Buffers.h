@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 #include <vector>
-
+#include "../Utility/Source/Defines.h"
 #include "glad.h"
 #include "glm/fwd.hpp"
-#include "utility/Defines.h"
+
 
 
 namespace KREngine

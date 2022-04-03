@@ -1,5 +1,5 @@
 #pragma once
-#include "Defines.h"
+#include "../Utility/Source/Defines.h"
 
 enum class ERenderingAPI:
 	uint8
