@@ -1,4 +1,6 @@
 #include "Vec3.h"
+#include "../../../Dependencies/rapidjson/stringbuffer.h"
+#include "../../../Dependencies/rapidjson/writer.h"
 
 
 
@@ -206,6 +208,29 @@ namespace KREngine
 	{
 		return x * other.x + y * other.y + z * other.z;
 	}
+
+	
+
+	void vec3::Serialize(rapidjson::Writer<rapidjson::StringBuffer> stringwriter)
+	{
+		stringwriter.Key("VertexPosition");
+		stringwriter.String("Hello");
+		//stringwriter.StartArray();
+		//stringwriter.Double(x);
+		//stringwriter.Double(y);
+		//stringwriter.Double(z);
+		//stringwriter.EndArray();
+	//	stringwriter.StartObject();
+	///*	stringwriter.SetMaxDecimalPlaces(10);
+	//	stringwriter.Double(x);
+	//	stringwriter.Double(y);
+	//	stringwriter.Double(z);*/
+	//	stringwriter.EndObject();
+
+	}
+		
+
+	
 
 	//glm::vec3 vec3::AsGLMVec3() const
 	//{

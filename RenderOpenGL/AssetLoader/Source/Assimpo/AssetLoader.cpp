@@ -12,7 +12,9 @@
 //#include "Math/Vec3.h"
 #include "../Utility/Source/Defines.h"
 //#include "Math/Vec3.h"
+#include "RenderOpenGL/Dependencies/rapidjson/prettywriter.h"
 #include "RenderOpenGL/Utility/Source/Logger.h"
+#include "RenderOpenGL/Utility/Source/Math/Vec3.h"
 #include "utility/Parameters.h"
 
 
@@ -54,21 +56,7 @@ private:
 			}
 
 		std::cout << "Testing!";
-		const char* json = "{\"project\":\"rapidjson\",\"stars\":10}";
-		rapidjson::Document d;
-		d.Parse(json);
-		// ...
-		rapidjson::Value& s = d["stars"];
-		s.SetInt(s.GetInt() + 1);
-		FILE* fp = fopen("../Content/output.json", "wb"); // non-Windows use "w"
-
-		char writeBuffer[65536];
-		rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
-
-		rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-		d.Accept(writer);
-
-		fclose(fp);
+		
 		return 0;
 	}
 
@@ -126,11 +114,66 @@ void FLoader::ProcessNode(aiNode* node, const aiScene* scene)
 }
 void FLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
+    std::vector<KREngine::FVector> vertex_position;
     for (uint32 i = 0; i < mesh->mNumVertices; i++)
     {
         KREngine::Logger::Verbose("Vertex {%f, %f, %f}, ", mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-      
+        vertex_position.push_back({ mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
     }
+
+    KREngine::FVector a{1,1,1};
+    rapidjson::StringBuffer s;
+    rapidjson::Writer<rapidjson::StringBuffer> stringwriter(s);
+    stringwriter.StartObject();
+    stringwriter.Key("Name");
+    stringwriter.String(mesh->mName.C_Str());
+  
+    a.Serialize(std::move(stringwriter));
+ 
+    //stringwriter.StartArray();
+    //a.Serialize(std::move(stringwriter));
+    //stringwriter.EndArray();
+
+
+
+    //const char* json = "{ \"name\":\"\",\"VertexPosition\":[[]]}";
+    const char* json = s.GetString();
+    rapidjson::Document d;
+    d.Parse(json);
+   // for (int i =0 ; i < vertex_position.size(); i ++)
+    {
+        
+        
+      /*  allocator.SetObject();
+        rapidjson::Value v;
+        
+       v[0][0].SetDouble(Vertex.x);
+        v[0][1].SetDouble(Vertex.y);
+        v[0][2].SetDouble(Vertex.z);*/
+
+   /*     d["VertexPosition"][0][3].SetDouble(Vertex.x);
+        d["VertexPosition"][0][4].SetDouble(Vertex.y);
+        d["VertexPosition"][0][5].SetDouble(Vertex.z);*/
+    }
+  
+
+    
+    
+    // ...
+    //rapidjson::Value& s = d["stars"];
+    //s.SetInt(s.GetInt() + 1);
+    FILE* fp = fopen("../Content/output.staticmesh", "wb"); // non-Windows use "w"
+
+    char writeBuffer[65536];
+    rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+
+   // rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+    rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
+    d.Accept(writer);
+
+    fclose(fp);
+
+
     // data to fill
     //std::vector<KREngine::FVector> vertices;
     //vector<unsigned int> indices;
