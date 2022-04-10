@@ -1,6 +1,9 @@
 #pragma once
 #include <ostream>
+#include "../Defines.h"
 #include "../../../Dependencies/rapidjson/fwd.h"
+#include "../../../Dependencies/nlohmann/json.hpp"
+
 
 
 namespace  KREngine
@@ -83,11 +86,33 @@ namespace  KREngine
 		//
 		//static vec3  AsVec3(const glm::vec3& other);
 
+
+	
+		
 		friend std::ostream& operator<<( std::ostream& stream, const vec3& other );
-		void Serialize(rapidjson::Writer<rapidjson::GenericStringBuffer<rapidjson::UTF8<char>, rapidjson::CrtAllocator>, rapidjson::UTF8<
-			char>, rapidjson::UTF8<char>, rapidjson::CrtAllocator, 0> stringwriter);
+		template <typename Writer>
+		void Serialize(Writer& writer) const
+		{
+//			writer.StartObject();
+//			//writer.Key("VertexPosition");
+//			writer.String("Hello");
+//	//stringwriter.StartArray();
+//	//stringwriter.Double(x);
+//	//stringwriter.Double(y);
+//	//stringwriter.Double(z);
+//	//stringwriter.EndArray();
+////	stringwriter.StartObject();
+/////*	stringwriter.SetMaxDecimalPlaces(10);
+////	stringwriter.Double(x);
+////	stringwriter.Double(y);
+////	stringwriter.Double(z);*/
+////	stringwriter.EndObject();
+//			writer.EndObject();
+		}
 	};
 
 	typedef KREngine::vec3 FVector;
 	typedef KREngine::vec3 FRotation;
+
+	
 }

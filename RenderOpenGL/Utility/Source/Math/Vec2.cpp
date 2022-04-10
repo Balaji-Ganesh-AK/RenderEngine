@@ -7,10 +7,8 @@ namespace KREngine
 		x = 0;
 		y = 0;
 	}
-	Vec2::Vec2( const float& x, const float& y )
+	Vec2::Vec2( const float& x, const float& y ):  x(x), y(y)
 	{
-		this->x = x;
-		this->y = y;
 	}
 	Vec2& Vec2::Random( const float& other )
 	{
@@ -97,6 +95,7 @@ namespace KREngine
 	Vec2::~Vec2()
 	{
 	}
+
 
 	Vec2 Vec2::zero()
 	{

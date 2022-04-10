@@ -20,19 +20,38 @@ namespace KREngine
 
 	void TestGame::Init()
 	{
-		entity = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-1");
+		entity = new FEntity(EntityManager::CreateEntity(), "Knife");
 		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{});
+		entity->AddComponent(FStaticMesh{"Knife"});
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		entity = new FEntity(EntityManager::CreateEntity(), "MushRoom");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Mushroom" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+
+		entity = new FEntity(EntityManager::CreateEntity(), "TwoMeshTest");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "TwoMeshTest" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		entity = new FEntity(EntityManager::CreateEntity(), "backpack");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "backpack" });
 		entity->AddComponent(FPointLight{});
 		entity->AddComponent(DefaultLitMaterialComponent{});
 		
 		
 		
 
-		entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
+	/*	entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});
 		entity1->AddComponent(FStaticMesh{ });
-		entity1->AddComponent(DefaultLitMaterialComponent{});
+		entity1->AddComponent(DefaultLitMaterialComponent{});*/
 
 
 		/*for(int i = 3; i < 100; i++)

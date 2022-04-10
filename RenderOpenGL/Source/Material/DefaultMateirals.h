@@ -31,7 +31,7 @@ namespace KREngine
 		std::shared_ptr<FShader> Shader;
 
 
-		std::string DiffuseTexture = "DiffuseWoodCrate.png";
+		std::string DiffuseTexture = "DefaultTexture.png";
 		std::string SpecularTexture = "SpecularCrate.png";
 	
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultLitVertexShader.GLSL";

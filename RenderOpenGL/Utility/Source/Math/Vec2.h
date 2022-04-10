@@ -11,6 +11,7 @@ namespace KREngine
 		float x, y;
 		Vec2();
 		~Vec2();
+
 		//int x, y;
 		//operations
 		//vec2(const float & x, const float & y);

@@ -4,16 +4,18 @@
 #include "assimp/Importer.hpp"
 #include "assimp/scene.h"
 #include "assimp/postprocess.h"
-#include "../rapidjson/document.h"
-#include "../rapidjson/writer.h"
-#include "../rapidjson/stringbuffer.h"
-#include "../rapidjson/filewritestream.h"
-#include "../rapidjson/writer.h"
+
 //#include "Math/Vec3.h"
 #include "../Utility/Source/Defines.h"
 //#include "Math/Vec3.h"
-#include "RenderOpenGL/Dependencies/rapidjson/prettywriter.h"
+#include <fstream>
+
+#include "MeshLoader.h"
 #include "RenderOpenGL/Utility/Source/Logger.h"
+#include "RenderOpenGL/Utility/Source/File/FileHelper.h"
+#include "RenderOpenGL/Utility/Source/File/FJson.h"
+#include "RenderOpenGL/Utility/Source/Math/FMath.h"
+#include "RenderOpenGL/Utility/Source/Math/Vec2.h"
 #include "RenderOpenGL/Utility/Source/Math/Vec3.h"
 #include "utility/Parameters.h"
 
@@ -24,6 +26,7 @@
  * \brief Default Object path
  */
 #define DEFAULT_OBj_PATH "../Content/Models"
+#define DEFAULT_OUTPUT_PATH   "../Content/"
 
 
 class FLoader
@@ -36,21 +39,28 @@ public:
     void LoadAllOBJ();
 
     void LoadFBX(const std::string& path);
+    void LoadOBJ(std::filesystem::path::iterator::reference path);
 private:
-    void ProcessMesh(aiMesh* mesh, const aiScene* scene);
-    void ProcessNode(aiNode* node, const aiScene* scene);
+    void ProcessMesh(aiMesh* mesh, const aiScene* scene, KREngine::FMeshLoader &loader);
+    void ProcessNode(aiNode* node, const aiScene* scene, KREngine::FMeshLoader& loader);
+
+    void ProcessScene(aiNode* node, const aiScene* scene , const std::string& filename);
 };
 	int main(int argumentCount, char* arguments[])
 	{
-		KREngine::FParameters Test(argumentCount, arguments);
-        FLoader Loader;
+		KREngine::FParameters parameters(argumentCount, arguments);
+        FLoader loader;
 			switch (
-				Test.CurrentCommand)
+				parameters.CurrentCommand)
 			{
 			case KREngine::ECommand::LoadFBX:
-                Loader.LoadAllFBX();
-                KREngine::Logger::Verbose("Loading Fbx files"); break;
-			case KREngine::ECommand::LoadOBJ: break;
+                loader.LoadAllFBX();
+                KREngine::Logger::Verbose("Loading Fbx files");
+				break;
+			case KREngine::ECommand::LoadOBJ:
+                KREngine::Logger::Verbose("Loading OBJ files");
+                loader.LoadAllOBJ();
+				break;
 			default:
 				std::cout << "Error";
 			}
@@ -64,196 +74,146 @@ private:
 
 	void FLoader::LoadAllFBX()
 	{
-		for (const std::filesystem::directory_entry& obj_path : std::filesystem::recursive_directory_iterator(DEFAULT_OBj_PATH))
-		{
-			if (obj_path.path().extension().compare( ".obj")  == 0 )
-			{
-				LoadFBX(obj_path.path().generic_string());
-			}
-		}
+		
 	}
    
 	void FLoader::LoadAllOBJ()
 	{
+        for (const std::filesystem::directory_entry& obj_path : std::filesystem::recursive_directory_iterator(DEFAULT_OBj_PATH))
+        {
+            if (obj_path.path().extension().compare(".obj") == 0)
+            {
+	         
+                LoadOBJ(obj_path.path());
+            }
+        }
 	}
 
 void FLoader::LoadFBX(const std::string& path)
 {
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
-	if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	{
-		//TODO: Replace here
-        KREngine::Logger::Error("Loading FBX failed with the following error: ", importer.GetErrorString());
-		return;
-	}
-	std::string directory = path.substr(0,path.find_last_not_of("/"));
-
-    ProcessNode(scene->mRootNode, scene);
+	
 
 
 
 }
-void FLoader::ProcessNode(aiNode* node, const aiScene* scene)
+
+void FLoader::LoadOBJ(std::filesystem::path::iterator::reference path)
 {
-	// process each mesh located at the current node
-	for (uint32 i = 0; i < node->mNumMeshes; i++)
-	{
-		// the node object only contains indices to index the actual objects in the scene. 
-		// the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        ProcessMesh(mesh, scene);
-	}
-	// after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-	for (uint32 i = 0; i < node->mNumChildren; i++)
-	{
-        ProcessNode(node->mChildren[i], scene);
-	}
+    const std::string& file_path = path.generic_string();
+
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(file_path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        //TODO: Replace here
+        KREngine::Logger::Error("Loading OBJ failed with the following error: ", importer.GetErrorString());
+        return;
+    }
+    const std::string& file_name = path.stem().generic_string();
+    KREngine::FMeshLoader Loader;
+   
+    Loader.FileName = file_name;
+    ProcessNode(scene->mRootNode, scene, Loader);
+
+    std::string tes = DEFAULT_OUTPUT_PATH;
+    std::string tesa = Loader.FileName;
+    tes = tes + tesa + ".staticmesh";
+    std::ofstream files_ofstream(tes);
+
+    FJson j;
+    j["Name"] = Loader.FileName.c_str();
+
+    j["VertexPosition"] = KREngine::FJsonHelper::ToJson(Loader.VertexPositions);
+    j["Normal"] = KREngine::FJsonHelper::ToJson(Loader.VertexNormals);
+    j["TexCord"] = KREngine::FJsonHelper::ToJson(Loader.TextureCords);
+    j["Indices"] = KREngine::FJsonHelper::ToJson(Loader.Indices);
+    j["MeshCount"] = FJson{ Loader.MeshCount };
+
+    files_ofstream << j.dump(2);
+}
+
+void FLoader::ProcessNode(aiNode* node, const aiScene* scene, KREngine::FMeshLoader& loader)
+{
+  
+    // process each mesh located at the current node
+    for (uint32 i = 0; i < node->mNumMeshes; i++)
+    {
+        // the node object only contains indices to index the actual objects in the scene. 
+        // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
+        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        loader.MeshCount++;
+        if(loader.MeshCount > 1)
+			loader.Offset = loader.Indices[loader.Indices.size()-1] + 1 ;
+        KREngine::Logger::Warning("Name %s count %d:", mesh->mName.C_Str(), loader.MeshCount);
+        ProcessMesh(mesh, scene, loader);
+    }
+    // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
+    for (uint32 i = 0; i < node->mNumChildren; i++)
+    {
+        
+        ProcessNode(node->mChildren[i], scene, loader);
+    }
+ 
 
 }
-void FLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+
+
+
+void FLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene, KREngine::FMeshLoader& loader)
 {
-    std::vector<KREngine::FVector> vertex_position;
+    
+
+    /* Get all the vertex*/
     for (uint32 i = 0; i < mesh->mNumVertices; i++)
     {
-        KREngine::Logger::Verbose("Vertex {%f, %f, %f}, ", mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-        vertex_position.push_back({ mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z });
+      //  KREngine::Logger::Verbose("Vertex {%f, %f, %f}, ", mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+        loader.VertexPositions.emplace_back(mesh->mVertices[i].x);
+        loader.VertexPositions.emplace_back(mesh->mVertices[i].y);
+        loader.VertexPositions.emplace_back(mesh->mVertices[i].z);
+
+
+        if (mesh->HasNormals())
+        {
+        	//KREngine::Logger::Verbose("Normals {%f, %f, %f}, ", mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+            loader.VertexNormals.emplace_back(mesh->mNormals[i].x);
+            loader.VertexNormals.emplace_back(mesh->mNormals[i].y);
+            loader.VertexNormals.emplace_back(mesh->mNormals[i].z);
+            
+        }
+
+        /*Reading only the first UV. Later we can support multiple uv maps*/
+        if (mesh->mTextureCoords[0])
+        {
+			//KREngine::Logger::Verbose("Tex {%f, %f, %f}, ", mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y, mesh->mTextureCoords[0][i].z);
+            loader.TextureCords.emplace_back(mesh->mTextureCoords[0][i].x);
+            loader.TextureCords.emplace_back(mesh->mTextureCoords[0][i].y);
+        }
+        //Push back empty?
+        else
+        {
+            loader.TextureCords.emplace_back(0);
+            loader.TextureCords.emplace_back(0);
+        }
     }
 
-    KREngine::FVector a{1,1,1};
-    rapidjson::StringBuffer s;
-    rapidjson::Writer<rapidjson::StringBuffer> stringwriter(s);
-    stringwriter.StartObject();
-    stringwriter.Key("Name");
-    stringwriter.String(mesh->mName.C_Str());
-  
-    a.Serialize(std::move(stringwriter));
- 
-    //stringwriter.StartArray();
-    //a.Serialize(std::move(stringwriter));
-    //stringwriter.EndArray();
-
-
-
-    //const char* json = "{ \"name\":\"\",\"VertexPosition\":[[]]}";
-    const char* json = s.GetString();
-    rapidjson::Document d;
-    d.Parse(json);
-   // for (int i =0 ; i < vertex_position.size(); i ++)
+    //Now Run through each face and get the index;
+    for (uint64 i =0; i < mesh->mNumFaces;i++)
     {
-        
-        
-      /*  allocator.SetObject();
-        rapidjson::Value v;
-        
-       v[0][0].SetDouble(Vertex.x);
-        v[0][1].SetDouble(Vertex.y);
-        v[0][2].SetDouble(Vertex.z);*/
-
-   /*     d["VertexPosition"][0][3].SetDouble(Vertex.x);
-        d["VertexPosition"][0][4].SetDouble(Vertex.y);
-        d["VertexPosition"][0][5].SetDouble(Vertex.z);*/
+        aiFace face = mesh->mFaces[i];
+        for(uint64 j=0; j < face.mNumIndices; j++)
+        {
+          
+            loader.Indices.push_back(face.mIndices[j] + loader.Offset);
+        }
     }
+
   
 
-    
-    
-    // ...
-    //rapidjson::Value& s = d["stars"];
-    //s.SetInt(s.GetInt() + 1);
-    FILE* fp = fopen("../Content/output.staticmesh", "wb"); // non-Windows use "w"
 
-    char writeBuffer[65536];
-    rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+ 
+  
 
-   // rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
-    rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
-    d.Accept(writer);
-
-    fclose(fp);
-
-
-    // data to fill
-    //std::vector<KREngine::FVector> vertices;
-    //vector<unsigned int> indices;
-    //vector<Texture> textures;
-
-    //// walk through each of the mesh's vertices
-    //for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    //{
-    //    Vertex vertex;
-    //    glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-    //    // positions
-    //    vector.x = mesh->mVertices[i].x;
-    //    vector.y = mesh->mVertices[i].y;
-    //    vector.z = mesh->mVertices[i].z;
-    //    vertex.Position = vector;
-    //    // normals
-    //    if (mesh->HasNormals())
-    //    {
-    //        vector.x = mesh->mNormals[i].x;
-    //        vector.y = mesh->mNormals[i].y;
-    //        vector.z = mesh->mNormals[i].z;
-    //        vertex.Normal = vector;
-    //    }
-    //    // texture coordinates
-    //    if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-    //    {
-    //        glm::vec2 vec;
-    //        // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-    //        // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-    //        vec.x = mesh->mTextureCoords[0][i].x;
-    //        vec.y = mesh->mTextureCoords[0][i].y;
-    //        vertex.TexCoords = vec;
-    //        // tangent
-    //        vector.x = mesh->mTangents[i].x;
-    //        vector.y = mesh->mTangents[i].y;
-    //        vector.z = mesh->mTangents[i].z;
-    //        vertex.Tangent = vector;
-    //        // bitangent
-    //        vector.x = mesh->mBitangents[i].x;
-    //        vector.y = mesh->mBitangents[i].y;
-    //        vector.z = mesh->mBitangents[i].z;
-    //        vertex.Bitangent = vector;
-    //    }
-    //    else
-    //        vertex.TexCoords = glm::vec2(0.0f, 0.0f);
-
-    //    vertices.push_back(vertex);
-    //}
-    //// now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-    //for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    //{
-    //    aiFace face = mesh->mFaces[i];
-    //    // retrieve all indices of the face and store them in the indices vector
-    //    for (unsigned int j = 0; j < face.mNumIndices; j++)
-    //        indices.push_back(face.mIndices[j]);
-    //}
-    //// process materials
-    //aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    //// we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    //// as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-    //// Same applies to other texture as the following list summarizes:
-    //// diffuse: texture_diffuseN
-    //// specular: texture_specularN
-    //// normal: texture_normalN
-
-    //// 1. diffuse maps
-    //vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    //textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    //// 2. specular maps
-    //vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    //textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    //// 3. normal maps
-    //std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    //textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    //// 4. height maps
-    //std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    //textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-    //// return a mesh object created from the extracted mesh data
-    //return Mesh(vertices, indices, textures);
 }
 
 	

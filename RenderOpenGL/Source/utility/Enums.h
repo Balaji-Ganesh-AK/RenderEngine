@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "../Utility/Source/Defines.h"
 
 enum class ERenderingAPI:
@@ -55,3 +57,13 @@ enum class EShaderType : uint8
 	None
 
 };
+
+
+enum class EFileExtension : uint8
+{
+	StaticMesh = 0,
+	UnKnown
+};
+
+std::string FileExtensionToString(EFileExtension extension);
+EFileExtension StringToFileExtension(const std::string& extension);

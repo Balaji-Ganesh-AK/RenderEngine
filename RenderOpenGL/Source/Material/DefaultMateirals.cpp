@@ -130,45 +130,43 @@ namespace KREngine
 					
 
 
-					//Vertex buffer
-					static_mesh.Model->VertexPositionBuffer.clear();
-					static_mesh.Model->VertexPositionBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
-					{
-						
-						static_mesh.Model->VertexPositionBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]];
-						//static_mesh.Model->TextureCordBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->TexCord[static_mesh.Model->IndexPositions[i%3]];
-					}
+					////Vertex buffer
+					//static_mesh.Model->VertexPositionBuffer.clear();
+					//static_mesh.Model->VertexPositionBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
+					//for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
+					//{
+					//	
+					//	static_mesh.Model->VertexPositionBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]];
+					//	//static_mesh.Model->TextureCordBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->TexCord[static_mesh.Model->IndexPositions[i%3]];
+					//}
 				
-					//Tex cord buffer
-					static_mesh.Model->TextureCordBuffer.clear();
-					static_mesh.Model->TextureCordBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					for (int i = 0; i < static_mesh.Model->IndexPositions.size() -1 ; i++)
-					{
+					////Tex cord buffer
+					//static_mesh.Model->TextureCordBuffer.clear();
+					//static_mesh.Model->TextureCordBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
+					//for (int i = 0; i < static_mesh.Model->IndexPositions.size() -1 ; i++)
+					//{
 
-						static_mesh.Model->TextureCordBuffer[i] = static_mesh.Model->TexCord[static_mesh.Model->TexIndices[i % 6 ] % 4];
-						
-					}
+					//	static_mesh.Model->TextureCordBuffer[i] = static_mesh.Model->TexCord[static_mesh.Model->TexIndices[i % 6 ] % 4];
+					//	
+					//}
 
-					//Normal buffer
+					////Normal buffer
 
-					static_mesh.Model->NormalBuffer.clear();
-					static_mesh.Model->NormalBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
-					{
+					//static_mesh.Model->NormalBuffer.clear();
+					//static_mesh.Model->NormalBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
+					//for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
+					//{
 
-						static_mesh.Model->NormalBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i] ];
+					//	static_mesh.Model->NormalBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i] ];
 
-					}
+					//}
 
 				/*Check if we vertex pos count tex cord count and normal count matches, if not mark the component and don't draw it */
-				if(true)
+				if (static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->TextureCordBuffer.size() && static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->NormalBuffer.size())
 				{
 					/*Combine all the buffer to a single buffer object*/
-					for (int i = 0; i < static_mesh.Model->IndexPositions.size(); i++)
+					for (int i = 0; i < static_mesh.Model->VertexPositionBuffer.size(); i++)
 					{
-						
-					
 
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPositionBuffer[i].x);
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPositionBuffer[i].y);

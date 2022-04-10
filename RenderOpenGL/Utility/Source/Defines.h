@@ -14,6 +14,7 @@ typedef int64_t int64;
 
 #define ENGINE_NAME "KREngine"
 #define FORCE_INLINE __forceinline
+#define INLINE __inline
 
 #define DASSERT(x) if(!(x)) __debugbreak();
 
@@ -22,6 +23,7 @@ typedef int64_t int64;
 
 
 #define OBJ_Extension ".obj"
+#define DefaultContentPath "../Content"
 #define DefaultTexturePath "../Content/Textures"
 #define DefaultAssetPath "../Content/Assets"
 #define DefaultShaderFolderPath "../Content/Shaders"
