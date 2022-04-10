@@ -28,14 +28,17 @@ namespace KREngine
 		Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
 		Shader->BindShader();
-		TexturePathToTextureMap.insert({ "material.Diffuse" , FApplication::GetTextureManager().GetTexture(DiffuseTexture) });
+		TextureRenderNameToTextureMap.insert({ "material.Diffuse" , FApplication::GetTextureManager().GetTexture(DiffuseTexture) });
+		TextureRenderNameToTexturePath.insert({ "material.Diffuse" , DiffuseTexture });
 		Shader->SetUniformInt("material.Diffuse", Slot);
 		Slot = Slot + 1;
-		TexturePathToTextureMap.insert({ "material.Specular" , FApplication::GetTextureManager().GetTexture(SpecularTexture) });
+		TextureRenderNameToTextureMap.insert({ "material.Specular" , FApplication::GetTextureManager().GetTexture(SpecularTexture) });
+		TextureRenderNameToTexturePath.insert({ "material.Specular" , SpecularTexture });
 		Shader->SetUniformInt("material.Specular", Slot);
 		Slot = Slot + 1;
 	
-		TexturePathToTextureMap.insert({ "u_Texture" , FApplication::GetTextureManager().GetTexture(u_Texture) });
+		TextureRenderNameToTextureMap.insert({ "u_Texture" , FApplication::GetTextureManager().GetTexture(u_Texture) });
+		TextureRenderNameToTexturePath.insert({ "u_Texture" , u_Texture });
 		Shader->SetUniformInt("u_Texture", Slot);
 		Slot = Slot + 1;
 
@@ -51,7 +54,7 @@ namespace KREngine
 
 		Shader->BindShader();
 
-		for (const auto& texture : TexturePathToTextureMap)
+		for (const auto& texture : TextureRenderNameToTextureMap)
 		{
 			texture.second->BindTexture(Slot);
 			Slot = Slot + 1;

@@ -63,7 +63,7 @@ namespace KREngine
 					if (ImGui::CollapsingHeader("Material Component"))
 					{
 						FDefaultLitMaterial& material = EntityManager::GetComponent<DefaultLitMaterialComponent>(CurrentSelectedEntity).Material;
-						CurrentDisplayedTexture = material.u_Texture;
+						CurrentDisplayedTexture = material.TextureRenderNameToTexturePath["material.Diffuse"];
 						if (ImGui::BeginCombo("##Texture", CurrentDisplayedTexture.c_str()))
 						{
 							std::vector<std::string >TextureNames;
@@ -74,7 +74,8 @@ namespace KREngine
 								if (ImGui::Selectable(textureName.c_str(), is_selected))
 								{
 									CurrentDisplayedTexture = textureName;
-									material.TexturePathToTextureMap["material.Diffuse"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
+									material.TextureRenderNameToTextureMap["material.Diffuse"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
+									material.TextureRenderNameToTexturePath["material.Diffuse"]= CurrentDisplayedTexture;
 								}
 								if (is_selected)
 								{

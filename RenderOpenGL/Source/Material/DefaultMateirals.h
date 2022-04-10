@@ -24,7 +24,8 @@ namespace KREngine
 	public:
 		FDefaultLitMaterial();
 
-		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TexturePathToTextureMap;
+		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TextureRenderNameToTextureMap;
+		std::unordered_map<std::string, std::string> TextureRenderNameToTexturePath;
 		std::string u_Texture = "DefaultTexture.png";
 		/*Used for calling binding functions*/
 		uint32 ShaderID;

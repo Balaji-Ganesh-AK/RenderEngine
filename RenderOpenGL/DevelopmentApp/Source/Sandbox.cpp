@@ -44,6 +44,12 @@ namespace KREngine
 		entity->AddComponent(FStaticMesh{ "backpack" });
 		entity->AddComponent(FPointLight{});
 		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		entity = new FEntity(EntityManager::CreateEntity(), "Gorilla");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Gorilla" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
 		
 		
 		
