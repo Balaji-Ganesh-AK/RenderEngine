@@ -30,6 +30,7 @@ namespace KREngine
 		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_DEPTH_CLAMP);
+	
 		//glFrontFace(GL_CCW);
 		//glEnable(GL_FRONT);
 	}

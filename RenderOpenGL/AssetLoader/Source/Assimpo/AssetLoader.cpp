@@ -40,6 +40,7 @@ public:
 
     void LoadFBX(const std::string& path);
     void LoadOBJ(std::filesystem::path::iterator::reference path);
+    std::vector<std::string>AllowedExtenstion{ ".obj" ,".FBX", ".fbx"};
 private:
     void ProcessMesh(aiMesh* mesh, const aiScene* scene, KREngine::FMeshLoader &loader);
     void ProcessNode(aiNode* node, const aiScene* scene, KREngine::FMeshLoader& loader);
@@ -81,10 +82,13 @@ private:
 	{
         for (const std::filesystem::directory_entry& obj_path : std::filesystem::recursive_directory_iterator(DEFAULT_OBj_PATH))
         {
-            if (obj_path.path().extension().compare(".obj") == 0)
+            for (const std::string& it : AllowedExtenstion)
             {
-	         
-                LoadOBJ(obj_path.path());
+                if (obj_path.path().extension().compare(it) == 0)
+                {
+
+                    LoadOBJ(obj_path.path());
+                }
             }
         }
 	}

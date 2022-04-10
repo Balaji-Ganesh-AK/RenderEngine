@@ -95,10 +95,45 @@ namespace KREngine
 					auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(Entity);
 
 					static_mesh.VertexArray = FVertexArray::Create();
+					if (static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->TextureCordBuffer.size() && static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->NormalBuffer.size())
+					{
+						/*Combine all the buffer to a single buffer object*/
+						for (int i = 0; i < static_mesh.Model->VertexPositionBuffer.size(); i++)
+						{
+
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPositionBuffer[i].x);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPositionBuffer[i].y);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->VertexPositionBuffer[i].z);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->TextureCordBuffer[i].x);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->TextureCordBuffer[i].y);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].x);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].y);
+							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].z);
+
+						}
+
+					}
+					else
+					{
+						Logger::Error("Mesh does not look good, please check the mesh! ");
+						for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
+						{
+
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+							static_mesh.VertexBuffer.push_back(0);
+
+						}
+					}
 					//static_mesh.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float)));
 					//static_mesh.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int)));
 					static_mesh.VertexBufferData = FVertexBuffer::CreateVertexBuffer(static_mesh.VertexBuffer.data(), static_mesh.VertexBuffer.size());
-					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Model->Indices, sizeof(static_mesh.Model->Indices) / sizeof(unsigned int));
+					static_mesh.IndexBufferData = FIndexBuffer::CreateIndexBuffer(static_mesh.Model->IndexPositions.data(), static_mesh.Model->IndexPositions.size());
 
 					static_mesh.VertexArray->SetLayOut(layout);
 					static_mesh.VertexArray->BindBufferLayout();

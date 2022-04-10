@@ -20,39 +20,43 @@ namespace KREngine
 
 	void TestGame::Init()
 	{
-		entity = new FEntity(EntityManager::CreateEntity(), "Knife");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{"Knife"});
-		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		//entity = new FEntity(EntityManager::CreateEntity(), "Knife");
+		//entity->AddComponent(FTransformComponent{});
+		//entity->AddComponent(FStaticMesh{"Knife"});
+		//entity->AddComponent(FPointLight{});
+		//entity->AddComponent(DefaultLitMaterialComponent{});
 
-		entity = new FEntity(EntityManager::CreateEntity(), "MushRoom");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Mushroom" });
-		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		//entity = new FEntity(EntityManager::CreateEntity(), "MushRoom");
+		//entity->AddComponent(FTransformComponent{});
+		//entity->AddComponent(FStaticMesh{ "Mushroom" });
+		//entity->AddComponent(FPointLight{});
+		//entity->AddComponent(DefaultLitMaterialComponent{});
 
 
-		entity = new FEntity(EntityManager::CreateEntity(), "TwoMeshTest");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "TwoMeshTest" });
-		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		//entity = new FEntity(EntityManager::CreateEntity(), "TwoMeshTest");
+		//entity->AddComponent(FTransformComponent{});
+		//entity->AddComponent(FStaticMesh{ "TwoMeshTest" });
+		//entity->AddComponent(FPointLight{});
+		//entity->AddComponent(DefaultLitMaterialComponent{});
 
-		entity = new FEntity(EntityManager::CreateEntity(), "backpack");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "backpack" });
-		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		//entity = new FEntity(EntityManager::CreateEntity(), "backpack");
+		//entity->AddComponent(FTransformComponent{});
+		//entity->AddComponent(FStaticMesh{ "backpack" });
+		//entity->AddComponent(FPointLight{});
+		//entity->AddComponent(DefaultLitMaterialComponent{});
 
-		entity = new FEntity(EntityManager::CreateEntity(), "Gorilla");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Gorilla" });
-		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		//entity = new FEntity(EntityManager::CreateEntity(), "Gorilla");
+		//entity->AddComponent(FTransformComponent{});
+		//entity->AddComponent(FStaticMesh{ "Gorilla" });
+		//entity->AddComponent(FPointLight{});
+		//entity->AddComponent(DefaultLitMaterialComponent{});
 		
 		
-		
+		entity = new FEntity(EntityManager::CreateEntity(), "Rifle");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Knife"});
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultUnLitMaterialComponent{});
 
 	/*	entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});

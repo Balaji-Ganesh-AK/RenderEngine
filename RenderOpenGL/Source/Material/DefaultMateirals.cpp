@@ -113,56 +113,6 @@ namespace KREngine
 					static_mesh.VertexArray = FVertexArray::Create();
 
 
-		
-				/*	static_mesh.VertexBuffer[i * 3 + 0] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]].x;
-					static_mesh.VertexBuffer[i * 3 + 1] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]].y;
-					static_mesh.VertexBuffer[i * 3 + 2] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]].z;*/
-
-
-
-					//static_mesh.VertexBuffer[i * 3 + 3] = (static_mesh.Model->TexCord[static_mesh.Model->IndexPositions[i % 4]].x);
-					//static_mesh.VertexBuffer[i * 3 + 4] = (static_mesh.Model->TexCord[static_mesh.Model->IndexPositions[i % 4]].y);
-
-
-					//static_mesh.VertexBuffer[i * 3 + 5] = (static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i % 6]].x);
-					//static_mesh.VertexBuffer[i * 3 + 6] = (static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i % 6]].y);
-					//static_mesh.VertexBuffer[i * 3 + 7] = (static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i % 6]].z);
-				
-			
-					
-					
-
-
-					////Vertex buffer
-					//static_mesh.Model->VertexPositionBuffer.clear();
-					//static_mesh.Model->VertexPositionBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					//for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
-					//{
-					//	
-					//	static_mesh.Model->VertexPositionBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->VertexPosition[static_mesh.Model->IndexPositions[i]];
-					//	//static_mesh.Model->TextureCordBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->TexCord[static_mesh.Model->IndexPositions[i%3]];
-					//}
-				
-					////Tex cord buffer
-					//static_mesh.Model->TextureCordBuffer.clear();
-					//static_mesh.Model->TextureCordBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					//for (int i = 0; i < static_mesh.Model->IndexPositions.size() -1 ; i++)
-					//{
-
-					//	static_mesh.Model->TextureCordBuffer[i] = static_mesh.Model->TexCord[static_mesh.Model->TexIndices[i % 6 ] % 4];
-					//	
-					//}
-
-					////Normal buffer
-
-					//static_mesh.Model->NormalBuffer.clear();
-					//static_mesh.Model->NormalBuffer.resize(static_mesh.Model->IndexPositions.size(), {});
-					//for (int i = 0; i < static_mesh.Model->IndexPositions.size()-1; i++)
-					//{
-
-					//	static_mesh.Model->NormalBuffer[static_mesh.Model->IndexPositions[i]] = static_mesh.Model->Normal[static_mesh.Model->IndexPositions[i] ];
-
-					//}
 
 				/*Check if we vertex pos count tex cord count and normal count matches, if not mark the component and don't draw it */
 				if (static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->TextureCordBuffer.size() && static_mesh.Model->VertexPositionBuffer.size() == static_mesh.Model->NormalBuffer.size())
@@ -210,7 +160,6 @@ namespace KREngine
 
 					static_mesh.VertexArray->SetLayOut(layout);
 					static_mesh.VertexArray->BindBufferLayout();
-				
 					static_mesh.VertexArray->UnBindBuffer();
 					material.UnBind();
 				
