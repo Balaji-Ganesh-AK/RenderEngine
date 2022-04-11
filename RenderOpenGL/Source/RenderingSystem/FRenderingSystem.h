@@ -6,6 +6,7 @@
 
 namespace KREngine
 {
+	class FShader;
 	class FRenderer;
 	class FTransformSystem;
 	class FDefaultLitMaterialSystem;
@@ -23,14 +24,18 @@ namespace KREngine
 		FRenderingSystem();
 		~FRenderingSystem()= default;
 		void Init();
-		void Run(const FCamera& mainCamera);
+		void Run(const FCamera& mainCamera, uint32 currentSelectedEntity);
 		void Stop();
 
 		void GUIInit();
 		void GUIStop();
 		void GUIRun();
-
-
+		std::shared_ptr<FRenderer> GetRenderer() const
+		{
+			return Renderer;
+		}
+		void OutLine(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer, uint32 currentSelectedEntity) const;
+	
 
 	private:
 		float test = 0.0;
@@ -106,6 +111,10 @@ namespace KREngine
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 
 		std::shared_ptr<FRenderer> Renderer;
+
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";
+		std::shared_ptr<FShader> Shader;
 		//FRenderer* Renderer;
 		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
 	};

@@ -54,9 +54,19 @@ namespace KREngine
 		
 		entity = new FEntity(EntityManager::CreateEntity(), "Rifle");
 		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Knife"});
+		entity->AddComponent(FStaticMesh{ "Rifle"});
 		entity->AddComponent(FPointLight{});
-		entity->AddComponent(DefaultUnLitMaterialComponent{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+		entity = new FEntity(EntityManager::CreateEntity(), "Rifle-1");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Knife" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+		entity = new FEntity(EntityManager::CreateEntity(), "Rifle-2");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Gorilla" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
 
 	/*	entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
 		entity1->AddComponent(FTransformComponent{});

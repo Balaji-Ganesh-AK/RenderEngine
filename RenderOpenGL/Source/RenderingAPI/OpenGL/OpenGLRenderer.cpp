@@ -30,14 +30,18 @@ namespace KREngine
 		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_DEPTH_CLAMP);
-	
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		//glFrontFace(GL_CCW);
 		//glEnable(GL_FRONT);
 	}
 
 	void OpenGLRenderer::ClearColor()
 	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	}
 
 	void OpenGLRenderer::SetClearColor(FColor color)

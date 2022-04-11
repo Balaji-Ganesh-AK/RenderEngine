@@ -71,7 +71,7 @@ namespace KREngine
 	void FDefaultUnLitMaterialSystem::Init()
 	{
 		FScopedTimer Timer("Default unlit system init");
-
+		
 		for (const FEntityHandle Entity : EntityHandles)
 		{
 			if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(Entity))
@@ -149,7 +149,9 @@ namespace KREngine
 	{
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
-
+		
+		glStencilFunc(GL_ALWAYS, 1, 0xFF); // all fragments should pass the stencil test
+		glStencilMask(0xFF);
 
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 
@@ -177,6 +179,9 @@ namespace KREngine
 					}
 				}
 			}
+
+
+		
 	}
 
 	void FDefaultUnLitMaterialSystem::End()

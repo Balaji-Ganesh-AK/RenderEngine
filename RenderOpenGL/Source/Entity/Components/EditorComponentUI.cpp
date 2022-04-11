@@ -9,11 +9,16 @@
 #include "RenderingSystem/FRenderingSystem.h"
 #include "RenderingSystem/Material.h"
 #include "Systems/TextureSystem/TextureManager.h"
+#include "glm/gtx/transform.hpp"
+#include <glm/glm.hpp>
+#include "RenderingSystem/FRenderer.h"
+#include "RenderingSystem/WindowsWindow.h"
 
 namespace KREngine
 {
 	void FEditorComponentPanelSystem::GUIInit()
 	{
+	
 	}
 
 	void FEditorComponentPanelSystem::GUIRun()
@@ -136,4 +141,6 @@ namespace KREngine
 	void FEditorComponentPanelSystem::GUIStop()
 	{
 	}
+
+	
 }

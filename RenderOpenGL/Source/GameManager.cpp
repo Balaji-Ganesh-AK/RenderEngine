@@ -231,6 +231,7 @@ namespace KREngine
 
 		StaticMeshSystem->GUIInit();
 		RenderingSystem->GUIInit();
+		EditorPanelSystem->GUIInit();
 	}
 
 	void FApplication::EngineGUIRun()
@@ -570,7 +571,7 @@ namespace KREngine
 			SCOPED_TIMER("Engine Loop");
 			EditorTagSystem->Run();
 			CameraSystem->Run();
-			RenderingSystem->Run(CameraSystem->GetMainCamera());
+			RenderingSystem->Run(CameraSystem->GetMainCamera(), EditorPanelSystem->GetCurrentSelectedEntity());
 		}
 		{
 			SCOPED_TIMER("Game Loop");

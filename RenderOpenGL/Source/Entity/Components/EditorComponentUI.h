@@ -4,6 +4,10 @@
 
 namespace KREngine
 {
+	struct FCamera;
+	class FRenderer;
+	class FShader;
+
 	class FEditorComponentPanelSystem: public FSystem
 	{
 	public:
@@ -11,8 +15,15 @@ namespace KREngine
 		void GUIRun();
 		void GUIStop();
 
+		uint32 GetCurrentSelectedEntity() const
+		{
+			return CurrentSelectedEntity;
+		}
 
 	private:
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";
+		std::shared_ptr<FShader> Shader;
 		FEntityHandle CurrentSelectedEntity {0};
 		int tempID = 0;
 		std::string CurrentDisplayedTexture;

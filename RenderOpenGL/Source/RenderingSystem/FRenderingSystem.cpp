@@ -250,9 +250,9 @@ FRenderingSystem::FRenderingSystem()
 //}
 void FRenderingSystem::Init()
 {
+	Renderer->Init();
 	DefaultShaderSystem->Init();
 	DefaultLitShaderSystem->Init();
-	Renderer->Init();
 
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
@@ -260,11 +260,11 @@ void FRenderingSystem::Init()
 
 	/*shader init*/
 	StaticMeshSystem->Init();
-	
+	Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
 }
 
-void FRenderingSystem::Run(const FCamera& mainCamera)
+void FRenderingSystem::Run(const FCamera& mainCamera, uint32 currentSelectedEntity)
 {
 	TransformSystem->Run();
 
@@ -284,7 +284,9 @@ void FRenderingSystem::Run(const FCamera& mainCamera)
 		if (mainCamera.bMainCamera)
 		{
 			DefaultShaderSystem->Run(mainCamera, Renderer);
+			//OutLine(mainCamera, Renderer, currentSelectedEntity);
 			DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			OutLine(mainCamera, Renderer, currentSelectedEntity);
 		}
 		else
 		{
@@ -340,5 +342,48 @@ void FRenderingSystem::GUIRun()
 
 	}
 
+}
+
+
+
+void FRenderingSystem::OutLine(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer, uint32 currentSelectedEntity) const
+{
+	const glm::mat4 ViewProjection = mainCamera.ViewProjection;
+
+	std::vector< glm::mat4> Translations;
+	const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDisable(GL_DEPTH_TEST);
+	if (EntityManager::HasComponent<FTransformComponent>(currentSelectedEntity) && EntityManager::HasComponent<FStaticMesh>(currentSelectedEntity))
+	{
+		FTransform& transform = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).Transform;
+		auto& model_projection = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).ModelProjection;
+		model_projection = glm::mat4(1.0f);
+		model_projection = glm::translate(model_projection, VectorHelper::AsGLMVec3(transform.GetLocation()));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model_projection = glm::scale(model_projection, VectorHelper::AsGLMVec3(transform.GetScale() * 1.05f));
+
+
+		auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(currentSelectedEntity);
+		{
+			int slot = 0;
+
+			Shader->BindShader();
+			Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+			Shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
+			static_mesh.VertexArray->BindBuffer();
+			// 3 vertex two triangles.
+			renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+			//(glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), GL_UNSIGNED_INT, nullptr));
+			static_mesh.VertexArray->UnBindBuffer();
+			Shader->UnBindShader();
+		}
+	}
+	glStencilMask(0xFF);
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glEnable(GL_DEPTH_TEST);
 }
 #endif

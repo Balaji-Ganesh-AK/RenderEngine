@@ -20,8 +20,8 @@ float LinearizeDepth(float depth)
 }
     void main()
     {     
-       color =texture( Material.BaseTexture, f_Texture ) * vec4(  Material.ObjectColor );
-      // color  = vec4(0.04, 0.28, 0.26, 1.0);
+       //color =texture( Material.BaseTexture, f_Texture ) * vec4(  Material.ObjectColor );
+       color  = vec4(1.0, 1.0, 0.0, 1.0);
 //     float depth = LinearizeDepth(gl_FragCoord.z) / far; 
 //     color = vec4(vec3(depth), 1.0);
                
