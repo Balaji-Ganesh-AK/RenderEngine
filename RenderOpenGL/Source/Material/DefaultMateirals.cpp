@@ -168,7 +168,7 @@ namespace KREngine
 
 	}
 
-	void FDefaultLitMaterialSystem::Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer)
+	void KREngine::FDefaultLitMaterialSystem::Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer,void(*func_ptr)(int))
 	{
 
 

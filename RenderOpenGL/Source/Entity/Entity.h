@@ -193,7 +193,7 @@ namespace KREngine
 		template <typename Component>
 		bool HasComponent(FEntityHandle entityHandle) 
 		{
-			return GetComponentArray<Component>()->HasComponent(entityHandle);
+			return HasComponentInternal<Component>(entityHandle);
 		}
 
 		template <typename Component>
@@ -220,12 +220,30 @@ namespace KREngine
 			if(ComponentTypes.contains(typeName))
 			{
 				auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
+			
 				return x;
 			}
 			else
 			{
 				Logger::Fatal("Component not registered");
 				return nullptr;
+			}
+		}
+		
+		template<typename T>
+		bool HasComponentInternal(FEntityHandle entityHandle)
+		{
+			const char* typeName = typeid(T).name();
+
+			if (ComponentTypes.contains(typeName))
+			{
+				auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
+				return x->HasComponent(entityHandle);
+			}
+			else
+			{
+				
+				return false;
 			}
 		}
 

@@ -134,7 +134,7 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 
 	glCreateTextures( GL_TEXTURE_2D, 1, &RendererTextureID );
 	glBindTexture( GL_TEXTURE_2D, RendererTextureID );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Width ), static_cast< int >( Height ), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Width ), static_cast< int >( Height ), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
