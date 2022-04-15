@@ -56,19 +56,21 @@ namespace KREngine
 		entity->AddComponent(FTransformComponent{});
 		entity->AddComponent(FStaticMesh{ "Rifle"});
 		entity->AddComponent(DefaultLitMaterialComponent{});
-		entity = new FEntity(EntityManager::CreateEntity(), "Rifle-1");
-		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Knife" });
-		entity->AddComponent(DefaultLitMaterialComponent{});
+		const auto entity_one = new FEntity(EntityManager::CreateEntity(), "Rifle-1");
+		entity_one->AddComponent(FTransformComponent{});
+		entity_one->AddComponent(FStaticMesh{ "Knife" });
+		entity_one->AddComponent(DefaultLitMaterialComponent{});
+
+
 		entity = new FEntity(EntityManager::CreateEntity(), "Rifle-2");
 		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Gorilla" });
+		entity->AddComponent(FStaticMesh{ "Rifle" });
 		entity->AddComponent(DefaultLitMaterialComponent{});
 
-		entity1 = new FEntity(EntityManager::CreateEntity(), "Static-Mesh-2");
+		entity1 = new FEntity(EntityManager::CreateEntity(), "SkySphere");
 		entity1->AddComponent(FTransformComponent{});
-		entity1->AddComponent(FStaticMesh{"Test"});
-		entity1->AddComponent(DefaultUnLitMaterialComponent{});
+		entity1->AddComponent(FStaticMesh{"Rifle"});
+		entity1->AddComponent(DefaultLitMaterialComponent{});
 
 
 		/*for(int i = 3; i < 100; i++)

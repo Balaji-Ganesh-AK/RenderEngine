@@ -66,8 +66,10 @@ namespace KREngine
 
 	void FAssetManager::ReadStaticMesh(const std::string path)
 	{
-		std::vector<uint8_t> static_mesh_data = FPathHelper::LoadFileToBuffer(path.c_str());
-		FJson json = FJson::parse(static_mesh_data);
+		std::ifstream input(path, std::ios::binary);
+		std::vector<uint8_t> static_mesh_data(std::istreambuf_iterator<char>(input), {});
+		FJson json = FJson::from_cbor((static_mesh_data));
+		
 		std::string Name;
 		FModel static_mesh_model;
 		if (json.contains("Name"))

@@ -37,5 +37,6 @@ namespace FPathHelper
 
 		return Buffer;
 	}
+
 }
 

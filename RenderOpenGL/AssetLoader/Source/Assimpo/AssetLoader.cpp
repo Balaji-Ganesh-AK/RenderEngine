@@ -123,7 +123,7 @@ void FLoader::LoadOBJ(std::filesystem::path::iterator::reference path)
     std::string tes = DEFAULT_OUTPUT_PATH;
     std::string tesa = Loader.FileName;
     tes = tes + tesa + ".staticmesh";
-    std::ofstream files_ofstream(tes);
+    std::ofstream binary_output(tes , std::ios::out | std::ios::binary);
 
     FJson j;
     j["Name"] = Loader.FileName.c_str();
@@ -134,7 +134,9 @@ void FLoader::LoadOBJ(std::filesystem::path::iterator::reference path)
     j["Indices"] = KREngine::FJsonHelper::ToJson(Loader.Indices);
     j["MeshCount"] = FJson{ Loader.MeshCount };
 
-    files_ofstream << j.dump(2);
+    std::vector<std::uint8_t> x;
+		FJson::to_cbor(j, x);
+    binary_output.write(reinterpret_cast<const char*>(x.data()), x.size());
 }
 
 void FLoader::ProcessNode(aiNode* node, const aiScene* scene, KREngine::FMeshLoader& loader)

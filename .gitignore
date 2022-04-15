@@ -353,3 +353,13 @@ MigrationBackup/
 *.vcxproj
 
 *.filters
+
+#Engine
+*.FBX
+*.fbx
+*.Obj
+*.Test
+*.staticmesh
+RenderOpenGL/Content/MillionTest.text
+
+RenderOpenGL/Content/Models/MillionTest.objREMOVE

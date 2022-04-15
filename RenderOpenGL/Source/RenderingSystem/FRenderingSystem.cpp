@@ -354,11 +354,12 @@ void FRenderingSystem::OutLine(const FCamera& mainCamera, const std::shared_ptr<
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 	glDisable(GL_DEPTH_TEST);
-	if (EntityManager::HasComponent<FTransformComponent>(currentSelectedEntity) && EntityManager::HasComponent<FStaticMesh>(currentSelectedEntity) )
+	if (EntityManager::HasComponent<FTransformComponent>(currentSelectedEntity) && EntityManager::HasComponent<FStaticMesh>(currentSelectedEntity) &&
+		(EntityManager::HasComponent<DefaultLitMaterialComponent>(currentSelectedEntity) || EntityManager::HasComponent<DefaultUnLitMaterialComponent>(currentSelectedEntity)))
 
 	{
 
-	//	&& (EntityManager::HasComponent<FDefaultLitMaterial>(currentSelectedEntity) || EntityManager::HasComponent<FDefaultUnLitMaterialSystem>(currentSelectedEntity)))
+
 		FTransform& transform = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).Transform;
 		auto& model_projection = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).ModelProjection;
 		model_projection = glm::mat4(1.0f);
