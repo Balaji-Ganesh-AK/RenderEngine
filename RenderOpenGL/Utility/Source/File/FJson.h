@@ -30,6 +30,7 @@ namespace KREngine
 			return_json += (vector[i]);
 
 		}
+		//return FJson::to_cbor(return_json);
 		return return_json;
 	}
 }

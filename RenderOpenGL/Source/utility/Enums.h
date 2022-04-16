@@ -67,3 +67,16 @@ enum class EFileExtension : uint8
 
 std::string FileExtensionToString(EFileExtension extension);
 EFileExtension StringToFileExtension(const std::string& extension);
+
+
+enum class EAssetType : uint8
+{
+	StaticMesh = 0,
+	Texture,
+	Material,
+	UnKnown,
+	Count,
+};
+
+std::string ToString(EAssetType extension);
+EAssetType StringToAssetType(const std::string& extension);

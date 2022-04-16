@@ -1,6 +1,8 @@
 #include "Entity.h"
 
+#include "GameManager.h"
 #include "Components/EditorTagComponent.h"
+#include "Systems/SceneManagement/LevelSystem.h"
 
 namespace KREngine
 {
@@ -111,6 +113,15 @@ namespace KREngine
 		if(name.empty())
 		{
 			entity_with_count = "Entity_" + std::to_string(EntityManager::EntityCount());
+		}
+		FLevel* level = FApplication::GetCurrentLevel();
+		if(level)
+		{
+			level->AddEntity(handle);
+		}
+		else
+		{
+			Logger::Fatal("No level registered in game! , make sure your are not adding entity in the constructor!");
 		}
 		EntityManager::AddComponent(handle, FName{ name });
 	}

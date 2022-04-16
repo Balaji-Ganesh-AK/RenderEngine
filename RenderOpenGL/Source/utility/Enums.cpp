@@ -13,17 +13,15 @@ static const std::map<EFileExtension, std::string> CommandToStringMap
 std::string FileExtensionToString(EFileExtension extension)
 {
 	std::string return_string = "Unknown";
-	switch (extension)
+	for (const std::pair<const EFileExtension, std::string>& command : CommandToStringMap)
 	{
-	case EFileExtension::StaticMesh:
-		return_string = ".staticmesh";
-		break;
-	case EFileExtension::UnKnown:
-	default:
-		return_string = "Unknown";
-
-		return  return_string;
+		if (command.first == extension)
+		{
+			return_string = command.second;
+			break;
+		}
 	}
+	return return_string;
 }
 
 EFileExtension StringToFileExtension(const std::string& extension)
@@ -36,5 +34,41 @@ EFileExtension StringToFileExtension(const std::string& extension)
 		}
 	}
 
-	return EFileExtension();
+	return EFileExtension::UnKnown;
+}
+
+
+static const std::map<EAssetType, std::string> EAssetToString
+{
+	{EAssetType::StaticMesh, "StaticMesh"},
+	{EAssetType::Texture, "Texture"},
+	{EAssetType::Material, "Material"},
+	{EAssetType::UnKnown, "Unknown"}
+
+
+};
+
+std::string ToString(EAssetType AssetType)
+{
+	for (const auto& string_pair : EAssetToString)
+	{
+		if (string_pair.first == AssetType)
+		{
+			return string_pair.second;
+		}
+	}
+	return {};
+}
+
+EAssetType StringToAssetType(const std::string& AssetName)
+{
+	for (const auto& string_pair : EAssetToString)
+	{
+		if (string_pair.second == AssetName)
+		{
+			return string_pair.first;
+		}
+	}
+
+	return EAssetType::UnKnown;
 }

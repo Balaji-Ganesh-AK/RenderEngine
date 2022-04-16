@@ -20,6 +20,7 @@
 #include "utility/Parameters.h"
 
 
+
 //namespace  KREngine
 //NEEDS TO GO INTO UTILITY PROJECT WHEN IT HAPPENS.
 /**
@@ -136,6 +137,7 @@ void FLoader::LoadOBJ(std::filesystem::path::iterator::reference path)
 
     std::vector<std::uint8_t> x;
 		FJson::to_cbor(j, x);
+        KREngine::FVector bobo{1,1,1};
     binary_output.write(reinterpret_cast<const char*>(x.data()), x.size());
 }
 

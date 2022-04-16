@@ -14,11 +14,13 @@
 #include "Runtime/Camera/FCamera.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
+#include "RenderOpenGL/Utility/Source/Utility.h"
 #include "Systems/AssetSystem/AssetSystem.h"
 #include "Systems/Input/Input.h"
+#include "Systems/SceneManagement/LevelSystem.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
-
+#include "Systems/LevelSystem/LevelManager.h"
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 namespace KREngine
@@ -56,6 +58,18 @@ namespace KREngine
 		EngineGUIStop();
 #endif
 
+	}
+
+	void FApplication::SaveLevelInternal()
+	{
+		if(CurrentLevel)
+		{
+			
+		}
+		else
+		{
+			Logger::Error(" Failed to save!, no level registered in the game.");
+		}
 	}
 #if GUI
 	void FApplication::EngineGUIInit()
@@ -425,6 +439,43 @@ namespace KREngine
 
 	FApplication::~FApplication()
 	{
+	}
+
+	void FApplication::Init()
+	{
+		if(CurrentLevel)
+		{
+			CurrentLevel->Init();
+		}
+	}
+
+	void FApplication::Run()
+	{
+		if (CurrentLevel)
+		{
+			CurrentLevel->Run();
+		}
+	}
+
+	void FApplication::End()
+	{
+		if (CurrentLevel)
+		{
+			CurrentLevel->End();
+
+		}
+	}
+
+	void FApplication::SetActiveLevel(FLevel* level)
+	{
+		CurrentLevel = level;
+	}
+
+	void FApplication::ChangeLevel(FLevel* newLevel)
+	{
+
+		/*Save the current level and load the given level*/
+		throw NotImplemented("Need to implement this change level");
 	}
 
 

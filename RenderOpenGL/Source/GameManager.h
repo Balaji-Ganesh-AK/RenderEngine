@@ -11,6 +11,7 @@
 
 namespace KREngine
 {
+	class FLevel;
 	class FAssetManager;
 	class FTransformSystem;
 	class FDefaultUnLitMaterialSystem;
@@ -47,10 +48,12 @@ namespace KREngine
 			return *Instance;
 		}
 
-		virtual void Init() = 0;
-		virtual void Run() = 0;
-		virtual void End() = 0;
+		virtual void Init();
+		virtual void Run() ;
+		virtual void End() ;
 
+		void SetActiveLevel(FLevel* level);
+		void ChangeLevel(FLevel* newLevel);
 		void OnEvent(FEvent& event);
 
 		WindowsWindow* GetWindowsWindow() const
@@ -75,6 +78,14 @@ namespace KREngine
 		{
 			return *Get().AssetManager;
 		}
+		static FLevel* GetCurrentLevel()
+		{
+			return Get().CurrentLevel;
+		}
+		static void SaveLevel()
+		{
+			Get().SaveLevelInternal();
+		}
 	private:
 		
 		static FApplication* Instance;
@@ -90,6 +101,7 @@ namespace KREngine
 
 		void InternalEnd();
 
+		void SaveLevelInternal();
 
 #if GUI
 		void EngineGUIInit();
@@ -106,7 +118,7 @@ namespace KREngine
 		std::unique_ptr<FShaderManager> ShaderManager;
 		std::unique_ptr<FAssetManager> AssetManager;
 
-
+		FLevel* CurrentLevel = nullptr;
 		bool bShowDebugProfiler{ false };
 		bool bEnableVSync{ false };
 		float test{ 0.0f };

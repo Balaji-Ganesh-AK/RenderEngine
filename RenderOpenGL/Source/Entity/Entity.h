@@ -164,7 +164,7 @@ namespace KREngine
 		}
 
 		template <typename Component>
-		ComponentType GetComponentType()
+		ComponentType GetComponentType() 
 		{
 			const char* type_name = typeid(Component).name();
 			if (ComponentTypes.contains(type_name))
@@ -552,6 +552,7 @@ namespace KREngine
 		template <typename Component>
 		void AddComponent(Component component)
 		{
+			
 			EntityManager::AddComponent(EntityHandle, component);
 		}
 
@@ -567,7 +568,7 @@ namespace KREngine
 			return EntityHandle;
 		}
 	private:
-	
+		
 		FEntityHandle EntityHandle;
 
 	};

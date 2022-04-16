@@ -15,46 +15,25 @@ namespace KREngine
 {
 	TestGame::TestGame()
 	{
-		
+		auto* level = new LevelOne("Wew");
+		auto* levelone = new LevelTwo("LevelOne");
+
+		SetActiveLevel(levelone);
 	}
 
-	void TestGame::Init()
+
+	LevelOne::LevelOne(const std::string& Name): FLevel(Name)
 	{
-		//entity = new FEntity(EntityManager::CreateEntity(), "Knife");
-		//entity->AddComponent(FTransformComponent{});
-		//entity->AddComponent(FStaticMesh{"Knife"});
-		//entity->AddComponent(FPointLight{});
-		//entity->AddComponent(DefaultLitMaterialComponent{});
+	}
 
-		//entity = new FEntity(EntityManager::CreateEntity(), "MushRoom");
-		//entity->AddComponent(FTransformComponent{});
-		//entity->AddComponent(FStaticMesh{ "Mushroom" });
-		//entity->AddComponent(FPointLight{});
-		//entity->AddComponent(DefaultLitMaterialComponent{});
-
-
-		//entity = new FEntity(EntityManager::CreateEntity(), "TwoMeshTest");
-		//entity->AddComponent(FTransformComponent{});
-		//entity->AddComponent(FStaticMesh{ "TwoMeshTest" });
-		//entity->AddComponent(FPointLight{});
-		//entity->AddComponent(DefaultLitMaterialComponent{});
-
-		//entity = new FEntity(EntityManager::CreateEntity(), "backpack");
-		//entity->AddComponent(FTransformComponent{});
-		//entity->AddComponent(FStaticMesh{ "backpack" });
-		//entity->AddComponent(FPointLight{});
-		//entity->AddComponent(DefaultLitMaterialComponent{});
-
-		//entity = new FEntity(EntityManager::CreateEntity(), "Gorilla");
-		//entity->AddComponent(FTransformComponent{});
-		//entity->AddComponent(FStaticMesh{ "Gorilla" });
-		//entity->AddComponent(FPointLight{});
-		//entity->AddComponent(DefaultLitMaterialComponent{});
+	void LevelOne::Init()
+	{
 		
-		
+
+
 		entity = new FEntity(EntityManager::CreateEntity(), "Rifle");
 		entity->AddComponent(FTransformComponent{});
-		entity->AddComponent(FStaticMesh{ "Rifle"});
+		entity->AddComponent(FStaticMesh{ "Rifle" });
 		entity->AddComponent(DefaultLitMaterialComponent{});
 		const auto entity_one = new FEntity(EntityManager::CreateEntity(), "Rifle-1");
 		entity_one->AddComponent(FTransformComponent{});
@@ -69,7 +48,7 @@ namespace KREngine
 
 		entity1 = new FEntity(EntityManager::CreateEntity(), "SkySphere");
 		entity1->AddComponent(FTransformComponent{});
-		entity1->AddComponent(FStaticMesh{"Rifle"});
+		entity1->AddComponent(FStaticMesh{ "Rifle" });
 		entity1->AddComponent(DefaultLitMaterialComponent{});
 
 
@@ -90,19 +69,100 @@ namespace KREngine
 		}*/
 
 		CameraEntity = new FEntity(EntityManager::CreateEntity(), "Camera");
-		CameraEntity->AddComponent(FCamera{true});
+		CameraEntity->AddComponent(FCamera{ true });
 	}
 
-	void TestGame::Run()
+	void LevelOne::Run() 
 	{
 		
 	}
 
-	void TestGame::End()
+	void LevelOne::End()
 	{
 	}
 
+	void LevelOne::GUIInit()
+	{
+	}
+
+	void LevelOne::GUIRun()
+	{
+	}
+
+	void LevelOne::GUIEnd()
+	{
+	}
+
+	LevelTwo::LevelTwo(const std::string& Name): FLevel(Name)
+	{
+
 	
+	}
+
+	void LevelTwo::Init()
+	{
+		FLevel::Init();
+
+		entity = new FEntity(EntityManager::CreateEntity(), "Knife");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Knife" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		/*entity = new FEntity(EntityManager::CreateEntity(), "MushRoom");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Mushroom" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+
+		entity = new FEntity(EntityManager::CreateEntity(), "TwoMeshTest");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "TwoMeshTest" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		entity = new FEntity(EntityManager::CreateEntity(), "backpack");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "backpack" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});
+
+		entity = new FEntity(EntityManager::CreateEntity(), "Gorilla");
+		entity->AddComponent(FTransformComponent{});
+		entity->AddComponent(FStaticMesh{ "Gorilla" });
+		entity->AddComponent(FPointLight{});
+		entity->AddComponent(DefaultLitMaterialComponent{});*/
+
+		CameraEntity = new FEntity(EntityManager::CreateEntity(), "Camera");
+		CameraEntity->AddComponent(FCamera{ true });
+	}
+
+	void LevelTwo::Run()
+	{
+		FLevel::Run();
+	}
+
+	void LevelTwo::End()
+	{
+		FLevel::End();
+	}
+
+	void LevelTwo::GUIInit()
+	{
+		FLevel::GUIInit();
+	}
+
+	void LevelTwo::GUIRun()
+	{
+		FLevel::GUIRun();
+	}
+
+	void LevelTwo::GUIEnd()
+	{
+		FLevel::GUIEnd();
+	}
+
 
 	KREngine::FApplication* KREngine::CreateApplication()
 	{
