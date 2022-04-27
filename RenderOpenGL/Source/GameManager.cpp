@@ -11,10 +11,13 @@
 #include "ImGUI/imgui_impl_opengl3.h"
 #include "RenderingSystem/WindowsWindow.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
-#include "Runtime/Camera/FCamera.h"
+#include "Runtime/Camera/FCameraComponent.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
 #include "RenderOpenGL/Utility/Source/Utility.h"
+#include "RenderOpenGL/Utility/Source/File/FJson.h"
+#include "Runtime/Foliage/Foliage.h"
+#include "Runtime/Line/Line.h"
 #include "Systems/AssetSystem/AssetSystem.h"
 #include "Systems/Input/Input.h"
 #include "Systems/SceneManagement/LevelSystem.h"
@@ -65,10 +68,42 @@ namespace KREngine
 		if(CurrentLevel)
 		{
 			
+			Logger::Warning("saving level %s", CurrentLevel->GetMapName().c_str());
+
+			std::string filename = DefaultMapsPath;
+			filename += "/" + CurrentLevel->GetMapName() + Level_Extension;
+			std::ofstream file(filename, std::ios::out | std::ios::binary | std::ios::trunc);
+			
+			FJson json;
+			json["LevelData"] = CurrentLevel->ToJson();
+
+		//	std::vector<std::uint8_t> binary_data;
+		//	FJson::to_cbor(json, binary_data);
+			//file.write(reinterpret_cast<const char*>(binary_data.data()), binary_data.size());
+			file << json.dump(4);
+			file.close();
 		}
 		else
 		{
 			Logger::Error(" Failed to save!, no level registered in the game.");
+		}
+	}
+
+	void FApplication::LoadLevelInternal()
+	{
+		if (CurrentLevel)
+		{
+
+			std::string filename = DefaultMapsPath;
+			filename += "/" + CurrentLevel->GetMapName() + Level_Extension;
+			std::ifstream input(filename, std::ios::binary);
+			FJson json = FJson::parse(input);
+			Logger::Verbose("Reading Map from file %d", filename.c_str());
+			CurrentLevel->FromJson(json);
+		}
+		else
+		{
+			Logger::Error(" Failed to load!, no level registered in the game.");
 		}
 	}
 #if GUI
@@ -243,7 +278,7 @@ namespace KREngine
 
 		EditorTagSystem->GUIInit();
 
-		StaticMeshSystem->GUIInit();
+		//StaticMeshSystem->GUIInit();
 		RenderingSystem->GUIInit();
 		EditorPanelSystem->GUIInit();
 	}
@@ -446,6 +481,7 @@ namespace KREngine
 		if(CurrentLevel)
 		{
 			CurrentLevel->Init();
+			LoadLevelInternal();
 		}
 	}
 
@@ -462,7 +498,7 @@ namespace KREngine
 		if (CurrentLevel)
 		{
 			CurrentLevel->End();
-
+			SaveLevelInternal();
 		}
 	}
 
@@ -513,12 +549,13 @@ namespace KREngine
 
 		EntityManager::RegisterComponent<FName>();
 		EntityManager::RegisterComponent<FTransformComponent>();
-		EntityManager::RegisterComponent<FCamera>();
+		EntityManager::RegisterComponent<FCameraComponent>();
 		EntityManager::RegisterComponent<DefaultLitMaterialComponent>();
 		EntityManager::RegisterComponent<DefaultUnLitMaterialComponent>();
 		EntityManager::RegisterComponent<FStaticMesh>();
 		EntityManager::RegisterComponent<FPointLight>();
-		
+		EntityManager::RegisterComponent<FFoliageInstance>();
+
 
 		//EntityManager::RegisterSystem<FStaticMeshSystem>();
 		//StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
@@ -530,7 +567,7 @@ namespace KREngine
 	
 
 		
-	
+		
 		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
 		EditorPanelSystem = EntityManager::RegisterSystem<FEditorComponentPanelSystem>();
 
@@ -564,15 +601,15 @@ namespace KREngine
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
-			UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
-			EntityManager::SetSystemComponents<FDefaultUnLitMaterialSystem>(UID);
+			ComponentUID OUID;
+			OUID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
+			EntityManager::SetSystemComponents<FDefaultUnLitMaterialSystem>(UID , OUID);
 		}
 		/*Default lit shader */
 		{
 			ComponentUID UID;
 			UID.set(EntityManager::GetComponentType<FTransformComponent>());
 			UID.set(EntityManager::GetComponentType<FStaticMesh>());
-			UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
 			ComponentUID OUID;
 			OUID.set(EntityManager::GetComponentType<FPointLight>());
 			EntityManager::SetSystemComponents<FDefaultLitMaterialSystem>(UID, OUID);
@@ -586,16 +623,18 @@ namespace KREngine
 
 		{
 			ComponentUID UID;
-			UID.set(EntityManager::GetComponentType<FCamera>());
+			UID.set(EntityManager::GetComponentType<FCameraComponent>());
 			EntityManager::SetSystemComponents<FCameraSystem>(UID);
 		}
 
 		{
 			ComponentUID UID;
-			UID.set(EntityManager::GetComponentType<FTransformComponent>());
-			//UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
-			//UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
-			EntityManager::SetSystemComponents<FEditorComponentPanelSystem>(UID);
+	
+			ComponentUID OUID;
+			OUID.set(EntityManager::GetComponentType<FTransformComponent>());
+			OUID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
+			OUID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
+			EntityManager::SetSystemComponents<FEditorComponentPanelSystem>(UID, OUID);
 		}
 		
 
@@ -603,13 +642,6 @@ namespace KREngine
 
 		Init();
 		CameraSystem->Init();
-		/*shader init*/
-		
-		//DefaultShaderSystem->Init();
-		
-		//EntityManager::GetSystem<FStaticMeshSystem>()->Init();
-	
-		
 		RenderingSystem->Init();
 		
 

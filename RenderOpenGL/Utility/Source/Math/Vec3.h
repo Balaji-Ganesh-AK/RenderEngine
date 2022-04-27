@@ -14,6 +14,7 @@ namespace  KREngine
 		float x, y, z;
 		vec3();
 		vec3( float x, float y, float z );
+		
 
 
 		static vec3 Down();
@@ -90,25 +91,13 @@ namespace  KREngine
 	
 		
 		friend std::ostream& operator<<( std::ostream& stream, const vec3& other );
-		template <typename Writer>
-		void Serialize(Writer& writer) const
+		const char* ToPrint() const
 		{
-//			writer.StartObject();
-//			//writer.Key("VertexPosition");
-//			writer.String("Hello");
-//	//stringwriter.StartArray();
-//	//stringwriter.Double(x);
-//	//stringwriter.Double(y);
-//	//stringwriter.Double(z);
-//	//stringwriter.EndArray();
-////	stringwriter.StartObject();
-/////*	stringwriter.SetMaxDecimalPlaces(10);
-////	stringwriter.Double(x);
-////	stringwriter.Double(y);
-////	stringwriter.Double(z);*/
-////	stringwriter.EndObject();
-//			writer.EndObject();
+			std::string return_string;
+			return_string += "(" +  std::to_string(x) + "," + std::to_string(y)+ "," + std::to_string(z) + ")";
+			return return_string.c_str();
 		}
+
 	};
 
 	typedef KREngine::vec3 FVector;

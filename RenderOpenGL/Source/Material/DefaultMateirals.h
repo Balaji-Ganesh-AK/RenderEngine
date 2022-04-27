@@ -2,8 +2,9 @@
 #include "Entity/Entity.h"
 #include "RenderingSystem/Material.h"
 #include "RenderingSystem/Shader.h"
+#include "RenderOpenGL/Utility/Source/File/FJson.h"
 #include "Runtime/Actors/Lights/FLights.h"
-#include "Runtime/Camera/FCamera.h"
+#include "Runtime/Camera/FCameraComponent.h"
 
 
 namespace KREngine
@@ -22,6 +23,7 @@ namespace KREngine
 		//FVector Specular{ 0.5f,0.5f,0.3f };
 
 	public:
+		FDefaultLitMaterial(std::filesystem::path  vertexShaderPath, std::filesystem::path fragmentShaderPath);
 		FDefaultLitMaterial();
 
 		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TextureRenderNameToTextureMap;
@@ -54,8 +56,9 @@ namespace KREngine
 		{
 			Shininess = shininess;
 		}
-
+		FJson ToJson();
 		~FDefaultLitMaterial() override;
+		void FromJson(FJson& json);
 	};
 
 	
@@ -63,13 +66,15 @@ namespace KREngine
 	struct DefaultLitMaterialComponent
 	{
 		FDefaultLitMaterial Material;
+		FJson ToJson();
+		void FromJson (FJson&  json);
 	};
 
 	class FDefaultLitMaterialSystem : public FSystem
 	{
 	public:
 		void Init();
-		void Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer , void(*func_ptr)(int) = nullptr);
+		void Run(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer);
 		void End();
 		void GUIRun();
 

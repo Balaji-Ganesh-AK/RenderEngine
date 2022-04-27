@@ -170,6 +170,7 @@ namespace KREngine
 		virtual void BindBufferLayout() = 0;
 		virtual void BindBuffer() = 0;
 		virtual void UnBindBuffer() = 0;
+		
 		void SetLayOut(const VertexBufferLayout& vertex_buffer )
 		{
 	

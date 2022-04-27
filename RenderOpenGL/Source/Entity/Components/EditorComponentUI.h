@@ -4,7 +4,7 @@
 
 namespace KREngine
 {
-	struct FCamera;
+	struct FCameraComponent;
 	class FRenderer;
 	class FShader;
 

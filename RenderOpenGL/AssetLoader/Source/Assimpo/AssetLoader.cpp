@@ -20,12 +20,6 @@
 #include "utility/Parameters.h"
 
 
-
-//namespace  KREngine
-//NEEDS TO GO INTO UTILITY PROJECT WHEN IT HAPPENS.
-/**
- * \brief Default Object path
- */
 #define DEFAULT_OBj_PATH "../Content/Models"
 #define DEFAULT_OUTPUT_PATH   "../Content/"
 

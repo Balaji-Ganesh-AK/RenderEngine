@@ -11,6 +11,21 @@ namespace KREngine
 
 	}
 
+	FColor FColor::Red()
+	{
+		return FColor{1.0,0.0,0.0,0.0};
+	}
+
+	FColor FColor::Blue()
+	{
+		return FColor{ 0.0,0.0,1.0,0.0 };
+	}
+
+	FColor FColor::Green()
+	{
+		return FColor{ 0.0,1.0,0.0,0.0 };
+	}
+
 	/*FColor::FColor(vec4& vec4): r( vec4.x ), g( vec4.y ), b( vec4.z ), a( vec4.w )
 	{
 		

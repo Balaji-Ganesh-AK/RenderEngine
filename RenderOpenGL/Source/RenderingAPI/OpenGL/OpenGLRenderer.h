@@ -15,6 +15,7 @@ namespace KREngine
 		void ClearColor() override;
 		void SetClearColor(FColor color) override;
 		void SetViewPort(FViewPort viewport) override;
+		void DrawLine(const FVector& startPoint, const FVector& endPoint) const override;
 	private:
 
 	};

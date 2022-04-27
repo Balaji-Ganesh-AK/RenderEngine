@@ -29,7 +29,7 @@ namespace KREngine
 		
 	}
 
-	void FStaticMeshSystem::Stop()
+	void FStaticMeshSystem::End()
 	{
 	}
 

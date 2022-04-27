@@ -14,14 +14,14 @@ namespace KREngine
 
 	void OpenGLRenderer::Draw(const uint32 indexBufferCount) const
 	{
-		
+		//glDrawArrays(GL_LINES, 0, 4);
 		glDrawElements(GL_TRIANGLES, indexBufferCount, GL_UNSIGNED_INT, nullptr);
 	}
 
 	void OpenGLRenderer::DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const 
 	{
 		
-		glDrawElements(GL_TRIANGLES, indexBufferCount * instanceTotalCount, GL_UNSIGNED_INT, nullptr);
+		glDrawElementsInstanced(GL_TRIANGLES, indexBufferCount * instanceTotalCount, GL_UNSIGNED_INT, nullptr,instanceTotalCount);
 	}
 
 	void OpenGLRenderer::Init()
@@ -36,6 +36,8 @@ namespace KREngine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CCW);
+	//	glLineWidth()
+	//	glEnable(GL_LINE_SMOOTH);
 		//glFrontFace(GL_CCW);
 		//glEnable(GL_FRONT);
 	}
@@ -55,5 +57,10 @@ namespace KREngine
 	void OpenGLRenderer::SetViewPort(FViewPort viewport)
 	{
 		glViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+	}
+
+	void OpenGLRenderer::DrawLine(const FVector& startPoint, const FVector& endPoint) const
+	{
+		glDrawArrays(GL_LINES, 0,2);
 	}
 }

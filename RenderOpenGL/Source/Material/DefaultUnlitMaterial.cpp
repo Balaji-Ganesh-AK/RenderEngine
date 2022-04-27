@@ -5,7 +5,7 @@
 #include "RenderingSystem/Shader.h"
 #include "RenderingSystem/Textures.h"
 #include "RenderingSystem/WindowsWindow.h"
-#include "Runtime/Camera/FCamera.h"
+#include "Runtime/Camera/FCameraComponent.h"
 #include "Systems/TextureSystem/TextureManager.h"
 #include "glm/gtx/transform.hpp"
 #include "RenderingSystem/Buffers.h"
@@ -32,7 +32,8 @@ namespace KREngine
 		Shader->SetUniformInt("u_Texture", Slot);
 		Slot = Slot + 1;*/
 
-		TexturePathToTextureMap.insert({ "Material.BaseTexture" , FApplication::GetTextureManager().GetTexture(u_Texture) });
+		TextureRenderNameToTextureMap.insert({ "Material.BaseTexture" , FApplication::GetTextureManager().GetTexture(u_Texture) });
+		TextureRenderNameToTexturePath.insert({ "Material.BaseTexture" , u_Texture});
 		Shader->SetUniformInt("Material.BaseTexture", Slot);
 		Slot = Slot + 1;
 
@@ -45,7 +46,7 @@ namespace KREngine
 	{
 		Shader->BindShader();
 
-		for (const auto& texture : TexturePathToTextureMap)
+		for (const auto& texture : TextureRenderNameToTextureMap)
 		{
 			texture.second->BindTexture(Slot);
 			Slot = Slot + 1;
@@ -58,7 +59,18 @@ namespace KREngine
 		Shader->UnBindShader();
 	}
 
-	
+
+	FJson DefaultUnlitMaterial::ToJson()
+	{
+		FJson return_value;
+		for (auto texture_map : TextureRenderNameToTexturePath)
+		{
+			return_value["TextureDetail"][texture_map.first] = texture_map.second;
+		}
+
+		return return_value;
+
+	}
 
 	DefaultUnlitMaterial::~DefaultUnlitMaterial()
 	{
@@ -66,12 +78,26 @@ namespace KREngine
 	}
 
 
-
+	FJson DefaultUnLitMaterialComponent::ToJson()
+	{
+		FJson return_value;
+		return_value["Material"] = Material.ToJson();
+		return return_value;
+	}
 
 	void FDefaultUnLitMaterialSystem::Init()
 	{
 		FScopedTimer Timer("Default unlit system init");
-		
+		//////////////////////////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 100; i++)
+		{
+			float rangeX = rand() % 50 + 0;
+			float rangeY = rand() % 50 + 0;
+			float rangeZ = rand() % 50 + 0;
+
+			Translations.emplace_back(rangeX, rangeY, rangeZ);
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////
 		for (const FEntityHandle Entity : EntityHandles)
 		{
 			if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(Entity))
@@ -142,10 +168,14 @@ namespace KREngine
 				
 			}
 		}
+
+		
+	
+
 	
 	}
 
-	void FDefaultUnLitMaterialSystem::Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer)
+	void FDefaultUnLitMaterialSystem::Run(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer)
 	{
 		/*Default shader update */
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
@@ -167,12 +197,15 @@ namespace KREngine
 					{
 						int slot = 0;
 						material.Bind(slot);
+						
+						//shader->SetUniform3f("Positions[1]", Translations[Entity]);
 						shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 						shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
 						shader->SetUniform4f("Material.ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 						static_mesh.VertexArray->BindBuffer();
 						// 3 vertex two triangles.
 						renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+					//	renderer->DrawIndexed(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), Translations.size());
 						//(glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), GL_UNSIGNED_INT, nullptr));
 						static_mesh.VertexArray->UnBindBuffer();
 						material.UnBind();

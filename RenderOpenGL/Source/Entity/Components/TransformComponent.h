@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity/Entity.h"
+#include "RenderOpenGL/Utility/Source/File/FJson.h"
 #include "Runtime/Containers/FTransform.h"
 
 
@@ -16,7 +17,9 @@ namespace KREngine
 			
 		}
 		FTransformComponent() = default;
-		
+
+		FJson ToJson();
+		void FromJson(FJson& json);
 	};
 
 	class FTransformSystem : public FSystem

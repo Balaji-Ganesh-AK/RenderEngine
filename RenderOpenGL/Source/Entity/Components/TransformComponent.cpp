@@ -3,12 +3,43 @@
 #include "GameManager.h"
 
 #include "glm/gtx/transform.hpp"
+#include "Math/Vec3.h"
 
 #include "RenderingSystem/FRenderingSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
 
 namespace KREngine
 {
+	FJson FTransformComponent::ToJson()
+	{
+		FJson return_json;
+
+		return_json["Location"] = FJsonHelper::ToJson(Transform.GetLocation());
+		return_json["Rotation"] = FJsonHelper::ToJson(Transform.GetRotation());
+		return_json["Scale"] = FJsonHelper::ToJson(Transform.GetScale());
+
+		return return_json;
+	}
+
+	void FTransformComponent::FromJson(FJson& json)
+	{
+		FVector Location; 
+		FVector Scale; 
+		FVector Rotation; 
+		if(json.contains("Location") && json.contains("Rotation") && json.contains("Scale"))
+		{
+			Location = FJsonHelper::FromJson(json["Location"]);
+			Rotation = FJsonHelper::FromJson(json["Rotation"]);
+			Scale = FJsonHelper::FromJson(json["Scale"]);
+		}
+		else
+		{
+			Logger::Warning("Error reading transform data from map file ");
+		}
+		Transform.SetLocation(Location);
+		Transform.SetScale(Scale);
+		Transform.SetRotation(Rotation);
+	}
 
 	void FTransformSystem::Init()
 	{

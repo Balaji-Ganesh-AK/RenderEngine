@@ -19,56 +19,15 @@ namespace KREngine
 
 		FStaticMesh();
 		FStaticMesh(const std::string& Name);
-		
-
 
 		std::shared_ptr<FModel> Model;
 		FVertexBuffer* VertexBufferData = nullptr;
 		FIndexBuffer* IndexBufferData= nullptr;
 		FVertexArray* VertexArray=nullptr;
 
-	
-		uint32 MaxInstances = 10000;
+		std::vector<float>VertexBuffer;
 
-
-		std::vector<float>VertexBuffer
-		{
-
-
-
-//0.0f,0.0f,0.0f,           0.0f, 0.0f,		0.0f,0.0f,-1.0f,
-//1.0f,0.0f,0.0f,			1.0f, 0.0f,		0.0f,0.0f,-1.0f,
-//1.0f,1.0f,0.0f,			1.0f, 1.0f,		0.0f,0.0f,-1.0f,
-//0.0f,1.0f,0.0f,			0.0f, 1.0f,		0.0f,0.0f,-1.0f,
-//
-//0.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,0.0f,1.0f,
-//1.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,0.0f,1.0f,
-//1.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,0.0f,1.0f,
-//0.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,0.0f,1.0f,
-//
-//0.0f,0.0f,1.0f,			0.0f, 0.0f,		-1.0f,0.0f,0.0f,
-//0.0f,0.0f,0.0f,			1.0f, 0.0f,		-1.0f,0.0f,0.0f,
-//0.0f,1.0f,0.0f,			1.0f, 1.0f,		-1.0f,0.0f,0.0f,
-//0.0f,1.0f,1.0f,			0.0f, 1.0f,		-1.0f,0.0f,0.0f,
-//
-//1.0f,0.0f,0.0f,			0.0f, 0.0f,		1.0f,0.0f,0.0f,
-//1.0f,0.0f,1.0f,			1.0f, 0.0f,		1.0f,0.0f,0.0f,
-//1.0f,1.0f,1.0f,			1.0f, 1.0f,		1.0f,0.0f,0.0f,
-//1.0f,1.0f,0.0f,			0.0f, 1.0f,		1.0f,0.0f,0.0f,
-//
-//0.0f,1.0f,0.0f,			0.0f, 0.0f,		 0.0f,1.0f,0.0f,
-//1.0f,1.0f,0.0f,			1.0f, 0.0f,		 0.0f,1.0f,0.0f,
-//1.0f,1.0f,1.0f,			1.0f, 1.0f,		 0.0f,1.0f,0.0f,
-//0.0f,1.0f,1.0f,			0.0f, 1.0f,		 0.0f,1.0f,0.0f,
-//
-//0.0f,0.0f,1.0f,			0.0f, 0.0f,		 0.0f,-1.0f,0.0f,
-//1.0f,0.0f,1.0f,			1.0f, 0.0f,		 0.0f,-1.0f,0.0f,
-//1.0f,0.0f,0.0f,			1.0f, 1.0f,		 0.0f,-1.0f,0.0f,
-//0.0f,0.0f,0.0f,			0.0f, 1.0f,		 0.0f,-1.0f,0.0f
-
-		};
 	private:
-
 
 	};
 
@@ -76,9 +35,9 @@ namespace KREngine
 	{
 	public:
 		FStaticMeshSystem() = default;
-		 void Init();
-		 void Run() ;
-		 void Stop();
+		 void Init() override;
+		 void Run()  override;
+		 void End() override;
 		~FStaticMeshSystem();
 
 #ifdef GUI

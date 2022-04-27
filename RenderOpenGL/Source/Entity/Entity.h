@@ -229,7 +229,8 @@ namespace KREngine
 				return nullptr;
 			}
 		}
-		
+
+
 		template<typename T>
 		bool HasComponentInternal(FEntityHandle entityHandle)
 		{
@@ -270,6 +271,35 @@ namespace KREngine
 	class FSystem
 	{
 	public:
+		virtual ~FSystem() = default;
+
+		virtual void Init()
+		{
+
+		}
+		virtual void Run()
+		{
+
+		}
+		virtual void End()
+		{
+
+		}
+
+		virtual void GUIInit()
+		{
+
+		}
+
+		virtual void GUIRun()
+		{
+
+		}
+
+		virtual void GUIEnd()
+		{
+			
+		}
 		std::set<FEntityHandle> EntityHandles;
 	};
 
@@ -390,6 +420,12 @@ namespace KREngine
 		~EntityManager();
 	
 
+		static ComponentUID GetComponentUID(uint64_t entity_handle)
+		{
+			return Get().GetComponentUIDInternal(entity_handle);
+		}
+
+
 		static EntityManager& Get()
 		{
 			static EntityManager Instance;
@@ -467,8 +503,11 @@ namespace KREngine
 
 		template <typename Component>
 		void RemoveComponentInternal(uint64_t uint64, Component component);
-		
 
+		ComponentUID GetComponentUIDInternal(FEntityHandle entityHandle)
+		{
+			return EntityHandler.GetComponentUID(entityHandle);
+		}
 
 		template<typename Component>
 		void SetSystemComponentsInternal(ComponentUID componentUid , ComponentUID optionalComponentUid = MAX_COMPONENTS)
@@ -554,6 +593,13 @@ namespace KREngine
 		{
 			
 			EntityManager::AddComponent(EntityHandle, component);
+		}
+
+		template <typename Component>
+		Component& GetComponent()
+		{
+
+			return EntityManager::GetComponent<Component>(EntityHandle);
 		}
 
 		template <typename Component>

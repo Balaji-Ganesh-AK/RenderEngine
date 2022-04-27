@@ -3,7 +3,7 @@
 
 #include "Buffers.h"
 #include "RenderOpenGL/Utility/Source/Defines.h"
-
+#include "RenderOpenGL/Utility/Source/Math/Vec3.h"
 
 
 namespace KREngine
@@ -50,6 +50,8 @@ namespace KREngine
 		/*Bind all the buffers before calling this step*/
 		virtual void Draw(const uint32 indexBufferCount) const =0 ;
 		virtual void DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const = 0 ;
+
+		virtual void DrawLine(const FVector& startPoint, const FVector& endPoint) const = 0;
 
 
 		/*Init*/

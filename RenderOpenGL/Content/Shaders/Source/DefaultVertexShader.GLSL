@@ -10,7 +10,7 @@
     uniform mat4 u_WorldProjection;
     uniform mat4 u_Model;
 
-   // uniform vec3 Positions[100];
+//    uniform vec3 Positions[100];
     void main()
     {
       
@@ -18,8 +18,8 @@
       //  vec3 CurrentPos = Positions[gl_InstanceID];
         f_FragPos = vec3( u_Model * vec4( v_Pos, 1.0 ) );
         f_Normal =mat3(transpose(inverse(u_Model))) * v_Normal;
-       // gl_Position = u_WorldProjection * vec4(v_Pos+CurrentPos, 1.0);
         gl_Position = u_WorldProjection * vec4(v_Pos, 1.0);
+      // gl_Position = u_WorldProjection * vec4(v_Pos, 1.0);
       
     }
 

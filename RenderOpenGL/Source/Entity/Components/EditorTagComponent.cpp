@@ -30,6 +30,20 @@ namespace KREngine
 		
 	}
 
+	void FName::FromJson(FJson json)
+	{
+		if(json.contains("Name"))
+		{
+			Name = json["Name"];
+		}
+		else
+		{
+			Name = "FailedToReadFile";
+			Logger::Error("Error reading name from map file");
+		}
+	}
+
+
 	void FEditorTagSystem::Run()
 	{
 		

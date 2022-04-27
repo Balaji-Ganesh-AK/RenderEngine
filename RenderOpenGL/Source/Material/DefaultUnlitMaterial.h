@@ -7,8 +7,9 @@
 #include "Math/Vec3.h"
 #include "RenderingSystem/Material.h"
 #include "RenderingSystem/Shader.h"
+#include "RenderOpenGL/Utility/Source/File/FJson.h"
 #include "Runtime/Actors/Lights/FLights.h"
-#include "Runtime/Camera/FCamera.h"
+#include "Runtime/Camera/FCameraComponent.h"
 
 
 namespace KREngine
@@ -36,7 +37,8 @@ namespace KREngine
 	public:
 		DefaultUnlitMaterial();
 
-		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TexturePathToTextureMap;
+		std::unordered_map<std::string, std::shared_ptr<FTexture2D>> TextureRenderNameToTextureMap;
+		std::unordered_map<std::string, std::string> TextureRenderNameToTexturePath;
 		std::string u_Texture = "DefaultTexture.png";
 		/*Used for calling binding functions*/
 		uint32 ShaderID;
@@ -70,20 +72,21 @@ namespace KREngine
 		{
 			Shininess = shininess;
 		}
-
+		FJson ToJson();
 		~DefaultUnlitMaterial() override;
 	};
 
 	struct DefaultUnLitMaterialComponent
 	{
 		DefaultUnlitMaterial Material;
+		FJson ToJson();
 	};
 
 	class FDefaultUnLitMaterialSystem : public FSystem
 	{
 	public:
 		void Init();
-		void Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer);
+		void Run(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer);
 		void End();
 		void GUIRun();
 
@@ -91,6 +94,9 @@ namespace KREngine
 
 		FColor Color{ 1.0f,1.0f,1.0f,1.0f };
 		FLight Light;
+
+
+		std::vector<FVector> Translations;
 
 
 	};

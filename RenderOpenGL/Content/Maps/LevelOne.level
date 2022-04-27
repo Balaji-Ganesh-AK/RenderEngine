@@ -1,0 +1,118 @@
+{
+    "LevelData": {
+        "Entities": [
+            {
+                "DefaultLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "material.Diffuse": "RedColor.jpg",
+                            "material.Specular": "SpecularCrate.png",
+                            "u_Texture": "DefaultTexture.png"
+                        }
+                    }
+                },
+                "EntityID": 0,
+                "Name": "Test",
+                "TransformComponent": {
+                    "Location": [
+                        5.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        -195.8459930419922,
+                        0.2694416642189026,
+                        161.0019989013672
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "DefaultLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "material.Diffuse": "DefaultTexture.png",
+                            "material.Specular": "SpecularCrate.png",
+                            "u_Texture": "DefaultTexture.png"
+                        }
+                    }
+                },
+                "EntityID": 1,
+                "FCameraComponent": {
+                    "CameraFront": [
+                        0.5031200051307678,
+                        -0.2701154351234436,
+                        0.8209189176559448
+                    ],
+                    "CameraPosition": [
+                        -4.284317493438721,
+                        6.552095890045166,
+                        -26.813880920410156
+                    ],
+                    "CameraUp": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "Direction": [
+                        0.5165218710899353,
+                        -0.2773106098175049,
+                        0.8427861332893372
+                    ],
+                    "MainCamera": true,
+                    "Rotator": [
+                        61.305137634277344,
+                        -16.09975814819336,
+                        0.0
+                    ]
+                },
+                "Name": "Light",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 2,
+                "Name": "Line",
+                "TransformComponent": {
+                    "Location": [
+                        4.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            }
+        ],
+        "EntityCount": 3,
+        "FormatVersion": 1,
+        "LevelName": "LevelOne"
+    }
+}

@@ -5,7 +5,7 @@
 #include "glm/gtx/transform.hpp"
 #include "RenderingSystem/FRenderingSystem.h"
 #include "RenderingSystem/WindowsWindow.h"
-#include "Runtime/Camera/FCamera.h"
+#include "Runtime/Camera/FCameraComponent.h"
 #include "Math/Color.h"
 #include "RenderingSystem/Buffers.h"
 #include "RenderingSystem/FRenderer.h"
@@ -16,6 +16,10 @@
 
 namespace KREngine
 {
+	FDefaultLitMaterial::FDefaultLitMaterial(std::filesystem::path vertexShaderPath,
+		std::filesystem::path fragmentShaderPath): DefaultVertexShaderPath(vertexShaderPath), DefaultFragmentShaderPath(fragmentShaderPath)
+	{
+	}
 
 	FDefaultLitMaterial::FDefaultLitMaterial()
 	{
@@ -74,19 +78,56 @@ namespace KREngine
 	}
 
 
+	FJson FDefaultLitMaterial::ToJson()
+	{
+		FJson return_value;
+		for (auto texture_map : TextureRenderNameToTexturePath)
+		{
+			return_value["TextureDetail"][texture_map.first] = texture_map.second;
+		}
+
+		return return_value;
+	}
+
 	FDefaultLitMaterial::~FDefaultLitMaterial()
 	{
 
 	}
 
+	void FDefaultLitMaterial::FromJson(FJson& json)
+	{
+		if(json.contains("TextureDetail"))
+		{
+			auto texture_raw_data = json["TextureDetail"].get<FJson::object_t>();
+			for (auto& kvp : texture_raw_data)
+			{
+				std::string texture_key = kvp.first;
+				std::string texture_value = kvp.second;
+				TextureRenderNameToTexturePath[texture_key] = texture_value;
+				TextureRenderNameToTextureMap.insert({ texture_key , FApplication::GetTextureManager().GetTexture(texture_value) });
+				//Logger::Warning("texture details key: %s, value: %s", texture_key.c_str(), texture_value.c_str());
+			}
+		}
+		
+	}
 
 
+	FJson DefaultLitMaterialComponent::ToJson()
+	{
+		FJson return_value;
+		return_value["Material"] = Material.ToJson();
+		return return_value;
+	}
+
+	void DefaultLitMaterialComponent::FromJson(FJson& json)
+	{
+		FJson material_json = json["Material"];
+		Material.FromJson(material_json);
+	}
 
 	void FDefaultLitMaterialSystem::Init()
 	{
-		/*REFACTOR: This should go away asap*/
 		FScopedTimer Timer("Default lit system init");
-		//DirectionalLight.Location = EntityManager::GetComponent<FTransformComponent>(0).Transform.GetLocation();
 
 		/*TODO: extract this function to read the file and return the layout used fo this mesh*/
 		VertexBufferLayout layout{
@@ -168,7 +209,7 @@ namespace KREngine
 
 	}
 
-	void KREngine::FDefaultLitMaterialSystem::Run(const FCamera& mainCamera, const std::shared_ptr<FRenderer>& renderer,void(*func_ptr)(int))
+	void KREngine::FDefaultLitMaterialSystem::Run(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer)
 	{
 
 

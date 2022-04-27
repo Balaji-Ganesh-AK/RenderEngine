@@ -9,8 +9,11 @@
 #define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
 #include <memory>
 
+#include "RenderOpenGL/Utility/Source/Defines.h"
+
 namespace KREngine
 {
+
 	class FLevel;
 	class FAssetManager;
 	class FTransformSystem;
@@ -49,8 +52,8 @@ namespace KREngine
 		}
 
 		virtual void Init();
-		virtual void Run() ;
-		virtual void End() ;
+		virtual void Run();
+		virtual void End();
 
 		void SetActiveLevel(FLevel* level);
 		void ChangeLevel(FLevel* newLevel);
@@ -60,7 +63,7 @@ namespace KREngine
 		{
 			return WindowWindow.get();
 		}
-		
+
 		FInput& GetInputSystem() const
 		{
 			return *Input;
@@ -69,7 +72,7 @@ namespace KREngine
 		{
 			return *Get().TextureManager;
 		}
-		 
+
 		static FShaderManager& GetShaderManager()
 		{
 			return *Get().ShaderManager;
@@ -85,6 +88,10 @@ namespace KREngine
 		static void SaveLevel()
 		{
 			Get().SaveLevelInternal();
+		}
+		static void LoadLevel()
+		{
+			Get().LoadLevelInternal();
 		}
 	private:
 		
@@ -102,6 +109,7 @@ namespace KREngine
 		void InternalEnd();
 
 		void SaveLevelInternal();
+		void LoadLevelInternal();
 
 #if GUI
 		void EngineGUIInit();
@@ -133,6 +141,8 @@ namespace KREngine
 		//std::shared_ptr<FTransformSystem> TransformSystem;
 		std::shared_ptr<FCameraSystem> CameraSystem;
 		std::shared_ptr<FEditorComponentPanelSystem> EditorPanelSystem;
+	
+
 
 	};
 	FApplication* CreateApplication();

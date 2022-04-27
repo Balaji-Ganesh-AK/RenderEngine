@@ -10,6 +10,9 @@
 
 namespace KREngine
 {
+	FModel::FModel(FGeometryID ID) : GeometryId(ID)
+	{
+	}
 
 	FAssetManager* FAssetManager::Create()
 	{
@@ -18,7 +21,7 @@ namespace KREngine
 
 	void FAssetManager::Init()
 	{
-		std::string Path = DefaultContentPath;
+		const std::string Path = DefaultContentPath;
 		LoadAssets(Path);
 	}
 
@@ -28,16 +31,21 @@ namespace KREngine
 	
 	}
 
+	std::shared_ptr<FModel> FAssetManager::GetModel(const FGeometryID id)
+	{
+		return AssetMap[id];
+	}
+
 	FAssetManager::FAssetManager()
 	{
 	}
 
 	void FAssetManager::LoadAssets(const std::string path)
 	{
-		AssetNameToID["Default"] = AssetCount;
-		AssetMap[AssetCount] = std::make_shared<FModel>();
+		AssetNameToID["Default"] = GeometryAssetCount;
+		AssetMap[GeometryAssetCount] = std::make_shared<FModel>(GeometryAssetCount);
 		AssetNameToFullPath["Default"] = "Default";
-		AssetCount++;
+		GeometryAssetCount++;
 
 		for (const std::filesystem::directory_entry& asset_path : std::filesystem::recursive_directory_iterator(path))
 		{
@@ -71,7 +79,7 @@ namespace KREngine
 		FJson json = FJson::from_cbor((static_mesh_data));
 		
 		std::string Name;
-		FModel static_mesh_model;
+		FModel static_mesh_model(GeometryAssetCount);
 		if (json.contains("Name"))
 		{
 			Name = json["Name"];
@@ -120,9 +128,9 @@ namespace KREngine
 
 
 
-		AssetNameToID[Name] = AssetCount;
-		AssetMap[AssetCount] = std::make_shared<FModel>(static_mesh_model);
+		AssetNameToID[Name] = GeometryAssetCount;
+		AssetMap[GeometryAssetCount] = std::make_shared<FModel>(static_mesh_model);
 		AssetNameToFullPath[Name] = path;
-		AssetCount++;
+		GeometryAssetCount++;
 	}
 }

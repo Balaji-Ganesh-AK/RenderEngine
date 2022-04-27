@@ -11,6 +11,9 @@ typedef uint64_t uint64;
 typedef int64_t int64;
 
 
+typedef uint64 FGeometryID;
+typedef uint64 FFoliageInstanceID;
+
 
 #define ENGINE_NAME "KREngine"
 #define FORCE_INLINE __forceinline
@@ -23,7 +26,9 @@ typedef int64_t int64;
 
 
 #define OBJ_Extension ".obj"
+#define Level_Extension ".level"
 #define DefaultContentPath "../Content"
+#define DefaultMapsPath "../Content/Maps"
 #define DefaultTexturePath "../Content/Textures"
 #define DefaultAssetPath "../Content/Assets"
 #define DefaultShaderFolderPath "../Content/Shaders"

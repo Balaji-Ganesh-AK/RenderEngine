@@ -12,7 +12,9 @@ namespace  KREngine
 		FColor( float r, float g, float b, float a );
 		//FColor( vec4& vec4 );
 
-
+		static FColor Red();
+		static FColor Blue();
+		static FColor Green();
 		static FColor Down();
 		static FColor Zero();
 		static FColor Up();
