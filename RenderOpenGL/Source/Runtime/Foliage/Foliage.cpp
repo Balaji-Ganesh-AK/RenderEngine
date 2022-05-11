@@ -64,19 +64,7 @@ namespace KREngine
 				else
 				{
 					Logger::Error("Mesh does not look good, please check the mesh! ");
-					for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
-					{
-
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-
-					}
+					
 				}
 
 

@@ -1,6 +1,7 @@
 #include "Line.h"
 
 #include "GameManager.h"
+#include "Ray.h"
 #include "Entity/Components/TransformComponent.h"
 #include "RenderingSystem/Buffers.h"
 #include "RenderingSystem/FRenderer.h"
@@ -23,30 +24,50 @@ namespace KREngine
 		};
 		for (auto entityHandle : EntityHandles)
 		{
-			
+			if(EntityManager::HasComponent<FLine>(entityHandle))
+			{
 				auto& line = EntityManager::GetComponent<FLine>(entityHandle);
 				line.Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
 
 				line.Shader->BindShader();
 				line.VertexArray = FVertexArray::Create();
-				VertexBuffer.push_back(line.StartLocation.x);
-				VertexBuffer.push_back(line.StartLocation.y);
-				VertexBuffer.push_back(line.StartLocation.z);
-				VertexBuffer.push_back(line.EndLocation.x);
-				VertexBuffer.push_back(line.EndLocation.y);
-				VertexBuffer.push_back(line.EndLocation.z);
-			/*	vertexpos[0] = &line.StartLocation.x;
-				vertexpos[1] = &line.StartLocation.y;
-				vertexpos[2] = &line.StartLocation.z;
-				vertexpos[3] = &line.EndLocation.x;
-				vertexpos[4] = &line.EndLocation.y;
-				vertexpos[5] = &line.EndLocation.z;*/
-				line.VertexBufferData = FVertexBuffer::CreateVertexBuffer(VertexBuffer.data(), VertexBuffer.size());
+				line.VertexBuffer.push_back(line.StartLocation.x);
+				line.VertexBuffer.push_back(line.StartLocation.y);
+				line.VertexBuffer.push_back(line.StartLocation.z);
+				line.VertexBuffer.push_back(line.EndLocation.x);
+				line.VertexBuffer.push_back(line.EndLocation.y);
+				line.VertexBuffer.push_back(line.EndLocation.z);
+				line.VertexBufferData = FVertexBuffer::CreateVertexBuffer(line.VertexBuffer.data(), line.VertexBuffer.size());
 				line.VertexArray->SetLayOut(layout);
 				line.VertexArray->BindBufferLayout();
 				line.VertexArray->UnBindBuffer();
 				line.Shader->UnBindShader();
+			}
+
+			if (EntityManager::HasComponent<FRay>(entityHandle))
+			{
+				auto& ray = EntityManager::GetComponent<FRay>(entityHandle);
+				ray.Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
+
+				ray.Shader->BindShader();
+				ray.Shader->SetUniform4f("u_LineColor", ray.Color);
+				ray.VertexArray = FVertexArray::Create();
+				ray.VertexBuffer.push_back(0);
+				ray.VertexBuffer.push_back(0);
+				ray.VertexBuffer.push_back(0);
+				ray.VertexBuffer.push_back(ray.EndLocation.x);
+				ray.VertexBuffer.push_back(ray.EndLocation.y);
+				ray.VertexBuffer.push_back(ray.EndLocation.z);
+				ray.VertexBufferData = FVertexBuffer::CreateVertexBuffer(ray.VertexBuffer.data(), ray.VertexBuffer.size());
+				ray.VertexArray->SetLayOut(layout);
+				ray.VertexArray->BindBufferLayout();
+				ray.VertexArray->UnBindBuffer();
+				ray.Shader->UnBindShader();
+
+			}
 		}
+
+
 	}
 
 	void FLineSystem::Run(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer)
@@ -55,16 +76,35 @@ namespace KREngine
 		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 		for(auto entityHandle: EntityHandles)
 		{
-			auto& line = EntityManager::GetComponent<FLine>(entityHandle);
-			
-			const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entityHandle).ModelProjection;
-			line.Shader->BindShader();
-			line.Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-			line.Shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
-			line.VertexArray->BindBuffer();
-			renderer->DrawLine(line.StartLocation, line.EndLocation);
-			line.VertexArray->UnBindBuffer();
+			if (EntityManager::HasComponent<FLine>(entityHandle))
+			{
+				auto& line = EntityManager::GetComponent<FLine>(entityHandle);
+
+				const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entityHandle).ModelProjection;
+				line.Shader->BindShader();
+				line.Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+				line.Shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
+				line.Shader->SetUniform4f("u_LineColor", line.Color);
+				line.VertexArray->BindBuffer();
+				renderer->DrawLine(line.VertexBuffer.size());
+				line.VertexArray->UnBindBuffer();
+			}
+
+			if (EntityManager::HasComponent<FRay>(entityHandle))
+			{
+				auto& ray = EntityManager::GetComponent<FRay>(entityHandle);
+
+				const auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entityHandle).ModelProjection;
+				ray.Shader->BindShader();
+				ray.Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
+				ray.Shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
+				ray.Shader->SetUniform4f("u_LineColor", ray.Color);
+				ray.VertexArray->BindBuffer();
+				renderer->DrawLine(ray.VertexBuffer.size());
+				ray.VertexArray->UnBindBuffer();
+			}
 		}
+		
 	}
 
 	void FLineSystem::End()

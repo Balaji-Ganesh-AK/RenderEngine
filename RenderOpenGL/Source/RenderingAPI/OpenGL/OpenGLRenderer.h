@@ -15,7 +15,10 @@ namespace KREngine
 		void ClearColor() override;
 		void SetClearColor(FColor color) override;
 		void SetViewPort(FViewPort viewport) override;
-		void DrawLine(const FVector& startPoint, const FVector& endPoint) const override;
+		void DrawLine(const uint32 count) const override;
+
+		void EnableWireFrameMode() const override;
+		void NormalRenderMode() const override;
 	private:
 
 	};

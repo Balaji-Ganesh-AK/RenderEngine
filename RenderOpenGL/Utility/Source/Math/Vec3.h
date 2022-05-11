@@ -3,7 +3,7 @@
 #include "../Defines.h"
 #include "../../../Dependencies/rapidjson/fwd.h"
 #include "../../../Dependencies/nlohmann/json.hpp"
-
+#include "../glm/glm/glm.hpp"
 
 
 namespace  KREngine
@@ -97,7 +97,14 @@ namespace  KREngine
 			return_string += "(" +  std::to_string(x) + "," + std::to_string(y)+ "," + std::to_string(z) + ")";
 			return return_string.c_str();
 		}
+		std::string ToString() const
+		{
+			std::string return_string;
+			return_string += "(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + ")";
+			return return_string;
+		}
 
+		KREngine::vec3 operator-(const glm::vec3& vec) const;
 	};
 
 	typedef KREngine::vec3 FVector;

@@ -5,6 +5,7 @@
 #include "GameManager.h"
 #include "Shader.h"
 #include "WindowsWindow.h"
+#include "Editor/Gizmo.h"
 #include "Entity/Components/TransformComponent.h"
 #include "glm/gtx/transform.hpp"
 #include "ImGUI/imgui.h"
@@ -15,10 +16,12 @@
 #include "RenderingSystem/FRenderer.h"
 #include "Runtime/Foliage/Foliage.h"
 #include "Runtime/Line/Line.h"
+#include "Systems/Input/Input.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
  
 
 using namespace KREngine;
+
 
 FRenderingSystem::FRenderingSystem()
 {
@@ -29,14 +32,9 @@ FRenderingSystem::FRenderingSystem()
 	DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
 	FoliageSystem = EntityManager::RegisterSystem<FFoliageSystem>();
 	LineSystem = EntityManager::RegisterSystem<FLineSystem>();
+	GizmoSystem = EntityManager::RegisterSystem<FGizmoSystem>();
 
-	EntityManager::RegisterComponent<FLine>();
-	{
-		ComponentUID UID;
-		UID.set(EntityManager::GetComponentType<FTransformComponent>());
-		UID.set(EntityManager::GetComponentType<FLine>());
-		EntityManager::SetSystemComponents<FLineSystem>(UID);
-	}
+	
 	Renderer.reset(FRenderer::CreateRenderer());
 }
 
@@ -48,6 +46,12 @@ void FRenderingSystem::Init()
 	DefaultLitShaderSystem->Init();
 	LineSystem->Init();
 
+
+	Gizmo = KREngine::EntityManager::CreateEntity();
+	EntityManager::AddComponent(Gizmo, KREngine::FTransformComponent{});
+	EntityManager::AddComponent(Gizmo, KREngine::FGizmo{});
+
+	GizmoSystem->Init();
 	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
 		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
 
@@ -55,6 +59,8 @@ void FRenderingSystem::Init()
 	/*shader init*/
 	StaticMeshSystem->Init();
 	Shader.reset(FShader::CreateShader(DefaultVertexShaderPath, DefaultFragmentShaderPath));
+
+	
 
 }
 
@@ -74,13 +80,16 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, uint32 currentSel
 
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-
+		Vec2 LastKnowMousePos;
+		FApplication::Get().GetInputSystem().GetMousePosition(LastKnowMousePos);
+		Logger::Warning("Mouse pos %s", LastKnowMousePos.Print());
 		if (mainCamera.bMainCamera)
 		{
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
 			DefaultLitShaderSystem->Run(mainCamera, Renderer);
 			LineSystem->Run(mainCamera, Renderer);
+			GizmoSystem->Run(mainCamera, Renderer);
 			OutLine(mainCamera, Renderer, currentSelectedEntity);
 		}
 		else
@@ -147,6 +156,8 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 
 	std::vector< glm::mat4> Translations;
 	const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
+
+	
 	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 	glStencilMask(0x00);
 	glDisable(GL_DEPTH_TEST);
@@ -159,30 +170,55 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 		FTransform& transform = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).Transform;
 		auto& model_projection = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).ModelProjection;
 		model_projection = glm::mat4(1.0f);
-		model_projection = glm::translate(model_projection, VectorHelper::AsGLMVec3(transform.GetLocation()));
+		model_projection = glm::translate(model_projection, FVectorHelper::AsGLMVec3(transform.GetLocation()));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model_projection = glm::scale(model_projection, VectorHelper::AsGLMVec3(transform.GetScale() * 1.05f));
+		model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale() * 1.005f));
 
+		
 
 		auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(currentSelectedEntity);
-		{
-			int slot = 0;
-
 			Shader->BindShader();
 			Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-			Shader->SetUniformMat4("u_Model", /*ViewProjection **/model_projection);
+			Shader->SetUniformMat4("u_Model",model_projection);
 			static_mesh.VertexArray->BindBuffer();
-			// 3 vertex two triangles.
+			
 			renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
-			//(glDrawElements(GL_TRIANGLES, static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()), GL_UNSIGNED_INT, nullptr));
 			static_mesh.VertexArray->UnBindBuffer();
 			Shader->UnBindShader();
+
+
+			if (EntityManager::HasComponent<FGizmo>(Gizmo) && EntityManager::HasComponent<FTransformComponent>(Gizmo))
+			{
+				FGizmo& gizmo = EntityManager::GetComponent<FGizmo>(Gizmo);
+				FTransformComponent& transform_gizmo = EntityManager::GetComponent<FTransformComponent>(Gizmo);
+				gizmo.bNeedsToRender = true;
+				transform_gizmo.Transform.SetLocation(transform.GetLocation());
+				transform_gizmo.Transform.SetRotation(transform.GetRotation());
+				
+				const KREngine::vec3 distance = transform.GetLocation() - mainCamera.CameraPosition;
+				transform_gizmo.Transform.SetScale(transform_gizmo.Transform.GetScale() * distance * GizmoScreenSize);
+
+			}
+	}
+	else
+	{
+		if (EntityManager::HasComponent<FGizmo>(Gizmo) && EntityManager::HasComponent<FTransformComponent>(Gizmo))
+		{
+			auto& gizmo = EntityManager::GetComponent<FGizmo>(Gizmo);
+			gizmo.bNeedsToRender = false;
 		}
+		
 	}
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
 	glEnable(GL_DEPTH_TEST);
+
+	
+
+
+
+
 }
 #endif

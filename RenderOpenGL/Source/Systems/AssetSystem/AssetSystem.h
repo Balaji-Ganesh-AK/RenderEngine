@@ -1,12 +1,14 @@
 #pragma once
 #include <filesystem>
 #include <memory>
+#include <set>
 #include <unordered_map>
 
 
+#include "Math/FTriangle.h"
 #include "Math/Vec3.h"
 #include "RenderOpenGL/Utility/Source/Math/Vec2.h"
-
+#include "RenderOpenGL/Utility/Source/Math/NumericLimit.h"
 
 namespace KREngine
 {
@@ -49,21 +51,7 @@ namespace KREngine
 			0,1,2,
 			3,1,2,
 		};
-
 		std::vector<uint32> IndexPositions{
-		};
-
-		std::vector<FVector> VertexPosition =
-		{
-			{0.0f,0.0f,0.0f},
-			{1.0f,0.0f,0.0f},
-			{1.0f,1.0f,0.0f},
-			{0.0f,1.0f,0.0f},
-			{0.0f,0.0f,1.0f},
-			{1.0f,0.0f,1.0f},
-			{1.0f,1.0f,1.0f},
-			{0.0f,1.0f,1.0f},
-
 		};
 		std::vector<FVector> VertexPositionBuffer =
 		{
@@ -76,32 +64,15 @@ namespace KREngine
 		{
 
 		};
-		std::vector<FVector> Normal =
-		{
-			{0.0f,0.0f,1.0f},
-			{0.0f,0.0f,1.0f},
-			{0.0f,0.0f,1.0f},
-			{0.0f,0.0f,1.0f},
 
-			{0.0f,1.0f,0.0f},
-			{0.0f,1.0f,0.0f},
-			{0.0f,1.0f,0.0f},
-			{0.0f,1.0f,0.0f},
+		std::vector<FTriangleID> TriangleIDToClusterIDBuffer;
 
-		};
-
-		std::vector<Vec2> TexCord =
-		{
-			{0,0},
-			{1,0},
-			{1, 1},
-			{0, 1},
-		};
-
+		std::vector<FTriangle> Triangles;
+		std::unordered_map<uint64, std::set<FTriangle>> Clusters;
 		std::string FName;
 
 	private:
-		FGeometryID GeometryId {UINT64_MAX + 1 };
+		FGeometryID GeometryId { TNumericLimit<uint64>::Max() };
 	};
 	class FAssetManager
 	{
@@ -120,6 +91,9 @@ namespace KREngine
 		void LoadAssets(const std::string path);
 
 		void ReadStaticMesh(const std::string path);
+
+
+		void CalculateAdjacentTriangle(FModel& model);
 
 		std::unordered_map<std::string, FGeometryID> AssetNameToID;
 

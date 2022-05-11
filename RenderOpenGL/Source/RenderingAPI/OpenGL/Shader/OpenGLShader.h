@@ -23,6 +23,7 @@ namespace KREngine
 		virtual void SetUniform3f(const std::string& location, KREngine::vec3 vector4) override;
 		virtual void SetUniformInt(const std::string& location, int value) override;
 		virtual void SetUniformF(const std::string& location, float value) override;
+		void SetUniform4f(const std::string& location, KREngine::FColor color) override;
 	};
 
 }

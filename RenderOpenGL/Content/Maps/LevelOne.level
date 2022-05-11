@@ -2,56 +2,45 @@
     "LevelData": {
         "Entities": [
             {
-                "DefaultLitMaterialComponent": {
+                "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "material.Diffuse": "RedColor.jpg",
-                            "material.Specular": "SpecularCrate.png",
-                            "u_Texture": "DefaultTexture.png"
+                            "Material.BaseTexture": "DefaultTexture.png"
                         }
                     }
                 },
                 "EntityID": 0,
-                "Name": "Test",
+                "Name": "Rifle",
                 "TransformComponent": {
                     "Location": [
-                        5.0,
+                        59.0,
                         0.0,
                         0.0
                     ],
                     "Rotation": [
-                        -195.8459930419922,
-                        0.2694416642189026,
-                        161.0019989013672
+                        192.0030059814453,
+                        -3.0,
+                        88.0
                     ],
                     "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        24.0,
+                        5.0,
+                        5.0
                     ]
                 }
             },
             {
-                "DefaultLitMaterialComponent": {
-                    "Material": {
-                        "TextureDetail": {
-                            "material.Diffuse": "DefaultTexture.png",
-                            "material.Specular": "SpecularCrate.png",
-                            "u_Texture": "DefaultTexture.png"
-                        }
-                    }
-                },
                 "EntityID": 1,
                 "FCameraComponent": {
                     "CameraFront": [
-                        0.5031200051307678,
-                        -0.2701154351234436,
-                        0.8209189176559448
+                        -0.5125164985656738,
+                        -0.31405872106552124,
+                        0.7991833090782166
                     ],
                     "CameraPosition": [
-                        -4.284317493438721,
-                        6.552095890045166,
-                        -26.813880920410156
+                        364.5776672363281,
+                        134.6161651611328,
+                        -346.1089782714844
                     ],
                     "CameraUp": [
                         0.0,
@@ -59,54 +48,37 @@
                         0.0
                     ],
                     "Direction": [
-                        0.5165218710899353,
-                        -0.2773106098175049,
-                        0.8427861332893372
+                        -0.49615779519081116,
+                        -0.3040344715118408,
+                        0.7736746668815613
                     ],
                     "MainCamera": true,
                     "Rotator": [
-                        61.305137634277344,
-                        -16.09975814819336,
+                        125.69646453857422,
+                        -17.700084686279297,
                         0.0
                     ]
                 },
-                "Name": "Light",
-                "TransformComponent": {
-                    "Location": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Rotation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ],
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ]
-                }
+                "Name": "Camera"
             },
             {
                 "EntityID": 2,
-                "Name": "Line",
+                "Name": "Ray",
                 "TransformComponent": {
                     "Location": [
-                        4.0,
-                        0.0,
-                        0.0
+                        45.0,
+                        -1.0,
+                        -15.0
                     ],
                     "Rotation": [
-                        0.0,
-                        0.0,
+                        9.0,
+                        28.0,
                         0.0
                     ],
                     "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
+                        -56.0,
+                        -3.0,
+                        4.0
                     ]
                 }
             }

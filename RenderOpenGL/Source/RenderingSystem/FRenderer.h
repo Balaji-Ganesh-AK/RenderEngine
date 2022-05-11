@@ -51,7 +51,7 @@ namespace KREngine
 		virtual void Draw(const uint32 indexBufferCount) const =0 ;
 		virtual void DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const = 0 ;
 
-		virtual void DrawLine(const FVector& startPoint, const FVector& endPoint) const = 0;
+		virtual void DrawLine(const uint32 count) const = 0;
 
 
 		/*Init*/
@@ -60,6 +60,10 @@ namespace KREngine
 		virtual void SetClearColor(FColor color) = 0;
 		virtual void SetViewPort(FViewPort viewport)=0;
 
+		virtual void EnableWireFrameMode() const = 0;
+		virtual void NormalRenderMode() const = 0;
+
+	
 	private:
 		
 	};

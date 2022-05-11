@@ -1,11 +1,13 @@
 #include "Levels.h"
 
+#include "Editor/Gizmo.h"
 #include "Entity/Components/TransformComponent.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
 #include "RenderOpenGL/DevelopmentApp/Source/Sandbox.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Line/Line.h"
+#include "Runtime/Line/Ray.h"
 
 
 LevelOne::LevelOne(const std::string& Name) : FLevel(Name)
@@ -105,18 +107,27 @@ void LevelTwo::Init()
 	//	temp->AddComponent(KREngine::FStaticMesh{"Test"});
 	//	temp->AddComponent(KREngine::DefaultLitMaterialComponent{});
 	//}
-	auto e = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle");
-	e->AddComponent(KREngine::FTransformComponent{});
-	e->AddComponent(KREngine::FStaticMesh{ "Test" });
-	e->AddComponent(KREngine::DefaultLitMaterialComponent{});
-
+	entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle");
+	entity->AddComponent(KREngine::FTransformComponent{});
+	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+	//entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
+	//entity->AddComponent(KREngine::FTransformComponent{});
+	//entity->AddComponent(KREngine::FStaticMesh{ "Rifle" });
+	//entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
 	
 	CameraEntity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Camera");
 	CameraEntity->AddComponent(KREngine::FCameraComponent{ true });
 
-	auto Line = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Line");
+	auto Ray = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray");
+	Ray->AddComponent(KREngine::FTransformComponent{});
+	Ray->AddComponent(KREngine::FRay{KREngine::FVector(0,0,1)});
+
+	/*auto Line = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Line");
 	Line->AddComponent(KREngine::FTransformComponent{});
-	Line->AddComponent(KREngine::FLine{ KREngine::FVector(e->GetComponent<KREngine::FTransformComponent>().Transform.GetLocation()), KREngine::FVector(10,0,0) });
+	Line->AddComponent(KREngine::FLine{ KREngine::FVector(entity->GetComponent<KREngine::FTransformComponent>().Transform.GetLocation()), KREngine::FVector(10,0,0) });*/
+
+
 }
 
 void LevelTwo::Run()

@@ -1,7 +1,6 @@
 #include "Vec3.h"
 
 
-
 namespace KREngine
 {
 	vec3::vec3() :x( 0.0f ), y( 0.0f ), z( 0.0f )
@@ -207,7 +206,10 @@ namespace KREngine
 		return x * other.x + y * other.y + z * other.z;
 	}
 
-
+	KREngine::vec3 vec3::operator-(const glm::vec3& vec) const
+	{
+		return vec3{ x - vec.x, y - vec.y, z - vec.z };
+	}
 
 
 	//void vec3::Serialize(rapidjson::Writer<rapidjson::StringBuffer> stringwriter)

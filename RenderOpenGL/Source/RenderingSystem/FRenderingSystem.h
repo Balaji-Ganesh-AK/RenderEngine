@@ -2,10 +2,12 @@
 #include <memory>
 
 #include "Entity/Entity.h"
+#include "Runtime/Line/Line.h"
 
 
 namespace KREngine
 {
+	class FGizmoSystem;
 	class FLineSystem;
 	class FFoliageSystem;
 	class FShader;
@@ -18,7 +20,7 @@ namespace KREngine
 
 	class FFrameBuffer;
 
-
+	
 	class FRenderingSystem /*: public FSystem*/
 	{
 
@@ -37,10 +39,11 @@ namespace KREngine
 			return Renderer;
 		}
 		void OutLine(const FCameraComponent& mainCamera, const std::shared_ptr<FRenderer>& renderer, uint32 currentSelectedEntity) const;
-	
 
 	private:
 		float test = 0.0;
+
+		float GizmoScreenSize = 0.01f;
 
 	private:
 
@@ -53,14 +56,16 @@ namespace KREngine
 		std::shared_ptr<FFrameBuffer> Framebuffer;
 		std::shared_ptr<FFoliageSystem> FoliageSystem;
 		std::shared_ptr<FLineSystem> LineSystem;
-
+		std::shared_ptr<FGizmoSystem> GizmoSystem;
 
 		std::shared_ptr<FRenderer> Renderer;
 
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
 		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";
 		std::shared_ptr<FShader> Shader;
+
 		//FRenderer* Renderer;
+		FEntityHandle Gizmo;
 		FColor Color{ 1.0f,0.0f,0.0f,1.0f };
 	};
 }

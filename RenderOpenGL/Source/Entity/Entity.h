@@ -239,7 +239,10 @@ namespace KREngine
 			if (ComponentTypes.contains(typeName))
 			{
 				auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
-				return x->HasComponent(entityHandle);
+				if (x)
+					return x->HasComponent(entityHandle);
+				else
+					return false;
 			}
 			else
 			{

@@ -118,11 +118,11 @@ namespace KREngine
 		{
 			rotation.x = rotation.x / -360;
 		}
-		if ( rotation.y < 0 )
+		if ( rotation.y < -360 )
 		{
 			rotation.y = rotation.y / -360;
 		}
-		if ( rotation.z < 0 )
+		if ( rotation.z < -360 )
 		{
 			rotation.z = rotation.z / -360;
 		}

@@ -123,5 +123,12 @@ namespace KREngine
 		const GLint location = glGetUniformLocation( RendererID, name.c_str() );
 		glUniform1f( location, value );
 	}
+
+	void OpenGLShader::SetUniform4f(const std::string& name, KREngine::FColor color)
+	{
+		GLint location = glGetUniformLocation(RendererID, name.c_str());
+		glUniform4f(location, color.r, color.g, color.b, color.a);
+		
+	}
 }
 

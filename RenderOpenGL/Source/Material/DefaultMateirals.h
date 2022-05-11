@@ -30,7 +30,7 @@ namespace KREngine
 		std::unordered_map<std::string, std::string> TextureRenderNameToTexturePath;
 		std::string u_Texture = "DefaultTexture.png";
 		/*Used for calling binding functions*/
-		uint32 ShaderID;
+		uint32 ShaderID{};
 		std::shared_ptr<FShader> Shader;
 
 

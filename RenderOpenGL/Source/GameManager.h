@@ -128,7 +128,11 @@ namespace KREngine
 
 		FLevel* CurrentLevel = nullptr;
 		bool bShowDebugProfiler{ false };
+
+
+		/*Settings*/
 		bool bEnableVSync{ false };
+		bool bEnableWireMode{ false };
 		float test{ 0.0f };
 
 

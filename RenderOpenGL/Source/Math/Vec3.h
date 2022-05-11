@@ -5,7 +5,7 @@ namespace  KREngine
 {
 	
 
-	class VectorHelper
+	class FVectorHelper
 	{
 	public:
 		static glm::vec3 AsGLMVec3(const FVector& other);

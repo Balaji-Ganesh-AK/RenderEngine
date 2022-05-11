@@ -3,6 +3,7 @@
     in vec3 f_Normal;
     in vec2 f_Texture;
     in vec3 f_FragPos;
+  
 
     struct FMaterial
     {
@@ -28,6 +29,15 @@ float LinearizeDepth(float depth)
 //        {
 //         color  = vec4(1, 0, 0, 1.0);
 //        }
+
+//if(f_ID < 0)
+//{
+//color  = vec4(0,0, 0, 1.0);
+//}
+//else{
+//color  = vec4(1,0,0, 1.0 );
+//}
+ //color  = vec4(1,0, 0, 1.0);
        color =texture( Material.BaseTexture, f_Texture ) * vec4(  Material.ObjectColor );
       // color  = vec4(0.04, 0.28, 0.26, 1.0);
 //     float depth = LinearizeDepth(gl_FragCoord.z) / far; 

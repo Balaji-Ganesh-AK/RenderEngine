@@ -2,6 +2,7 @@
 #include "GameManager.h"
 
 
+#include "Editor/Gizmo.h"
 #include "Entity/Components/EditorComponentUI.h"
 #include "RenderingSystem/FRenderingSystem.h"
 #include "Entity/Components/EditorTagComponent.h"
@@ -14,6 +15,7 @@
 #include "Runtime/Camera/FCameraComponent.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
+#include "RenderingSystem/FRenderer.h"
 #include "RenderOpenGL/Utility/Source/Utility.h"
 #include "RenderOpenGL/Utility/Source/File/FJson.h"
 #include "Runtime/Foliage/Foliage.h"
@@ -23,7 +25,8 @@
 #include "Systems/SceneManagement/LevelSystem.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
-#include "Systems/LevelSystem/LevelManager.h"
+#include <Runtime/Line/Ray.h>
+
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 namespace KREngine
@@ -65,21 +68,21 @@ namespace KREngine
 
 	void FApplication::SaveLevelInternal()
 	{
-		if(CurrentLevel)
+		if (CurrentLevel)
 		{
-			
+
 			Logger::Warning("saving level %s", CurrentLevel->GetMapName().c_str());
 
 			std::string filename = DefaultMapsPath;
 			filename += "/" + CurrentLevel->GetMapName() + Level_Extension;
-			std::ofstream file(filename, std::ios::out | std::ios::binary | std::ios::trunc);
+			std::ofstream file(filename, std::ios::trunc | std::ios::binary);
 			
 			FJson json;
 			json["LevelData"] = CurrentLevel->ToJson();
 
-		//	std::vector<std::uint8_t> binary_data;
-		//	FJson::to_cbor(json, binary_data);
-			//file.write(reinterpret_cast<const char*>(binary_data.data()), binary_data.size());
+	/*		std::vector<std::uint8_t> binary_data;
+			FJson::to_cbor(json, binary_data);
+			file.write(reinterpret_cast<const char*>(binary_data.data()), binary_data.size());*/
 			file << json.dump(4);
 			file.close();
 		}
@@ -96,10 +99,11 @@ namespace KREngine
 
 			std::string filename = DefaultMapsPath;
 			filename += "/" + CurrentLevel->GetMapName() + Level_Extension;
-			std::ifstream input(filename, std::ios::binary);
+			std::ifstream input(filename);
 			FJson json = FJson::parse(input);
 			Logger::Verbose("Reading Map from file %d", filename.c_str());
 			CurrentLevel->FromJson(json);
+			input.close();
 		}
 		else
 		{
@@ -386,6 +390,18 @@ namespace KREngine
 					glfwSwapInterval(bEnableVSync);
 				}
 				ImGui::Separator();
+				if (ImGui::MenuItem("Enable WireFrame Mode", "", (bEnableWireMode) != 0))
+				{
+					bEnableWireMode = !bEnableWireMode;
+					if(bEnableWireMode)
+					{
+						RenderingSystem->GetRenderer()->EnableWireFrameMode();
+					}
+					else
+					{
+						RenderingSystem->GetRenderer()->NormalRenderMode();
+					}
+				}
 
 
 
@@ -555,7 +571,9 @@ namespace KREngine
 		EntityManager::RegisterComponent<FStaticMesh>();
 		EntityManager::RegisterComponent<FPointLight>();
 		EntityManager::RegisterComponent<FFoliageInstance>();
-
+		
+		EntityManager::RegisterComponent<FGizmo>();
+		EntityManager::RegisterComponent<FRay>();
 
 		//EntityManager::RegisterSystem<FStaticMeshSystem>();
 		//StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
@@ -636,7 +654,23 @@ namespace KREngine
 			OUID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
 			EntityManager::SetSystemComponents<FEditorComponentPanelSystem>(UID, OUID);
 		}
-		
+		EntityManager::RegisterComponent<FLine>();
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			
+
+			ComponentUID OID;
+			OID.set(EntityManager::GetComponentType<FLine>());
+			OID.set(EntityManager::GetComponentType<FRay>());
+			EntityManager::SetSystemComponents<FLineSystem>(UID, OID);
+		}
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FGizmo>());
+			EntityManager::SetSystemComponents<FGizmoSystem>(UID);
+		}
 
 		
 

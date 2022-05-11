@@ -140,7 +140,7 @@ project "AssetLoader"
 		"../Content/**.mtl",
 		"AssetLoader/Source/**.h",
 		"AssetLoader/Source/**.cpp",
-		"$(SolutionDir)/Dependencies/nlohmann/**.h",
+	
 		"$(SolutionDir)/Dependencies/nlohmann/**.cpp",
 		"Config/**.ini",
 		"$(SolutionDir)/Dependencies/FBX/lib-vc2019/**.lib",
@@ -152,10 +152,10 @@ project "AssetLoader"
 
 	includedirs 
 	{	
-		"$(SolutionDir)/Dependencies/glm",
+	
 		"$(SolutionDir)AssetLoader/Dependencies/ASSIMPO/include",
 		"$(SolutionDir)AssetLoader/Dependencies/ASSIMPO/bin",
-
+		
 		"$(SolutionDir)AssetLoader/Dependencies/ASSIMPO/lib/Release",
 		"$(SolutionDir)AssetLoader/Dependencies/ASSIMPO/lib/Debug",
 		"../",
@@ -242,14 +242,19 @@ project "Utility"
 	{
 		
 		"Utility/Source/**.h",
-		"Utility/Source/**.cpp"
+		"Utility/Source/**.cpp",
+			"Dependencies/glm/glm/**.hpp",
+		"$(SolutionDir)/Dependencies/glm/glm/**.h",
+		"$(SolutionDir)/Dependencies/glm/glm/**.cpp",
+		"$(SolutionDir)/Dependencies/glm/glm/**.inl",
+		"$(SolutionDir)/Dependencies/nlohmann/**.h",
 	}
 
 	removefiles { "**/foo.h", "**/CMakeCXXCompilerId.cpp" }
 
 	includedirs 
 	{	
-		
+		"$(SolutionDir)/Dependencies/glm"
 		
 	}
 	libdirs 

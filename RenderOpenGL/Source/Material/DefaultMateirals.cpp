@@ -6,7 +6,6 @@
 #include "RenderingSystem/FRenderingSystem.h"
 #include "RenderingSystem/WindowsWindow.h"
 #include "Runtime/Camera/FCameraComponent.h"
-#include "Math/Color.h"
 #include "RenderingSystem/Buffers.h"
 #include "RenderingSystem/FRenderer.h"
 #include "RenderingSystem/Textures.h"
@@ -81,7 +80,7 @@ namespace KREngine
 	FJson FDefaultLitMaterial::ToJson()
 	{
 		FJson return_value;
-		for (auto texture_map : TextureRenderNameToTexturePath)
+		for (const auto& texture_map : TextureRenderNameToTexturePath)
 		{
 			return_value["TextureDetail"][texture_map.first] = texture_map.second;
 		}
@@ -177,19 +176,6 @@ namespace KREngine
 				else
 				{
 					Logger::Error("Mesh does not look good, please check the mesh! ");
-					for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
-					{
-
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-						static_mesh.VertexBuffer.push_back(0);
-
-					}
 				}
 					
 			
@@ -253,9 +239,9 @@ namespace KREngine
 						
 						
 						shader->SetUniformF("material.Shininess", material.GetShininess());
-						shader->SetUniform3f("CameraPosition", VectorHelper::AsVec3(mainCamera.CameraPosition));
+						shader->SetUniform3f("CameraPosition", FVectorHelper::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform3f("CameraFront",vec3(-mainCamera.CameraFront.x, -mainCamera.CameraFront.y, -mainCamera.CameraFront.z));
-						shader->SetUniform3f("u_CameraPos", VectorHelper::AsVec3(mainCamera.CameraPosition));
+						shader->SetUniform3f("u_CameraPos", FVectorHelper::AsVec3(mainCamera.CameraPosition));
 						shader->SetUniform4f("u_ObjectColor", vec4(Color.r, Color.g, Color.b, Color.a));
 
 

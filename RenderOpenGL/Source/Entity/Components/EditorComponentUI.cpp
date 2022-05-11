@@ -11,8 +11,11 @@
 #include "Systems/TextureSystem/TextureManager.h"
 #include "glm/gtx/transform.hpp"
 #include <glm/glm.hpp>
+
+#include "Editor/Gizmo.h"
 #include "RenderingSystem/FRenderer.h"
 #include "RenderingSystem/WindowsWindow.h"
+#include "Runtime/Line/Line.h"
 
 namespace KREngine
 {
@@ -20,6 +23,10 @@ namespace KREngine
 	{
 	
 	}
+
+
+
+
 
 	void FEditorComponentPanelSystem::GUIRun()
 	{
@@ -44,7 +51,7 @@ namespace KREngine
 				}
 			}
 			ImGui::Separator();
-			if (EntityManager::HasComponent<FTransformComponent>(CurrentSelectedEntity))
+			if (EntityManager::HasComponent<FTransformComponent>(CurrentSelectedEntity) && !EntityManager::HasComponent<FGizmo>(CurrentSelectedEntity))
 			{
 				if (ImGui::CollapsingHeader("Transform"))
 				{
@@ -60,7 +67,7 @@ namespace KREngine
 			}
 			ImGui::Separator();
 
-
+			
 			{
 				SCOPED_TIMER("Materials update");
 				if (EntityManager::HasComponent<DefaultLitMaterialComponent>(CurrentSelectedEntity))

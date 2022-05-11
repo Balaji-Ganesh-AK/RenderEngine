@@ -1,5 +1,7 @@
 #include "Vec2.h"
 
+#include <string>
+
 namespace KREngine
 {
 	Vec2::Vec2()
@@ -153,6 +155,13 @@ namespace KREngine
 		this->x = other / this->x;
 		this->y = other / this->y;
 		return *this;
+	}
+
+	const char* Vec2::Print()
+	{
+		std::string return_string;
+		return_string = "(" + std::to_string(x) + "," + std::to_string(y) + ")";
+		return return_string.c_str();
 	}
 
 	// Printing overloading

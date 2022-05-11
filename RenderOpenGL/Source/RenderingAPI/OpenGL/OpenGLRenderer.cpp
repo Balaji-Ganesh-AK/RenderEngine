@@ -1,7 +1,6 @@
 #include "OpenGLRenderer.h"
 
 
-#include "Math/Color.h"
 #include "RenderingSystem/Buffers.h"
 #include "RenderOpenGL/Utility/Source/Math/Color.h"
 
@@ -36,6 +35,7 @@ namespace KREngine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CCW);
+	
 	//	glLineWidth()
 	//	glEnable(GL_LINE_SMOOTH);
 		//glFrontFace(GL_CCW);
@@ -59,8 +59,21 @@ namespace KREngine
 		glViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
 	}
 
-	void OpenGLRenderer::DrawLine(const FVector& startPoint, const FVector& endPoint) const
+	void OpenGLRenderer::DrawLine(const uint32 count) const
 	{
-		glDrawArrays(GL_LINES, 0,2);
+		//glEnable(GL_POINT_SMOOTH);
+	//	glEnable(GL_LINE_SMOOTH);
+		//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+		glDrawArrays(GL_LINES, 0, count);
+	}
+
+	void OpenGLRenderer::EnableWireFrameMode() const
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
+	void OpenGLRenderer::NormalRenderMode() const
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }

@@ -111,6 +111,7 @@ namespace KREngine
 								BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 								BufferElement{"v_Texture", EShaderDataType::FVec2, true},
 								BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+								//BufferElement{"v_ID", EShaderDataType::Float, true},
 								//BufferElement{"v_Normal", EShaderDataType::FVec3, true},
 				};
 
@@ -136,25 +137,30 @@ namespace KREngine
 							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].y);
 							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].z);
 
+
+							//static_mesh.VertexBuffer.push_back(static_mesh.Model->TriangleIDToClusterIDBuffer[i]);
+							/*if(i  < static_mesh.Model->Triangles.size())
+							{
+								auto& id = static_mesh.Model->Triangles[(static_mesh.Model->TriangleIDToClusterIDBuffer[i])];
+								if(id.ClusterID != TNumericLimit<uint64>::Max())
+								{
+									static_mesh.VertexBuffer.push_back(static_cast<float>(id.ClusterID));
+								}
+								
+								
+							}
+							else
+							{
+								static_mesh.VertexBuffer.push_back(-1.0);
+							}*/
+							
+
 						}
 
 					}
 					else
 					{
 						Logger::Error("Mesh does not look good, please check the mesh! ");
-						for (int i = 0; i < static_mesh.Model->VertexPosition.size(); i++)
-						{
-
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-							static_mesh.VertexBuffer.push_back(0);
-
-						}
 					}
 					//static_mesh.VertexBufferData.reset(FVertexBuffer::CreateVertexBuffer(static_mesh.Positions, sizeof(static_mesh.Positions) / sizeof(float)));
 					//static_mesh.IndexBufferData.reset(FIndexBuffer::CreateIndexBuffer(static_mesh.Indices, sizeof(static_mesh.Indices) / sizeof(unsigned int)));

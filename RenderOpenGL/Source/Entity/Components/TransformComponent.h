@@ -6,6 +6,9 @@
 
 namespace KREngine
 {
+
+	
+
 	struct FTransformComponent
 	{
 	public:
