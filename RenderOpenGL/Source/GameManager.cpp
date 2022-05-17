@@ -575,17 +575,10 @@ namespace KREngine
 		EntityManager::RegisterComponent<FGizmo>();
 		EntityManager::RegisterComponent<FRay>();
 
-		//EntityManager::RegisterSystem<FStaticMeshSystem>();
-		//StaticMeshSystem = EntityManager::RegisterSystem<FStaticMeshSystem>();
-		//DefaultShaderSystem = EntityManager::RegisterSystem<FDefaultUnLitMaterialSystem>();
-		//DefaultLitShaderSystem = EntityManager::RegisterSystem<FDefaultLitMaterialSystem>();
+
+
 		EditorTagSystem = EntityManager::RegisterSystem<FEditorTagSystem>();
 		RenderingSystem = std::make_shared<FRenderingSystem>();
-		/*TransformSystem = EntityManager::RegisterSystem<FTransformSystem>();*/
-	
-
-		
-		
 		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
 		EditorPanelSystem = EntityManager::RegisterSystem<FEditorComponentPanelSystem>();
 
@@ -605,14 +598,7 @@ namespace KREngine
 			EntityManager::SetSystemComponents<FStaticMeshSystem>(UID, OUID);
 		}
 
-		//{
-		//	ComponentUID UID;
-		//	UID.set(EntityManager::GetComponentType<FTransformComponent>());
-		//	//UID.set(EntityManager::GetComponentType<DefaultLitMaterialComponent>());
-		//	UID.set(EntityManager::GetComponentType<DefaultUnLitMaterialComponent>());
-		//	UID.set(EntityManager::GetComponentType<FStaticMesh>());
-		//	EntityManager::SetSystemComponents<FRenderingSystem>(UID);
-		//}
+	
 
 		/*Default unlit shader*/
 		{
@@ -688,7 +674,7 @@ namespace KREngine
 			SCOPED_TIMER("Engine Loop");
 			EditorTagSystem->Run();
 			CameraSystem->Run();
-			RenderingSystem->Run(CameraSystem->GetMainCamera(), EditorPanelSystem->GetCurrentSelectedEntity());
+			RenderingSystem->Run(CameraSystem->GetMainCamera(), EditorPanelSystem->GetCurrentSelectedEntityMutable());
 		}
 		{
 			SCOPED_TIMER("Game Loop");

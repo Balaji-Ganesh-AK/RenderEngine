@@ -83,7 +83,6 @@ namespace KREngine
 		FPointLight Light;
 		FDirectionalLight DirectionalLight;
 		float test = 0.0;
-		std::shared_ptr<FFrameBuffer> Framebuffer;
 
 		bool PointLight = false;
 		bool bHasDirectionalLight = false;

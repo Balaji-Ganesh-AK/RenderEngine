@@ -111,6 +111,16 @@ void LevelTwo::Init()
 	entity->AddComponent(KREngine::FTransformComponent{});
 	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
 	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+
+	entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
+	entity->AddComponent(KREngine::FTransformComponent{});
+	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+
+	entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle3");
+	entity->AddComponent(KREngine::FTransformComponent{});
+	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
 	//entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
 	//entity->AddComponent(KREngine::FTransformComponent{});
 	//entity->AddComponent(KREngine::FStaticMesh{ "Rifle" });

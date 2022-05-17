@@ -133,7 +133,7 @@ namespace KREngine
 						BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 						BufferElement{"v_Texture", EShaderDataType::FVec2, true},
 						BufferElement{"v_Normal", EShaderDataType::FVec3, true},
-						//BufferElement{"v_Normal", EShaderDataType::FVec3, true},
+						BufferElement{"v_ID", EShaderDataType::Int, true},
 		};
 
 		for (const FEntityHandle Entity : EntityHandles)
@@ -169,6 +169,7 @@ namespace KREngine
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].x);
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].y);
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].z);
+						static_mesh.VertexBuffer.push_back(Entity);
 
 					}
 

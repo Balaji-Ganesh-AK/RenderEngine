@@ -1,6 +1,7 @@
 #version 330 core
 
     layout( location = 0 ) out vec4 color;
+    layout( location = 1 ) out int id;
      #define MAX_POINTLIGHTS 100
     struct FMaterial
     {
@@ -64,6 +65,7 @@
     in vec3 f_Normal;
     in vec2 f_Texture;
     in vec3 f_FragPos;
+    in float f_ID;
 
     uniform vec4 u_LightColor;
     uniform vec4 u_ObjectColor;
@@ -96,6 +98,7 @@
 
 
         color =   vec4(Result, 1.0);
+        id =int(f_ID);
         
     }
     vec3 CalulateDirectionLight(FDirectionalLight DirectionalLight, vec3 Normal, vec3 ViewDirection, FMaterial material)

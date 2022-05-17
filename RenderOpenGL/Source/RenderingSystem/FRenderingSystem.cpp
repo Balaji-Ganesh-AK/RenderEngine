@@ -64,7 +64,7 @@ void FRenderingSystem::Init()
 
 }
 
-void FRenderingSystem::Run(const FCameraComponent& mainCamera, uint32 currentSelectedEntity)
+void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& currentSelectedEntity)
 {
 	TransformSystem->Run();
 
@@ -80,22 +80,36 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, uint32 currentSel
 
 		const glm::mat4 ViewProjection = mainCamera.ViewProjection;
 
-		Vec2 LastKnowMousePos;
-		FApplication::Get().GetInputSystem().GetMousePosition(LastKnowMousePos);
-		Logger::Warning("Mouse pos %s", LastKnowMousePos.Print());
+		
 		if (mainCamera.bMainCamera)
 		{
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
-			DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			/*DefaultLitShaderSystem->Run(mainCamera, Renderer);
 			LineSystem->Run(mainCamera, Renderer);
 			GizmoSystem->Run(mainCamera, Renderer);
-			OutLine(mainCamera, Renderer, currentSelectedEntity);
+			OutLine(mainCamera, Renderer, currentSelectedEntity);*/
 		}
 		else
 		{
 			Logger::Error("No main camera found! ");
 		}
+
+
+		if(FApplication::Get().GetInputSystem().IsMouseKeyPressed(Input::MouseCode::ButtonLeft))
+		{
+			//Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
+			Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
+
+			//Logger::Warning("Mouse pos %s", Test.Print());
+			//Logger::Warning("min bounds %s", min_bounds.Print());
+			auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
+			//Logger::Warning(" max bounds %s", Test.Print());
+			Logger::Warning(" max bounds %d", x);
+		}
+		
+
+
 		Framebuffer->UnBindBuffer();
 
 
@@ -132,17 +146,33 @@ void FRenderingSystem::GUIRun()
 	DefaultLitShaderSystem->GUIRun();
 	{
 		SCOPED_TIMER("Screen frame buffer");
-	ImGui::Begin("ScreenPort");
-	if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
-	{
-		test = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
-		Framebuffer->OnWindowResize(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
-	}
+		ImGui::Begin("ScreenPort");
+		if (test != FApplication::Get().GetWindowsWindow()->Properties->GetWidth())
+		{
+			test = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
+			Framebuffer->OnWindowResize(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
+			//Framebuffer->OnWindowResize(ImGui::GetContentRegionAvail().x, (ImGui::GetContentRegionAvail().y));
+			//ImGui::Image(reinterpret_cast<void*>(textureID), ImGui::GetContentRegionAvail()/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
+		}
+		
+		const uint32 textureID = Framebuffer->GetTextureRendererID();
 
-	const uint32 textureID = Framebuffer->GetTextureRendererID();
-	auto WindowSize = ImGui::GetWindowSize();
-	ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()),static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()) }/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
-	ImGui::End();
+		const auto imgui_cursor_pos = ImGui::GetCursorPos();
+		Vec2 viewport_offset{ imgui_cursor_pos.x, imgui_cursor_pos.y };
+
+		const auto window_size = ImGui::GetWindowSize();
+		auto bounds = ImGui::GetWindowPos();
+		bounds.x += viewport_offset.x;
+		bounds.y += viewport_offset.y;
+		Vec2 min_bounds = { bounds.x,bounds.y };
+		Vec2 max_bounds = { bounds.x + window_size.x,bounds.y + window_size.y };
+
+		FApplication::Get().GetInputSystem().SetCurrentViewportBounds(min_bounds, max_bounds);
+
+		
+		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2(static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth()), static_cast<float>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight()))/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
+		//ImGui::Image(reinterpret_cast<void*>(textureID), ImGui::GetContentRegionAvail()/*, ImVec2( 0, 1 ), ImVec2( 0, 1 )*/);
+		ImGui::End();
 
 	}
 

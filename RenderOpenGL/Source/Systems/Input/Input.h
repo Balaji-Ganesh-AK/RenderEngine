@@ -23,7 +23,7 @@ namespace KREngine
 
 		virtual void GetMousePosition(Vec2& mousePos) = 0;
 
-
+		virtual void SetCurrentViewportBounds(const Vec2& minBounds, const Vec2& maxBounds) = 0 ;
 
 
 		/*Event functions*/

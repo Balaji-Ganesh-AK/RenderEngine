@@ -6,3 +6,5 @@ KREngine::FInput* KREngine::FInput::Create(WindowsWindow* pointer)
 {
 	return new WindowsInput(pointer);
 }
+
+

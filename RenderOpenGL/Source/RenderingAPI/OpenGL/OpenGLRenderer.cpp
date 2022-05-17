@@ -35,7 +35,7 @@ namespace KREngine
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CCW);
-	
+		glEnable(GL_MULTISAMPLE);
 	//	glLineWidth()
 	//	glEnable(GL_LINE_SMOOTH);
 		//glFrontFace(GL_CCW);

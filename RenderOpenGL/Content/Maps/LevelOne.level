@@ -13,12 +13,12 @@
                 "Name": "Rifle",
                 "TransformComponent": {
                     "Location": [
-                        59.0,
+                        40.0,
                         0.0,
-                        0.0
+                        -31.0
                     ],
                     "Rotation": [
-                        192.0030059814453,
+                        10.003000259399414,
                         -3.0,
                         88.0
                     ],
@@ -30,17 +30,24 @@
                 }
             },
             {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "DefaultTexture.png"
+                        }
+                    }
+                },
                 "EntityID": 1,
                 "FCameraComponent": {
                     "CameraFront": [
-                        -0.5125164985656738,
-                        -0.31405872106552124,
-                        0.7991833090782166
+                        0.7092662453651428,
+                        -0.7032567262649536,
+                        -0.04869697242975235
                     ],
                     "CameraPosition": [
-                        364.5776672363281,
-                        134.6161651611328,
-                        -346.1089782714844
+                        -249.0133056640625,
+                        164.2637481689453,
+                        -52.42587661743164
                     ],
                     "CameraUp": [
                         0.0,
@@ -48,31 +55,83 @@
                         0.0
                     ],
                     "Direction": [
-                        -0.49615779519081116,
-                        -0.3040344715118408,
-                        0.7736746668815613
+                        0.9974659085273743,
+                        -0.9890145063400269,
+                        -0.06848425418138504
                     ],
                     "MainCamera": true,
                     "Rotator": [
-                        125.69646453857422,
-                        -17.700084686279297,
+                        -27.6002197265625,
+                        -81.49947357177734,
                         0.0
                     ]
                 },
-                "Name": "Camera"
+                "Name": "Camera",
+                "TransformComponent": {
+                    "Location": [
+                        -7.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        15.0,
+                        -279.99700927734375,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        8.0
+                    ]
+                }
             },
             {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "DefaultTexture.png"
+                        }
+                    }
+                },
                 "EntityID": 2,
+                "FCameraComponent": {
+                    "CameraFront": [
+                        0.0,
+                        0.0,
+                        -1.0
+                    ],
+                    "CameraPosition": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "CameraUp": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "Direction": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "MainCamera": true,
+                    "Rotator": [
+                        90.0,
+                        0.0,
+                        0.0
+                    ]
+                },
                 "Name": "Ray",
                 "TransformComponent": {
                     "Location": [
-                        45.0,
+                        -15.0,
                         -1.0,
                         -15.0
                     ],
                     "Rotation": [
-                        9.0,
-                        28.0,
+                        -5.0,
+                        -41.0,
                         0.0
                     ],
                     "Scale": [
@@ -81,9 +140,79 @@
                         4.0
                     ]
                 }
+            },
+            {
+                "EntityID": 3,
+                "FCameraComponent": {
+                    "CameraFront": [
+                        0.0,
+                        0.0,
+                        -1.0
+                    ],
+                    "CameraPosition": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "CameraUp": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "Direction": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "MainCamera": true,
+                    "Rotator": [
+                        90.0,
+                        0.0,
+                        0.0
+                    ]
+                },
+                "Name": "Ray",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 4,
+                "Name": "Ray",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
             }
         ],
-        "EntityCount": 3,
+        "EntityCount": 5,
         "FormatVersion": 1,
         "LevelName": "LevelOne"
     }

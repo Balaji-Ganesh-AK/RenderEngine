@@ -37,7 +37,12 @@ namespace KREngine
 		 
 	Vec2 WindowsInput::GetMousePosition()
 	{
-		return MousePos;
+		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
+		mouse_x -= MinBounds.x;
+		mouse_y -= MinBounds.y;
+		
+		//return MousePos;
+		return Vec2(mouse_x,mouse_y);
 		
 	}
 

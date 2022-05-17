@@ -19,9 +19,16 @@ namespace KREngine
 		void GetMousePosition(Vec2& mousePos) override;
 		bool OnEvent(FEvent& event) override;
 		bool OnMouseMovedEvent(MouseMovedEvent& event) override;
+		inline void SetCurrentViewportBounds(const Vec2& minBounds, const Vec2& maxBounds) override
+		{
+			MinBounds = minBounds;
+			MaxBounds = maxBounds;
+		};
 	private:
 		WindowsWindow* WindowWindow;
 		Vec2 MousePos;
 		std::bitset< static_cast<int>(Input::KeyCodes::Count)> KeyCodes;
+		Vec2 MinBounds;
+		Vec2 MaxBounds;
 	};
 }

@@ -64,10 +64,12 @@ namespace KREngine
 		virtual void BindBuffer() override;
 		virtual void UnBindBuffer() override;
 		virtual uint32 GetTextureRendererID() override;
+		virtual void OnWindowResize(float width, float height) override;
+		int ReadPixel(uint32 attachmentID, int x, int y) override;
 	private:
 		void InitializeFrameBuffer( float Width, float Height );
-	public:
-		virtual void OnWindowResize(float width, float height) override;
+
+	
 	};
 	
 }

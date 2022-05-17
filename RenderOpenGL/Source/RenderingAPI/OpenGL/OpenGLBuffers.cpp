@@ -116,7 +116,8 @@ void KREngine::OpenGLFrameBuffer::UnBindBuffer()
 
 uint32 KREngine::OpenGLFrameBuffer::GetTextureRendererID()
 {
-	return RendererTextureID;
+	/*Refactor this*/
+	return ColorAttachments[0];
 }
 
 void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Height)
@@ -125,31 +126,67 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 	{
 		glDeleteFramebuffers( 1, &RendererID );
 		glDeleteFramebuffers( 1, &RendererTextureID );
-		glDeleteFramebuffers( 1, &DepthAttachmentID );
+		glDeleteFramebuffers(1, &DepthAttachmentID);
+		glDeleteFramebuffers( 2, ColorAttachments.data());
 	}
 
 
 	glCreateFramebuffers( 1, &RendererID );
 	glBindFramebuffer( GL_FRAMEBUFFER, RendererID );
 
-	glCreateTextures( GL_TEXTURE_2D, 1, &RendererTextureID );
-	glBindTexture( GL_TEXTURE_2D, RendererTextureID );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Width ), static_cast< int >( Height ), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, RendererTextureID, 0 );
+	ColorAttachments.resize(2);
+	glCreateTextures( GL_TEXTURE_2D, 2, ColorAttachments.data());
+	glBindTexture( GL_TEXTURE_2D, ColorAttachments[0]);
+
+	//Goes into color attachment function
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Width ), static_cast< int >( Height ), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ColorAttachments[0], 0 );
+
+
+
+	glBindTexture(GL_TEXTURE_2D, ColorAttachments[1]);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, static_cast<int>(Width), static_cast<int>(Height), 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, ColorAttachments[1], 0);
+
+
 
 	//depth texture
 	glCreateTextures( GL_TEXTURE_2D, 1, &DepthAttachmentID );
 	glBindTexture( GL_TEXTURE_2D, DepthAttachmentID );
 	glTexStorage2D( GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, static_cast< int >( Width ), static_cast< int >( Height ) );
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	//glTexImage2D( GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, Width, Height, 0,GL_DEPTH24_STENCIL8,GL_UNSIGNED_INT_24_8, NULL );
 
 	glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, DepthAttachmentID, 0 );
 
+
+	GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+	glDrawBuffers(2, buffers);
+	
+
+
 	//Error check
-	//glCheckFramebufferStatus( GL_FRAMEBUFFER ) == GL_FRAMEBUFFER_COMPLETE;
+	glCheckFramebufferStatus( GL_FRAMEBUFFER ) == GL_FRAMEBUFFER_COMPLETE;
 	//
 	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 }
@@ -157,5 +194,13 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 void KREngine::OpenGLFrameBuffer::OnWindowResize(float width, float height)
 {
 	InitializeFrameBuffer( width, height );
+}
+
+int KREngine::OpenGLFrameBuffer::ReadPixel(uint32 attachmentID, int x, int y)
+{
+	glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentID);
+	int pixelData;
+	glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+	return pixelData;
 }
 

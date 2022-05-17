@@ -28,7 +28,7 @@ namespace KREngine
 		FRenderingSystem();
 		~FRenderingSystem()= default;
 		void Init();
-		void Run(const FCameraComponent& mainCamera, uint32 currentSelectedEntity);
+		void Run(const FCameraComponent& mainCamera, FEntityHandle& currentSelectedEntity);
 		void Stop();
 
 		void GUIInit();

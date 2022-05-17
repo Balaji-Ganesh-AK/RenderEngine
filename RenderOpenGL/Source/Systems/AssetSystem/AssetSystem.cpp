@@ -144,7 +144,7 @@ namespace KREngine
 				static_mesh_model.TriangleIDToClusterIDBuffer.push_back(TriangleID);
 				TriangleID++;
 			}
-			CalculateAdjacentTriangle(static_mesh_model);
+		//	CalculateAdjacentTriangle(static_mesh_model);
 			Logger::Verbose("Total triangles %d", static_mesh_model.Triangles.size());
 
 		}

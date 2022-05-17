@@ -20,6 +20,10 @@ namespace KREngine
 			return CurrentSelectedEntity;
 		}
 
+		FEntityHandle& GetCurrentSelectedEntityMutable()
+		{
+			return CurrentSelectedEntity;
+		}
 	private:
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
 		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";

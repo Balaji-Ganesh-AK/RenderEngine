@@ -108,10 +108,16 @@ namespace KREngine
 		virtual void UnBindBuffer() = 0;
 		virtual uint32 GetTextureRendererID() = 0 ;
 		virtual void OnWindowResize( float width, float height ) = 0;
+
+
+		virtual int ReadPixel(uint32 attachmentID, int x, int y) = 0;
 	protected:
 		uint32 RendererID{ 0 };
 		uint32 RendererTextureID{ 0 };
 		uint32 DepthAttachmentID{ 0 };
+		uint32 EntityID{ 0 };
+
+		std::vector<uint32_t> ColorAttachments;
 	};
 
 	struct BufferElement
