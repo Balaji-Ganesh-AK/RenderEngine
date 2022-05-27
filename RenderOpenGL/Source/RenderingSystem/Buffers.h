@@ -96,13 +96,18 @@ namespace KREngine
 		int* Indices = nullptr;
 
 	};
+	struct FFrameBufferSettings
+	{
+		float Width;
+		float Height;
 
+	};
 	class FFrameBuffer
 	{
 	public:
 		virtual ~FFrameBuffer() = default;
 
-		static FFrameBuffer* CreateFrameBuffer( float width, float height);
+		static FFrameBuffer* CreateFrameBuffer(FFrameBufferSettings settings);
 
 		virtual void BindBuffer() = 0;
 		virtual void UnBindBuffer() = 0;
@@ -112,6 +117,7 @@ namespace KREngine
 
 		virtual int ReadPixel(uint32 attachmentID, int x, int y) = 0;
 	protected:
+		FFrameBufferSettings Settings;
 		uint32 RendererID{ 0 };
 		uint32 RendererTextureID{ 0 };
 		uint32 DepthAttachmentID{ 0 };

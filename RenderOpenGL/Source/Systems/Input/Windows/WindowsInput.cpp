@@ -26,22 +26,36 @@ namespace KREngine
 	bool WindowsInput::IsMouseKeyPressed(Input::MouseCode mouseCode)
 	{
 		auto* window = WindowWindow->GetCurrentWindow();
-
-		if ( window )
+		if ( window  )
 		{
 			const int state = glfwGetMouseButton( window, static_cast< int >( mouseCode ) );
 			return state == GLFW_PRESS;
 		}
 		return false;
-	}	 
-		 
+	}
+
+	bool WindowsInput::IsMouseKeyPressedInViewPort(Input::MouseCode mouseCode)
+	{
+		auto* window = WindowWindow->GetCurrentWindow();
+		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
+		auto viewport = MaxBounds - MinBounds;
+		if (window &&  mouse_x > viewport.x /*&& mouse_x < MaxBounds.x *//*&& mouse_y > MinBounds.x && mouse_x < MaxBounds.x*/)
+		{
+			const int state = glfwGetMouseButton(window, static_cast<int>(mouseCode));
+			return state == GLFW_PRESS;
+		}
+		return false;
+	}
+
 	Vec2 WindowsInput::GetMousePosition()
 	{
+		auto viewport = MaxBounds - MinBounds;
 		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
 		mouse_x -= MinBounds.x;
 		mouse_y -= MinBounds.y;
-		
+		mouse_y = viewport.y - mouse_y;
 		//return MousePos;
+
 		return Vec2(mouse_x,mouse_y);
 		
 	}

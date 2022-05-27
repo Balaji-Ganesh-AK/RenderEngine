@@ -52,8 +52,8 @@ void FRenderingSystem::Init()
 	EntityManager::AddComponent(Gizmo, KREngine::FGizmo{});
 
 	GizmoSystem->Init();
-	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(),
-		FApplication::Get().GetWindowsWindow()->Properties->GetHeight()));
+	FFrameBufferSettings settings(FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), FApplication::Get().GetWindowsWindow()->Properties->GetHeight());
+	Framebuffer.reset(FFrameBuffer::CreateFrameBuffer(settings));
 
 
 	/*shader init*/
@@ -85,10 +85,10 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		{
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
-			/*DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			//DefaultLitShaderSystem->Run(mainCamera, Renderer);
 			LineSystem->Run(mainCamera, Renderer);
 			GizmoSystem->Run(mainCamera, Renderer);
-			OutLine(mainCamera, Renderer, currentSelectedEntity);*/
+			OutLine(mainCamera, Renderer, currentSelectedEntity);
 		}
 		else
 		{
@@ -96,16 +96,17 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		}
 
 
-		if(FApplication::Get().GetInputSystem().IsMouseKeyPressed(Input::MouseCode::ButtonLeft))
+		if(FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
 		{
 			//Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
 			Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
 
 			//Logger::Warning("Mouse pos %s", Test.Print());
 			//Logger::Warning("min bounds %s", min_bounds.Print());
-			auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
-			//Logger::Warning(" max bounds %s", Test.Print());
-			Logger::Warning(" max bounds %d", x);
+			//auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
+			//currentSelectedEntity = x;
+			Logger::Warning(" max bounds %s", Test.Print());
+		//	Logger::Warning(" max bounds %d", x);
 		}
 		
 

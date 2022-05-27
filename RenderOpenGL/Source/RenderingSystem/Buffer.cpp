@@ -12,9 +12,10 @@ KREngine::FIndexBuffer* KREngine::FIndexBuffer::CreateIndexBuffer( unsigned int*
 	return new OpenGLIndexBuffer( indices, count );
 }
 
-KREngine::FFrameBuffer* KREngine::FFrameBuffer::CreateFrameBuffer( float width, float height)
+
+KREngine::FFrameBuffer* KREngine::FFrameBuffer::CreateFrameBuffer(FFrameBufferSettings Settings)
 {
-	return new OpenGLFrameBuffer( width, height );
+	return new OpenGLFrameBuffer(Settings);
 }
 
 

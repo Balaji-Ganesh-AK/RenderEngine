@@ -33,6 +33,7 @@ float LinearizeDepth(float depth)
 
          color =texture( Material.BaseTexture, f_Texture ) * vec4(  Material.ObjectColor );
       // color = vec4(f_ID/2 + 0.1,0,0.0,1.0 );
+
        id =  int(f_ID);
                
     }

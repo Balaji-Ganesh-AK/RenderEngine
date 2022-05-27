@@ -15,6 +15,7 @@ namespace KREngine
 		}
 		virtual bool IsKeyPressed(Input::KeyCodes keyCode) override;
 		virtual bool IsMouseKeyPressed(Input::MouseCode mouseCode) override;
+		virtual bool IsMouseKeyPressedInViewPort(Input::MouseCode mouseCode) override;
 		virtual Vec2 GetMousePosition() override;
 		void GetMousePosition(Vec2& mousePos) override;
 		bool OnEvent(FEvent& event) override;

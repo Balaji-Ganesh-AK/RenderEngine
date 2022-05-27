@@ -55,11 +55,15 @@ namespace KREngine
 		
 	};
 
+	struct OpenGLFrameBufferSettings : public FFrameBufferSettings
+	{
+		
+	};
 
 	class OpenGLFrameBuffer : public FFrameBuffer
 	{
 	public:
-		OpenGLFrameBuffer( float Width, float Height);
+		OpenGLFrameBuffer(const FFrameBufferSettings settings);
 		~OpenGLFrameBuffer();
 		virtual void BindBuffer() override;
 		virtual void UnBindBuffer() override;
@@ -67,7 +71,7 @@ namespace KREngine
 		virtual void OnWindowResize(float width, float height) override;
 		int ReadPixel(uint32 attachmentID, int x, int y) override;
 	private:
-		void InitializeFrameBuffer( float Width, float Height );
+		void InitializeFrameBuffer( );
 
 	
 	};

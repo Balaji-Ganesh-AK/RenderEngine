@@ -92,9 +92,10 @@ KREngine::OpenGLVertexArray::~OpenGLVertexArray()
 }
 
 //************************************************************** Frame buffer ******************************************************************
-KREngine::OpenGLFrameBuffer::OpenGLFrameBuffer( float Width, float Height )
+KREngine::OpenGLFrameBuffer::OpenGLFrameBuffer(const FFrameBufferSettings settings)
 {
-	InitializeFrameBuffer( Width, Height);
+	Settings = settings;
+	InitializeFrameBuffer( );
 }
 
 KREngine::OpenGLFrameBuffer::~OpenGLFrameBuffer()
@@ -107,6 +108,9 @@ KREngine::OpenGLFrameBuffer::~OpenGLFrameBuffer()
 void KREngine::OpenGLFrameBuffer::BindBuffer()
 {
 	glBindFramebuffer( GL_FRAMEBUFFER, RendererID );
+	glViewport(0, 0, static_cast<int>(Settings.Width), static_cast<int>(Settings.Height));
+	int invalidId = -1;
+	glClearTexImage(ColorAttachments[1], 0, GL_RED_INTEGER, GL_INT, &invalidId);
 }
 
 void KREngine::OpenGLFrameBuffer::UnBindBuffer()
@@ -120,7 +124,7 @@ uint32 KREngine::OpenGLFrameBuffer::GetTextureRendererID()
 	return ColorAttachments[0];
 }
 
-void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Height)
+void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer()
 {
 	if(RendererID)
 	{
@@ -140,7 +144,7 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 	glBindTexture( GL_TEXTURE_2D, ColorAttachments[0]);
 
 	//Goes into color attachment function
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Width ), static_cast< int >( Height ), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, static_cast< int >( Settings.Width ), static_cast< int >(Settings.Height), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -154,7 +158,7 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 
 	glBindTexture(GL_TEXTURE_2D, ColorAttachments[1]);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, static_cast<int>(Width), static_cast<int>(Height), 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, static_cast<int>(Settings.Width), static_cast<int>(Settings.Height), 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -169,7 +173,7 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 	//depth texture
 	glCreateTextures( GL_TEXTURE_2D, 1, &DepthAttachmentID );
 	glBindTexture( GL_TEXTURE_2D, DepthAttachmentID );
-	glTexStorage2D( GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, static_cast< int >( Width ), static_cast< int >( Height ) );
+	glTexStorage2D( GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, static_cast< int >(Settings.Width), static_cast< int >(Settings.Height) );
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -193,7 +197,9 @@ void KREngine::OpenGLFrameBuffer::InitializeFrameBuffer(float Width, float Heigh
 
 void KREngine::OpenGLFrameBuffer::OnWindowResize(float width, float height)
 {
-	InitializeFrameBuffer( width, height );
+	Settings.Width = width;
+	Settings.Height = height;
+	InitializeFrameBuffer();
 }
 
 int KREngine::OpenGLFrameBuffer::ReadPixel(uint32 attachmentID, int x, int y)

@@ -78,7 +78,7 @@ namespace KREngine
 			std::ofstream file(filename, std::ios::trunc | std::ios::binary);
 			
 			FJson json;
-			json["LevelData"] = CurrentLevel->ToJson();
+			//json["LevelData"] = CurrentLevel->ToJson();
 
 	/*		std::vector<std::uint8_t> binary_data;
 			FJson::to_cbor(json, binary_data);
@@ -102,7 +102,7 @@ namespace KREngine
 			std::ifstream input(filename);
 			FJson json = FJson::parse(input);
 			Logger::Verbose("Reading Map from file %d", filename.c_str());
-			CurrentLevel->FromJson(json);
+			//CurrentLevel->FromJson(json);
 			input.close();
 		}
 		else

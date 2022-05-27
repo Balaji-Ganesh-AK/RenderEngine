@@ -35,8 +35,8 @@ namespace KREngine
 		{
 
 			/*Needs to go when we have mouse picking.*/
-			IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", &tempID), "Entity ID", );
-			CurrentSelectedEntity = tempID;
+			//IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", CurrentSelectedEntity), "Entity ID", );
+			//CurrentSelectedEntity = tempID;
 
 
 

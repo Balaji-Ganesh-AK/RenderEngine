@@ -19,6 +19,7 @@ namespace KREngine
 
 		virtual bool IsKeyPressed(Input::KeyCodes keyCode) = 0;
 		virtual  bool IsMouseKeyPressed(Input::MouseCode mouseCode) = 0;
+		virtual bool IsMouseKeyPressedInViewPort(Input::MouseCode mouseCode) = 0;
 		virtual  Vec2 GetMousePosition() = 0;
 
 		virtual void GetMousePosition(Vec2& mousePos) = 0;
