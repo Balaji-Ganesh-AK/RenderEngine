@@ -333,7 +333,7 @@ project "DevelopmentApp"
 	includedirs 
 	{
 		"$(SolutionDir)/Dependencies/glm",
-		"../Source/",
+		"$(SolutionDir)../../Source/",
 		"$(SolutionDir)/Source/",
 		"$(SolutionDir)/Dependencies/GLFW/include",
 		"$(SolutionDir)/Dependencies/FBX/include",

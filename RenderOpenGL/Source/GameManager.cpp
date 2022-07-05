@@ -446,6 +446,8 @@ namespace KREngine
 		if (bShowDebugProfiler)
 			EProfileDebugger::Instance().GUIRun();
 
+		/*Game loop gui*/
+		GUIRun();
 
 		ImGui::End();
 		ImGui::Render();
@@ -460,7 +462,6 @@ namespace KREngine
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
-
 
 
 
@@ -496,8 +497,15 @@ namespace KREngine
 	{
 		if(CurrentLevel)
 		{
+			CurrentLevel->PreInit();
 			CurrentLevel->Init();
 			LoadLevelInternal();
+
+
+			for(auto& system: CurrentLevel->Systems)
+			{
+				system->Init();
+			}
 		}
 	}
 
@@ -506,6 +514,11 @@ namespace KREngine
 		if (CurrentLevel)
 		{
 			CurrentLevel->Run();
+
+			for (auto& system : CurrentLevel->Systems)
+			{
+				system->Run();
+			}
 		}
 	}
 
@@ -515,6 +528,22 @@ namespace KREngine
 		{
 			CurrentLevel->End();
 			SaveLevelInternal();
+			for (auto& system : CurrentLevel->Systems)
+			{
+				system->End();
+			}
+
+		}
+	}
+
+	void FApplication::GUIRun()
+	{
+		if (CurrentLevel)
+		{
+			for (auto& system : CurrentLevel->Systems)
+			{
+				system->GUIRun();
+			}
 		}
 	}
 

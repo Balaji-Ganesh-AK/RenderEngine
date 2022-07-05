@@ -18,6 +18,7 @@ namespace KREngine
 	{
 		return val < 0 ? -val : val;
 	}
+	constexpr float EPSILON = 0.00001f;
 
 	template <std::floating_point T> constexpr auto  epsilon = static_cast<T>(0.000001);
 	constexpr  bool close_enough (std::integral auto a, std::integral auto b)
@@ -26,8 +27,14 @@ namespace KREngine
 	}
 	constexpr bool close_enough(std::floating_point auto a, std::floating_point auto b)
 	{
-		return absolute(a - b) <= epsilon<std::common_type_t<decltype(a), decltype(b)>>;
+		return fabs(a - b) <= (EPSILON * std::max( abs(a), abs(b)));
 	}
 
+	constexpr  int FLOAT_ROUND_OFF_VALUE = 1000;
+	FORCE_INLINE float RoundOff(float value)
+	{
+		const float return_value = static_cast<int>(value * FLOAT_ROUND_OFF_VALUE + .5);
+		return static_cast<float>(return_value) / FLOAT_ROUND_OFF_VALUE;
+	}
 
 }

@@ -1,5 +1,9 @@
 #include "Vec3.h"
 
+#include <iostream>
+
+#include "FMath.h"
+
 
 namespace KREngine
 {
@@ -64,13 +68,32 @@ namespace KREngine
 		return *this;
 	}
 
+#pragma optimize("", off)
 	vec3& vec3::Subtract( const vec3& other )
 	{
-		y -= other.y;
-		x -= other.x;
-		z -= other.z;
+		/*x =RoundOff(x);
+		float tempX = RoundOff(other.x);
+		float tempY =RoundOff(other.y);
+		float tempZ = RoundOff(other.z);
+		y = RoundOff(y);
+		z=  RoundOff(z);*/
+		if (!close_enough(x, other.x))
+			x -= other.x;
+		else
+			x = 0;
+		if (!close_enough(y, other.y))
+			y -= other.y;
+		else
+			y = 0;
+		if (close_enough(z, other.z))
+			z = 0;
+		else
+			z -= other.z;
+		
 		return *this;
 	}
+
+#pragma optimize("", on)
 
 	vec3& vec3::Multiply( const vec3& other )
 	{
@@ -118,6 +141,24 @@ namespace KREngine
 		y /= value;
 		z /= value;
 		return *this;
+	}
+
+	float vec3::Distance(const vec3& other) const
+	{
+		const float diffx = x - other.x;
+		const float diffy = y - other.y;
+		const float diffz = z - other.z;
+
+		return sqrt((diffx * diffx) + (diffy * diffy) + (diffz * diffz));
+	}
+
+	float vec3::DistanceSqrt(const vec3& other) const
+	{
+		const float diffx = x - other.x;
+		const float diffy = y - other.y;
+		const float diffz = z - other.z;
+
+		return ((diffx * diffx) + (diffy * diffy) + (diffz * diffz));
 	}
 
 	bool vec3::operator==( const vec3& other ) const

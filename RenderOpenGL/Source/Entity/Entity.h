@@ -105,6 +105,7 @@ namespace KREngine
 			return false;
 		}
 
+#pragma optimize("", off)
 		Component& GetData(FEntityHandle entityHandle)
 		{
 			
@@ -119,6 +120,7 @@ namespace KREngine
 			std::_Throw_Cpp_error(1);
 		}
 
+#pragma optimize("", on)
 
 		
 	public:

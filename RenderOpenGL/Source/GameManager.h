@@ -55,6 +55,8 @@ namespace KREngine
 		virtual void Run();
 		virtual void End();
 
+		virtual void GUIRun();
+
 		void SetActiveLevel(FLevel* level);
 		void ChangeLevel(FLevel* newLevel);
 		void OnEvent(FEvent& event);

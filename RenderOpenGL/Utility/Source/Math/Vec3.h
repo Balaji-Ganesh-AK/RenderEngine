@@ -15,7 +15,15 @@ namespace  KREngine
 		vec3();
 		vec3( float x, float y, float z );
 		
-
+		static vec3 Random(float min = 0.000f , float max = 1.000f)
+		{
+			vec3 temp;
+		
+			temp.x = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+			temp.y = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+			temp.z = min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+			return temp;
+		};
 
 		static vec3 Down();
 		static vec3 Zero();
@@ -32,6 +40,9 @@ namespace  KREngine
 		vec3& Subtract( float value );
 		vec3& Multiply( float value );
 		vec3& Divide( float value );
+		float Distance(const vec3& other) const;
+		float DistanceSqrt(const vec3& other) const;
+
 
 		friend vec3 operator+( vec3 left, const vec3& right );
 		friend vec3 operator-( vec3 left, const vec3& right );

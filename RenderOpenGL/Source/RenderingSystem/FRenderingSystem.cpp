@@ -105,7 +105,7 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			//Logger::Warning("min bounds %s", min_bounds.Print());
 			//auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
 			//currentSelectedEntity = x;
-			Logger::Warning(" max bounds %s", Test.Print());
+		//	Logger::Warning(" max bounds %s", Test.Print());
 		//	Logger::Warning(" max bounds %d", x);
 		}
 		
