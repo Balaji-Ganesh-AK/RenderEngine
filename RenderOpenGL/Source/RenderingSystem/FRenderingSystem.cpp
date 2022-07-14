@@ -85,10 +85,10 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		{
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
-			//DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			DefaultLitShaderSystem->Run(mainCamera, Renderer);
 			LineSystem->Run(mainCamera, Renderer);
-			GizmoSystem->Run(mainCamera, Renderer);
-			OutLine(mainCamera, Renderer, currentSelectedEntity);
+			//GizmoSystem->Run(mainCamera, Renderer);
+		//	OutLine(mainCamera, Renderer, 0);
 		}
 		else
 		{

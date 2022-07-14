@@ -27,10 +27,10 @@ namespace KREngine
 	}
 	constexpr bool close_enough(std::floating_point auto a, std::floating_point auto b)
 	{
-		return fabs(a - b) <= (EPSILON * std::max( abs(a), abs(b)));
+		return absolute(a - b) <= epsilon<std::common_type_t<decltype(a), decltype(b)>>;
 	}
 
-	constexpr  int FLOAT_ROUND_OFF_VALUE = 1000;
+	constexpr  int FLOAT_ROUND_OFF_VALUE = 100000;
 	FORCE_INLINE float RoundOff(float value)
 	{
 		const float return_value = static_cast<int>(value * FLOAT_ROUND_OFF_VALUE + .5);

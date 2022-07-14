@@ -30,7 +30,14 @@ public:
 
 	float speed=0.5f;
 	float Preception = 1000.0f;
+	float Preception_Cohesion = 100.0f;
+	float Preception_Sep = 100.0f;
 private:
 
 	FVector Align(FEntityHandle boid);
+	FVector Cohesion(FEntityHandle boid);
+	FVector Separation(FEntityHandle i_boid);
+	FVector Max{ 50,50,50 };
+	FVector Min{ -50,-50,-50 };
+	void EdgeLimit(FVector& pos);
 };

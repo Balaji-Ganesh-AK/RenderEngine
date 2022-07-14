@@ -59,12 +59,17 @@ namespace KREngine
 		temp.z = 0;
 		return temp;
 	}
-
+	
 	vec3& vec3::Add( const vec3& other )
 	{
-		x += other.x;
-		y += other.y;
-		z += other.z;
+		
+		x = RoundOff(x) + RoundOff(other.x);
+		y = RoundOff(y) + RoundOff(other.y);
+		z = RoundOff(z) + RoundOff(other.z);
+
+		//x += other.x;
+		//y += other.y;
+		//z += other.z;
 		return *this;
 	}
 
@@ -72,12 +77,12 @@ namespace KREngine
 	vec3& vec3::Subtract( const vec3& other )
 	{
 		/*x =RoundOff(x);
-		float tempX = RoundOff(other.x);
+		
 		float tempY =RoundOff(other.y);
 		float tempZ = RoundOff(other.z);
 		y = RoundOff(y);
 		z=  RoundOff(z);*/
-		if (!close_enough(x, other.x))
+		/*if (!close_enough(x, other.x))
 			x -= other.x;
 		else
 			x = 0;
@@ -89,7 +94,14 @@ namespace KREngine
 			z = 0;
 		else
 			z -= other.z;
-		
+		*/
+		x = RoundOff(x) - RoundOff(other.x);
+		y = RoundOff(y) - RoundOff(other.y);
+		z = RoundOff(z) - RoundOff(other.z);
+
+	/*	x -= other.x;
+		y -= other.y;
+		z -= other.z;*/
 		return *this;
 	}
 
@@ -129,9 +141,14 @@ namespace KREngine
 
 	vec3& vec3::Multiply( float value )
 	{
-		x *= value;
-		y *= value;
-		z *= value;
+	
+	/*	x = RoundOff(x) *value;
+		y = RoundOff(y) *value;
+		z = RoundOff(z) *value;*/
+
+		x *=value;
+		y *=value;
+		z *=value;
 		return *this;
 	}
 
@@ -236,6 +253,16 @@ namespace KREngine
 		return sqrt( x * x + y * y + z * z );
 	}
 
+	void vec3::SetMagnitude(float new_mag)
+	{
+		
+			const float mag = Magnitude();
+			x = x * new_mag / mag;
+			y = y * new_mag / mag;
+			z = z * new_mag / mag;
+		
+	}
+
 	vec3 vec3::Normalize() const
 	{
 		float temp = Magnitude();
@@ -306,7 +333,7 @@ namespace KREngine
 
 	vec3 operator*( vec3 left, float value )
 	{
-		return  vec3( left.x * value, left.y * value, left.z * value );
+		return  { left.x * value, left.y * value, left.z * value };
 	}
 
 	vec3 operator/( vec3 left, float value )

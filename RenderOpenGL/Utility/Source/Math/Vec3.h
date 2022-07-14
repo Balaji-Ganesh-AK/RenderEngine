@@ -80,6 +80,8 @@ namespace  KREngine
 
 
 		float Magnitude() const;
+		void SetMagnitude(float new_mag);
+		
 		vec3 Normalize() const;
 		float Dot( const vec3& other )const;
 

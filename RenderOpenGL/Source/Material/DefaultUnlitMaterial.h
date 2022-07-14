@@ -73,6 +73,7 @@ namespace KREngine
 			Shininess = shininess;
 		}
 		FJson ToJson();
+		void FromJson(FJson& json);
 		~DefaultUnlitMaterial() override;
 	};
 
@@ -80,6 +81,7 @@ namespace KREngine
 	{
 		DefaultUnlitMaterial Material;
 		FJson ToJson();
+		void FromJson(FJson& json);
 	};
 
 	class FDefaultUnLitMaterialSystem : public FSystem

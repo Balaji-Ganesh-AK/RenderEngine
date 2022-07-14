@@ -35,8 +35,9 @@ namespace KREngine
 		{
 
 			/*Needs to go when we have mouse picking.*/
-			//IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", CurrentSelectedEntity), "Entity ID", );
-			//CurrentSelectedEntity = tempID;
+			
+			IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", &tempID), "Entity ID", );
+			CurrentSelectedEntity = tempID;
 
 
 
@@ -111,7 +112,7 @@ namespace KREngine
 					if (ImGui::CollapsingHeader("Material Component"))
 					{
 						auto& material = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(CurrentSelectedEntity).Material;
-						CurrentDisplayedTexture = material.u_Texture;
+						CurrentDisplayedTexture = material.TextureRenderNameToTexturePath["Material.BaseTexture"];
 						if (ImGui::BeginCombo("##Texture", CurrentDisplayedTexture.c_str()))
 						{
 							std::vector<std::string >TextureNames;
@@ -123,6 +124,7 @@ namespace KREngine
 								{
 									CurrentDisplayedTexture = textureName;
 									material.TextureRenderNameToTextureMap["Material.BaseTexture"] = FApplication::GetTextureManager().GetTexture(CurrentDisplayedTexture);
+									material.TextureRenderNameToTexturePath["Material.BaseTexture"] = CurrentDisplayedTexture;
 								}
 								if (is_selected)
 								{

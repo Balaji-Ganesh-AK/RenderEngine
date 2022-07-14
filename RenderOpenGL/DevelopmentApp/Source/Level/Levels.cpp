@@ -4,6 +4,7 @@
 #include "Entity/Components/TransformComponent.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
+#include "RenderOpenGL/Dependencies/ImGUI/imgui.h"
 #include "RenderOpenGL/DevelopmentApp/Source/Sandbox.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Line/Line.h"
@@ -107,58 +108,73 @@ void LevelTwo::Init()
 
 	
 	
-	for(int i = 3; i < 100; i++)
-	{
-		std::string name = "Boid--" ;
-		name += std::to_string(i);
-		auto temp = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), name);
-		KREngine::FTransform Temp;
-		float rangeX=rand() % 50 + 0;
-		float rangeY=rand() % 50 + 0;
-		float rangeZ=rand() % 50 + 0;
-		FVector& scale = Temp.GetScale();
-		scale = scale / 3;
-		Temp.SetScale(scale);
+	//for(int i = 1; i < 100; i++)
+	//{
+	//	std::string name = "Boid--" ;
+	//	name += std::to_string(i);
+	//	auto temp = new FEntity(KREngine::EntityManager::CreateEntity(), name);
+	//	KREngine::FTransform Temp;
+	//	float rangeX=rand() % 50 + 0;
+	//	float rangeY=rand() % 50 + 0;
+	//	float rangeZ=rand() % 50 + 0;
+	//	FVector& scale = Temp.GetScale();
+	//	scale = scale / 5;
+	//	Temp.SetScale(scale);
 
-		Temp.SetLocation(KREngine::FVector(rangeX, rangeY, rangeZ));
-		temp->AddComponent(KREngine::FTransformComponent{ Temp });
-		temp->AddComponent(KREngine::FStaticMesh{"Test"});
-		temp->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
-		temp->AddComponent(FBoidComponent{});
-	}
-	//entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle");
-	//entity->AddComponent(KREngine::FTransformComponent{});
-	//entity->AddComponent(KREngine::FStaticMesh{ "Test" });
-	//entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
-	//entity->AddComponent(FBoidComponent{});
+	//	Temp.SetLocation(KREngine::FVector(rangeX, rangeY, rangeZ));
+	//	temp->AddComponent(KREngine::FTransformComponent{ Temp });
+	//	temp->AddComponent(KREngine::FStaticMesh{"Sphere"});
+	//	temp->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+	//	temp->AddComponent(FBoidComponent{});
+	//}
 
-	//entity1 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
-	//entity1->AddComponent(KREngine::FTransformComponent{});
-	//entity1->AddComponent(KREngine::FStaticMesh{ "Test" });
-	//entity1->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+
+	KREngine::FTransform Temp;
+	//	float rangeX=rand() % 50 + 0;
+	//	float rangeY=rand() % 50 + 0;
+	//	float rangeZ=rand() % 50 + 0;
+	Ray = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray");
+	Ray->AddComponent(KREngine::FTransformComponent{});
+	Ray->AddComponent(KREngine::FRay{ KREngine::FVector(0,0,1), 1000 });
+
+	Ray1 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray_two");
+	Ray1->AddComponent(KREngine::FTransformComponent{});
+	Ray1->AddComponent(KREngine::FRay{ KREngine::FVector(0.5,0,1), 1000 });
+	entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle");
+		Temp.SetScale({1000,1,1000});
+		Temp.SetLocation({0,-200,1200});
+	entity->AddComponent(KREngine::FTransformComponent{Temp});
+	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+//	entity->AddComponent(FBoidComponent{});
+
+
+	entity1 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
+	Temp.SetScale({ 10,10,10 });
+	entity1->AddComponent(KREngine::FTransformComponent{ Temp });
+	entity1->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity1->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
 	// entity1->AddComponent(FBoidComponent{});
 	////entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle3");
 	////entity->AddComponent(KREngine::FTransformComponent{});
 	////entity->AddComponent(KREngine::FStaticMesh{ "Test" });
 	////entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
-	//entity2 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Rifle1");
-	//entity2->AddComponent(KREngine::FTransformComponent{});
-	//entity2->AddComponent(KREngine::FStaticMesh{ "Test" });
-	//entity2->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
-	//entity2->AddComponent(FBoidComponent{});
+	entity2 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "LitCube");
+	entity2->AddComponent(KREngine::FTransformComponent{});
+	entity2->AddComponent(KREngine::FStaticMesh{ "Cube" });
+	entity2->AddComponent(KREngine::DefaultLitMaterialComponent{});
+//	entity2->AddComponent(FBoidComponent{});
 
 	CameraEntity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Camera");
 	CameraEntity->AddComponent(KREngine::FCameraComponent{ true });
 
-	/*auto Ray = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray");
-	Ray->AddComponent(KREngine::FTransformComponent{});
-	Ray->AddComponent(KREngine::FRay{KREngine::FVector(0,0,1)});*/
+	
 
 	/*auto Line = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Line");
 	Line->AddComponent(KREngine::FTransformComponent{});
 	Line->AddComponent(KREngine::FLine{ KREngine::FVector(entity->GetComponent<KREngine::FTransformComponent>().Transform.GetLocation()), KREngine::FVector(10,0,0) });*/
 
-	
+	Test();
 }
 
 
@@ -209,6 +225,17 @@ void LevelTwo::GUIInit()
 void LevelTwo::GUIRun()
 {
 	FLevel::GUIRun();
+
+	ImGui::Begin("Test Menu");
+	SCOPED_TIMER("Boid Controls ");
+	
+	if(ImGui::Button("Test"))
+	{
+		Test();
+	}
+	ImGui::End();
+	
+	ImGui::End();
 }
 
 void LevelTwo::GUIEnd()
@@ -260,6 +287,40 @@ void LevelTwo::MoveTo(const game_object_t* Target, const game_object_t* Follower
 void LevelTwo::Test()
 {
 	KREngine::Logger::Warning("Testing");
+	vec3 A = Ray->GetComponent<FRay>().EndLocation - Ray->GetComponent<FRay>().StartLocation;
+	vec3 B = Ray1->GetComponent<FRay>().EndLocation - Ray1->GetComponent<FRay>().StartLocation;
+	const auto k = A.Dot(B) / B.Dot(B);
+	vec3 AD = { k * B.x, k * B.y, k * B.z };
+	AD.Add(Ray->GetComponent<FRay>().StartLocation);
+	auto ray = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray_three");
+	ray->AddComponent(KREngine::FTransformComponent{});
+	ray->AddComponent(KREngine::FLine{ Ray->GetComponent<FRay>().StartLocation, AD , FColor::Blue()});
+
+
+	auto ray1 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Ray_Four");
+	ray1->AddComponent(KREngine::FTransformComponent{});
+	ray1->AddComponent(KREngine::FLine{ Ray->GetComponent<FRay>().EndLocation, AD , FColor::Blue() });
+	auto length = (Ray->GetComponent<FRay>().EndLocation - AD).Magnitude();
+
+	entity1->GetComponent<FTransformComponent>().Transform.SetLocation(AD);
+
+	KREngine::FTransform Temp;
+	auto sphere = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Sphere");
+	Temp.SetLocation(Ray->GetComponent<FRay>().EndLocation);
+	Temp.SetScale({500,500,500});
+	sphere->AddComponent(KREngine::FTransformComponent{ Temp });
+	sphere->AddComponent(KREngine::FStaticMesh{ "Sphere" });
+	sphere->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+
+	Logger::Warning("Angle %s",AD.ToPrint());
+	Logger::Warning("Distance %f", length);
+	
+}
+
+void LevelTwo::LineCircle()
+{
+	Logger::Warning("Pressed");
+	
 }
 
 InstanceStaticMeshTestMap::InstanceStaticMeshTestMap(const std::string& Name): FLevel(Name)

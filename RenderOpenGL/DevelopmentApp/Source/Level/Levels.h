@@ -111,9 +111,12 @@ public:
 	void Test();
 
 private:
+
+	void LineCircle();
 	std::shared_ptr<FBoidSystem> BoidSystem;
 
-
+	KREngine::FEntity* Ray;
+	KREngine::FEntity* Ray1;
 	KREngine::FEntity* entity{};
 	KREngine::FEntity* entity1{};
 	KREngine::FEntity* entity2{};

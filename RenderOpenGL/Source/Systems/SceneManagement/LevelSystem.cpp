@@ -53,12 +53,12 @@ namespace  KREngine
 				Entity["DefaultUnLitMaterialComponent"] = default_lit_component.ToJson();
 
 			}
-			if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(entity_handle))
+		/*	if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(entity_handle))
 			{
 				auto& default_lit_component = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(entity_handle);
 				Entity["DefaultUnLitMaterialComponent"] = default_lit_component.ToJson();
 
-			}
+			}*/
 			if (EntityManager::HasComponent<FCameraComponent>(entity_handle))
 			{
 				auto& component = EntityManager::GetComponent<FCameraComponent>(entity_handle);
@@ -142,6 +142,23 @@ namespace  KREngine
 						{
 							EntityManager::AddComponent(entity_handle, DefaultLitMaterialComponent{});
 							auto& component = EntityManager::GetComponent<DefaultLitMaterialComponent>(entity_handle);
+							component.FromJson(default_material_component_json);
+
+						}
+					}
+
+					if (entity_data.contains("DefaultUnLitMaterialComponent"))
+					{
+						FJson default_material_component_json = entity_data["DefaultUnLitMaterialComponent"];
+						if (EntityManager::HasComponent<DefaultUnLitMaterialComponent>(entity_handle))
+						{
+							auto& component = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(entity_handle);
+							component.FromJson(default_material_component_json);
+						}
+						else
+						{
+							EntityManager::AddComponent(entity_handle, DefaultUnLitMaterialComponent{});
+							auto& component = EntityManager::GetComponent<DefaultUnLitMaterialComponent>(entity_handle);
 							component.FromJson(default_material_component_json);
 
 						}

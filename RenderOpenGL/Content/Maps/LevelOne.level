@@ -1,1 +1,239 @@
-null
+{
+    "LevelData": {
+        "Entities": [
+            {
+                "EntityID": 0,
+                "Name": "Ray",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 1,
+                "Name": "Ray_two",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "BlueColor.jpg"
+                        }
+                    }
+                },
+                "EntityID": 2,
+                "Name": "Rifle",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        -200.0,
+                        1200.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1000.0,
+                        1.0,
+                        1000.0
+                    ]
+                }
+            },
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "SpecularCrate.png"
+                        }
+                    }
+                },
+                "EntityID": 3,
+                "Name": "Rifle1",
+                "TransformComponent": {
+                    "Location": [
+                        399.6000061035156,
+                        0.0,
+                        800.2000122070313
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ]
+                }
+            },
+            {
+                "DefaultLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "material.Diffuse": "grass.png",
+                            "material.Specular": "SpecularCrate.png",
+                            "u_Texture": "DefaultTexture.png"
+                        }
+                    }
+                },
+                "EntityID": 4,
+                "Name": "LitCube",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 5,
+                "FCameraComponent": {
+                    "CameraFront": [
+                        -0.13937021791934967,
+                        -0.31492751836776733,
+                        0.9388272762298584
+                    ],
+                    "CameraPosition": [
+                        560.9295654296875,
+                        300.6289367675781,
+                        -858.0364379882813
+                    ],
+                    "CameraUp": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "Direction": [
+                        -0.13748914003372192,
+                        -0.3106769323348999,
+                        0.9261559247970581
+                    ],
+                    "MainCamera": true,
+                    "Rotator": [
+                        102.99945068359375,
+                        -18.10003089904785,
+                        0.0
+                    ]
+                },
+                "Name": "Camera"
+            },
+            {
+                "EntityID": 6,
+                "Name": "Ray_three",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 7,
+                "Name": "Ray_Four",
+                "TransformComponent": {
+                    "Location": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ]
+                }
+            },
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "RedColor.jpg"
+                        }
+                    }
+                },
+                "EntityID": 8,
+                "Name": "Sphere",
+                "TransformComponent": {
+                    "Location": [
+                        -95.0,
+                        0.0,
+                        1000.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        500.0,
+                        500.0,
+                        500.0
+                    ]
+                }
+            }
+        ],
+        "EntityCount": 9,
+        "FormatVersion": 1,
+        "LevelName": "LevelOne"
+    }
+}

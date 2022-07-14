@@ -72,6 +72,22 @@ namespace KREngine
 
 	}
 
+	void DefaultUnlitMaterial::FromJson(FJson& json)
+	{
+		if (json.contains("TextureDetail"))
+		{
+			auto texture_raw_data = json["TextureDetail"].get<FJson::object_t>();
+			for (auto& kvp : texture_raw_data)
+			{
+				std::string texture_key = kvp.first;
+				std::string texture_value = kvp.second;
+				TextureRenderNameToTexturePath[texture_key] = texture_value;
+				TextureRenderNameToTextureMap.insert({ texture_key , FApplication::GetTextureManager().GetTexture(texture_value) });
+				//Logger::Warning("texture details key: %s, value: %s", texture_key.c_str(), texture_value.c_str());
+			}
+		}
+	}
+
 	DefaultUnlitMaterial::~DefaultUnlitMaterial()
 	{
 
@@ -83,6 +99,12 @@ namespace KREngine
 		FJson return_value;
 		return_value["Material"] = Material.ToJson();
 		return return_value;
+	}
+
+	void DefaultUnLitMaterialComponent::FromJson(FJson& json)
+	{
+		FJson material_json = json["Material"];
+		Material.FromJson(material_json);
 	}
 
 	void FDefaultUnLitMaterialSystem::Init()

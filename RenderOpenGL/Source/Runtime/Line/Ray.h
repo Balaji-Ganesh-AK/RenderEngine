@@ -18,14 +18,16 @@ namespace KREngine
 		FRay() = default;
 		FRay(const FVector& direction, const float magnitude = 10, const FColor color = FColor::Red()) : Direction(direction), Magnitude(magnitude), Color(color)
 		{
+			StartLocation = Direction;
 			EndLocation = Direction * Magnitude;
 		}
-
-	private:
+		FVector StartLocation;
 		FVector Direction;
 		float Magnitude = TNumericLimit<float>::Min();
 
 		FVector EndLocation;
+	private:
+	
 		FColor Color;
 
 
