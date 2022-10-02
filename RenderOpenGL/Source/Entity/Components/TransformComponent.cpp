@@ -1,10 +1,9 @@
 #include "TransformComponent.h"
 
-#include "GameManager.h"
 
+#include "GameManager.h"
 #include "glm/gtx/transform.hpp"
 #include "Math/Vec3.h"
-
 #include "RenderingSystem/FRenderingSystem.h"
 #include "Systems/TextureSystem/TextureManager.h"
 
@@ -52,8 +51,19 @@ namespace KREngine
 		{
 			SCOPED_TIMER("Transform System ");
 
-			 
-			for (const FEntityHandle entity : EntityHandles)
+			std::for_each(std::execution::par, EntityHandles.begin(), EntityHandles.end(),[](auto& entity) { {
+					FTransform& transform = EntityManager::GetComponent<FTransformComponent>(entity).Transform;
+					glm::mat4& model_projection = EntityManager::GetComponent<FTransformComponent>(entity).ModelProjection;
+					model_projection = glm::mat4(1.0f);
+					model_projection = glm::translate(model_projection, FVectorHelper::AsGLMVec3(transform.GetLocation()));
+					model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+					model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+					model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+					model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale()));
+				}});
+
+		//	std::for_each(std::execution::par, EntityHandles.begin(), EntityHandles.end(), &TransformRun);
+			/*for (const FEntityHandle entity : EntityHandles)
 			{
 				FTransform& transform = EntityManager::GetComponent<FTransformComponent>(entity).Transform;
 				auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entity).ModelProjection;
@@ -63,7 +73,7 @@ namespace KREngine
 				model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 				model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
 				model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale()));
-			}
+			}*/
 		}
 	}
 
@@ -89,6 +99,18 @@ namespace KREngine
 	void FTransformSystem::GUIStop()
 	{
 	
+	}
+
+	void FTransformSystem::TransformRun(FEntityHandle entity) 
+	{
+		FTransform& transform = EntityManager::GetComponent<FTransformComponent>(entity).Transform;
+		auto& model_projection = EntityManager::GetComponent<FTransformComponent>(entity).ModelProjection;
+		model_projection = glm::mat4(1.0f);
+		model_projection = glm::translate(model_projection, FVectorHelper::AsGLMVec3(transform.GetLocation()));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale()));
 	}
 #endif
 

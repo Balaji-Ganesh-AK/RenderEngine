@@ -4,12 +4,15 @@
 #include "Entity/Components/TransformComponent.h"
 #include "Material/DefaultMateirals.h"
 #include "Material/DefaultUnlitMaterial.h"
+#include "Physics/Rigidbody.h"
 #include "RenderOpenGL/Dependencies/ImGUI/imgui.h"
 #include "RenderOpenGL/DevelopmentApp/Source/Sandbox.h"
 #include "Runtime/Actors/StaticMesh/StaticMesh.h"
 #include "Runtime/Line/Line.h"
 #include "Runtime/Line/Ray.h"
 #include "RenderOpenGL/DevelopmentApp/Source/Boids/Boids.h"
+#include "Runtime/Sphere/Collider.h"
+#include "Systems/Input/Input.h"
 
 
 using namespace KREngine;
@@ -20,6 +23,36 @@ LevelOne::LevelOne(const std::string& Name) : FLevel(Name)
 
 void LevelOne::Init()
 {
+	KREngine::FTransform Temp;
+	entity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Floor");
+	Temp.SetScale({ 1000,1,1000 });
+	Temp.SetLocation({ 0,-200,1200 });
+	entity->AddComponent(KREngine::FTransformComponent{ Temp });
+	entity->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+
+
+	entity1 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Cube 1");
+
+	entity1->AddComponent(KREngine::FTransformComponent{});
+	entity1->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity1->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+	entity1->AddComponent(FRigidBody{});
+	entity1->AddComponent(FSphereCollider{});
+
+	entity2 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Cube 2");
+	entity2->AddComponent(KREngine::FTransformComponent{});
+	entity2->AddComponent(KREngine::FStaticMesh{ "Test" });
+	entity2->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
+	entity2->AddComponent(FSphereCollider{});
+	FRigidBody temprigid;
+	temprigid.Mass = 50;
+	entity2->AddComponent(temprigid);
+
+	entity3 = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Sphere");
+	entity3->AddComponent(KREngine::FTransformComponent{});
+	entity3->AddComponent(FSphereCollider{});
+	//entity1->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
 
 
 
@@ -60,13 +93,29 @@ void LevelOne::Init()
 	//	temp->AddComponent(DefaultLitMaterialComponent{});
 	//}*/
 
-	//CameraEntity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Camera");
-	//CameraEntity->AddComponent(KREngine::FCameraComponent{ true });
+	CameraEntity = new KREngine::FEntity(KREngine::EntityManager::CreateEntity(), "Camera");
+	CameraEntity->AddComponent(KREngine::FCameraComponent{ true });
 }
 
 void LevelOne::Run()
 {
+	if(FApplication::Get().GetInputSystem().IsKeyPressed(Input::KeyCodes::Space))
+	{
+		auto& rigidBody = entity2->GetComponent<FRigidBody>();
+		rigidBody.Force = FVector{0.1f,0.0,0.0};
 
+	}
+
+
+	vec3 target = entity1->GetComponent<FTransformComponent>().Transform.GetLocation();
+	vec3 current = entity2->GetComponent<FTransformComponent>().Transform.GetLocation();
+
+	vec3 dir = target - current;
+	auto rotx = atan2(dir.y, dir.z);
+	auto roty = atan2(dir.x * cos(rotx), dir.z);
+	auto rotz = atan2(cos(rotx), sin(rotx) * sin(roty));
+	Logger::Warning("%d, %d %d,", rotx, roty, rotz);
+	entity1->GetComponent<FTransformComponent>().Transform.SetRotation(vec3{ rotx, roty, rotz });
 }
 
 void LevelOne::End()
@@ -225,17 +274,16 @@ void LevelTwo::GUIInit()
 void LevelTwo::GUIRun()
 {
 	FLevel::GUIRun();
+	
+	//ImGui::Begin("Test Menu");
+	//SCOPED_TIMER("Boid Controls ");
+	//
+	//if(ImGui::Button("Test"))
+	//{
+	//	//Test();
+	//}
+	//ImGui::End();
 
-	ImGui::Begin("Test Menu");
-	SCOPED_TIMER("Boid Controls ");
-	
-	if(ImGui::Button("Test"))
-	{
-		Test();
-	}
-	ImGui::End();
-	
-	ImGui::End();
 }
 
 void LevelTwo::GUIEnd()
@@ -312,7 +360,7 @@ void LevelTwo::Test()
 	sphere->AddComponent(KREngine::FStaticMesh{ "Sphere" });
 	sphere->AddComponent(KREngine::DefaultUnLitMaterialComponent{});
 
-	Logger::Warning("Angle %s",AD.ToPrint());
+	Logger::Warning("Angle %s", AD.ToString().c_str());
 	Logger::Warning("Distance %f", length);
 	
 }

@@ -37,6 +37,7 @@ namespace KREngine
 		}
 		static void Run()
 		{
+
 			if (Get().Application)
 			{
 				

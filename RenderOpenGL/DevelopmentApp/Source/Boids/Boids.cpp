@@ -53,7 +53,7 @@ void FBoidSystem::End()
 FBoidSystem::~FBoidSystem()
 {
 }
-
+#ifdef GUI
 void FBoidSystem::GUIInit()
 {
 	FSystem::GUIInit();
@@ -97,6 +97,7 @@ void FBoidSystem::GUIRun()
 void FBoidSystem::GUIEnd()
 {
 }
+#endif
 
 #pragma optimize("", off)
 FVector FBoidSystem::Align(FEntityHandle i_boid)

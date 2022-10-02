@@ -47,7 +47,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "BlueColor.jpg"
+                            "Material.BaseTexture": "AlienPlant-1.jpg"
                         }
                     }
                 },
@@ -75,7 +75,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "SpecularCrate.png"
+                            "Material.BaseTexture": "Rifle.png"
                         }
                     }
                 },
@@ -103,7 +103,7 @@
                 "DefaultLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "material.Diffuse": "grass.png",
+                            "material.Diffuse": "DefaultTexture.png",
                             "material.Specular": "SpecularCrate.png",
                             "u_Texture": "DefaultTexture.png"
                         }
@@ -133,14 +133,14 @@
                 "EntityID": 5,
                 "FCameraComponent": {
                     "CameraFront": [
-                        -0.13937021791934967,
-                        -0.31492751836776733,
-                        0.9388272762298584
+                        -0.09508851170539856,
+                        -0.16715607047080994,
+                        0.9813342690467834
                     ],
                     "CameraPosition": [
-                        560.9295654296875,
-                        300.6289367675781,
-                        -858.0364379882813
+                        593.8035278320313,
+                        170.49557495117188,
+                        -767.9053344726563
                     ],
                     "CameraUp": [
                         0.0,
@@ -148,14 +148,14 @@
                         0.0
                     ],
                     "Direction": [
-                        -0.13748914003372192,
-                        -0.3106769323348999,
-                        0.9261559247970581
+                        -0.09486827999353409,
+                        -0.16676892340183258,
+                        0.9790614247322083
                     ],
                     "MainCamera": true,
                     "Rotator": [
-                        102.99945068359375,
-                        -18.10003089904785,
+                        96.79931640625,
+                        -9.60000991821289,
                         0.0
                     ]
                 },
@@ -207,7 +207,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "RedColor.jpg"
+                            "Material.BaseTexture": "FileIcon.png"
                         }
                     }
                 },
@@ -215,7 +215,7 @@
                 "Name": "Sphere",
                 "TransformComponent": {
                     "Location": [
-                        -95.0,
+                        0.0,
                         0.0,
                         1000.0
                     ],

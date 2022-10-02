@@ -13,9 +13,11 @@
 #include <glm/glm.hpp>
 
 #include "Editor/Gizmo.h"
+#include "Physics/Rigidbody.h"
 #include "RenderingSystem/FRenderer.h"
 #include "RenderingSystem/WindowsWindow.h"
 #include "Runtime/Line/Line.h"
+#include "Runtime/Sphere/Collider.h"
 
 namespace KREngine
 {
@@ -140,10 +142,48 @@ namespace KREngine
 					}
 					ImGui::Separator();
 				}
+				if (EntityManager::HasComponent<FRigidBody>(CurrentSelectedEntity))
+				{
+
+					auto& rigidBody = EntityManager::GetComponent<FRigidBody>(CurrentSelectedEntity);
+
+					if (ImGui::CollapsingHeader("Rigid Body"))
+					{
+						IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Force", &rigidBody.Force.x), "Force", );
+						IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Drag", &rigidBody.Drag.x), "Drag", );
+						IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Acceleration", &rigidBody.Acceleration.x), "Acceleration", );
+						IMGUI_LEFT_LABEL(ImGui::DragFloat("##Mass", &rigidBody.Mass), "Mass", );
+						IMGUI_LEFT_LABEL(ImGui::DragFloat("##KD", &rigidBody.KD), "KD", );
+
+
+						IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Velocity", &rigidBody.Velocity.x), "Velocity", );
+						IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Gravity", &rigidBody.Gravity.x), "Gravity", );
+					}
+
+				
+				}
+
+				if (EntityManager::HasComponent<FSphereCollider>(CurrentSelectedEntity))
+				{
+
+					auto& sphereCollider = EntityManager::GetComponent<FSphereCollider>(CurrentSelectedEntity);
+
+					if (ImGui::CollapsingHeader("Sphere Collider"))
+					{
+						IMGUI_LEFT_LABEL(ImGui::DragFloat("##Radius", &sphereCollider.Radius), "Radius", );
+						
+						IMGUI_LEFT_LABEL(ImGui::Checkbox("##Show Collider", &sphereCollider.bShowCollider), "Show Collider", );
+					
+					}
+
+
+				}
 
 			}
 
 		}
+
+		
 
 
 	}

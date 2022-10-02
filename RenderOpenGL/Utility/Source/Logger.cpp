@@ -56,6 +56,19 @@ namespace KREngine
 
 	}
 
+	void Logger::SameLine(const char* format, ...)
+	{
+#ifdef LOGGING
+		Get().UpdateTextColor(COLOR_LOADING);
+		va_list Arguments;
+		va_start(Arguments, format);
+		Get().PrintSameLine(format, Arguments);
+		va_end(Arguments);
+#endif
+
+
+	}
+
 	void Logger::Error(const char* format, ...)
 	{
 #ifdef LOGGING

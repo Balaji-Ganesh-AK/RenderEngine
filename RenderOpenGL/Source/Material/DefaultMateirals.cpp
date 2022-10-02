@@ -169,7 +169,7 @@ namespace KREngine
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].x);
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].y);
 						static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].z);
-						static_mesh.VertexBuffer.push_back(Entity);
+						static_mesh.VertexBuffer.push_back(static_cast<float>(Entity));
 
 					}
 
@@ -290,19 +290,19 @@ namespace KREngine
 	void FDefaultLitMaterialSystem::GUIRun()
 	{
 		ImGui::Begin("Light MENU");
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Ambient Color", &DirectionalLight.AmbientColor.r, 0.1, -1, 1), "Ambient Color", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Diffuse Color", &DirectionalLight.DiffuseColor.r, 0.1, -1, 1), "Diffuse Color", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Specular Color", &DirectionalLight.SpecularColor.r, 0.1, -1, 1), "Specular Color", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Direction", &DirectionalLight.Direction.x, 0.1, -1, 1), "Direction", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Ambient Color", &DirectionalLight.AmbientColor.r, 0.1f, -1, 1), "Ambient Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Diffuse Color", &DirectionalLight.DiffuseColor.r, 0.1f, -1, 1), "Diffuse Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Specular Color", &DirectionalLight.SpecularColor.r, 0.1f, -1, 1), "Specular Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Direction", &DirectionalLight.Direction.x, 0.1f, -1, 1), "Direction", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##ObjectColor", &Color.r, 0.1, -1, 1), "ObjectColor", );
 		//IMGUI_LEFT_LABEL(ImGui::DragFloat("##Shininess", &Light.Shininess, 2, 2, 1024), "Shininess", );
 		//IMGUI_LEFT_LABEL(ImGui::DragFloat3("##Point light Position", &Light.Position.x), "Position", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat("##AttenutaionLinear", &Light.Linear, 0.001, 0, 1), "Linear", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat("##AttenutaionLinear", &Light.Linear, 0.001f, 0, 1), "Linear", );
 		IMGUI_LEFT_LABEL(ImGui::DragFloat("##AttenutaionQuad", &Light.Quadratic, 1, 0, 10000), "Quad", );
 		IMGUI_LEFT_LABEL(ImGui::Checkbox("##Point Light?", &PointLight), "Point light", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Ambient Color", &Light.AmbientColor.r, 0.1, -1, 1), "Point light Ambient Color", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Diffuse Color", &Light.DiffuseColor.r, 0.1, -1, 1), "Point light Diffuse Color", );
-		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Specular Color", &Light.SpecularColor.r, 0.1, -1, 1), "Point light Specular Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Ambient Color", &Light.AmbientColor.r, 0.1f, -1, 1), "Point light Ambient Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Diffuse Color", &Light.DiffuseColor.r, 0.1f, -1, 1), "Point light Diffuse Color", );
+		IMGUI_LEFT_LABEL(ImGui::DragFloat4("##Point light Specular Color", &Light.SpecularColor.r, 0.1f, -1, 1), "Point light Specular Color", );
 		ImGui::End();
 		
 	}

@@ -50,7 +50,7 @@ namespace KREngine
 		/*Bind all the buffers before calling this step*/
 		virtual void Draw(const uint32 indexBufferCount) const =0 ;
 		virtual void DrawIndexed( const uint32 indexBufferCount, uint32 instanceTotalCount) const = 0 ;
-
+		virtual void SetDepthBuffer(const bool bDepthBuffer) = 0;
 		virtual void DrawLine(const uint32 count) const = 0;
 
 

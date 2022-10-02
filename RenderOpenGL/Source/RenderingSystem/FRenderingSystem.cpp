@@ -16,6 +16,7 @@
 #include "RenderingSystem/FRenderer.h"
 #include "Runtime/Foliage/Foliage.h"
 #include "Runtime/Line/Line.h"
+#include "Runtime/Sphere/Collider.h"
 #include "Systems/Input/Input.h"
 #include "Systems/ShaderSystem/ShaderSystem.h"
  
@@ -34,7 +35,13 @@ FRenderingSystem::FRenderingSystem()
 	LineSystem = EntityManager::RegisterSystem<FLineSystem>();
 	GizmoSystem = EntityManager::RegisterSystem<FGizmoSystem>();
 
-	
+	SphereSystem = EntityManager::RegisterSystem< FColliderRenderer>();
+	{
+		ComponentUID UID;
+		UID.set(EntityManager::GetComponentType<FSphereCollider>());
+		UID.set(EntityManager::GetComponentType<FTransformComponent>());
+		EntityManager::SetSystemComponents<FColliderRenderer>(UID);
+	}
 	Renderer.reset(FRenderer::CreateRenderer());
 }
 
@@ -45,7 +52,7 @@ void FRenderingSystem::Init()
 	DefaultShaderSystem->Init();
 	DefaultLitShaderSystem->Init();
 	LineSystem->Init();
-
+	SphereSystem->Init();
 
 	Gizmo = KREngine::EntityManager::CreateEntity();
 	EntityManager::AddComponent(Gizmo, KREngine::FTransformComponent{});
@@ -86,8 +93,10 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
 			DefaultLitShaderSystem->Run(mainCamera, Renderer);
+			SphereSystem->RenderRun(mainCamera, Renderer);
+			
 			LineSystem->Run(mainCamera, Renderer);
-			//GizmoSystem->Run(mainCamera, Renderer);
+			//GizmoSystem->RenderRun(mainCamera, Renderer);
 		//	OutLine(mainCamera, Renderer, 0);
 		}
 		else
@@ -96,20 +105,19 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		}
 
 
-		if(FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
-		{
-			//Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
-			Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
+		//if(FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
+		//{
+		//	//Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
+		//	Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
 
-			//Logger::Warning("Mouse pos %s", Test.Print());
-			//Logger::Warning("min bounds %s", min_bounds.Print());
-			//auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
-			//currentSelectedEntity = x;
-		//	Logger::Warning(" max bounds %s", Test.Print());
-		//	Logger::Warning(" max bounds %d", x);
-		}
+		//	//Logger::Warning("Mouse pos %s", Test.Print());
+		//	//Logger::Warning("min bounds %s", min_bounds.Print());
+		//	//auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
+		//	//currentSelectedEntity = x;
+		////	Logger::Warning(" max bounds %s", Test.Print());
+		////	Logger::Warning(" max bounds %d", x);
+		//}
 		
-
 
 		Framebuffer->UnBindBuffer();
 
@@ -126,7 +134,7 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 
 }
 
-void FRenderingSystem::Stop()
+void FRenderingSystem::Run()
 {
 }
 #ifdef GUI

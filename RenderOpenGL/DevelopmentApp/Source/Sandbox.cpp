@@ -16,10 +16,10 @@ namespace KREngine
 {
 	KREngine::TestGame::TestGame()
 	{
-		auto* level = new LevelOne("Wew");
+		auto* level = new LevelOne("Physics");
 		auto* levelone = new LevelTwo("LevelOne");
 		auto* instance = new InstanceStaticMeshTestMap("InstanceStaticMeshTestMap");
-		SetActiveLevel(levelone);
+		SetActiveLevel(level);
 	}
 
 

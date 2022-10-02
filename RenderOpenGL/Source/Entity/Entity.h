@@ -218,19 +218,19 @@ namespace KREngine
 		std::shared_ptr<ComponentEntityArray<T>> GetComponentArray()
 		{
 			const char* typeName = typeid(T).name();
+			auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
 
-			if(ComponentTypes.contains(typeName))
+			return x;
+		}
+			/*if(ComponentTypes.contains(typeName))
 			{
-				auto x = std::static_pointer_cast<ComponentEntityArray<T>>(ComponentArrayPointerMap[typeName]);
-			
-				return x;
-			}
+				
 			else
 			{
 				Logger::Fatal("Component not registered");
 				return nullptr;
-			}
-		}
+			}*/
+		//}
 
 
 		template<typename T>

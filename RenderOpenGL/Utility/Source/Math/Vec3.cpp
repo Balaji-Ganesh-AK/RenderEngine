@@ -59,7 +59,22 @@ namespace KREngine
 		temp.z = 0;
 		return temp;
 	}
+
+	vec3 vec3::Cross(const vec3 a, const vec3 b)
+	{
+		return{
+		a.y * b.z - a.z * b.y,
+			a.z * b.x - a.x * b.z,
+			a.x * b.y - a.y * b.x,
+		};
 	
+	}
+
+	float vec3::Dot(const vec3 a, const vec3 b)
+	{
+		return { a.x * b.x + a.y * b.y + a.z * b.z };
+	}
+
 	vec3& vec3::Add( const vec3& other )
 	{
 		
@@ -272,6 +287,15 @@ namespace KREngine
 	float vec3::Dot( const vec3& other ) const
 	{
 		return x * other.x + y * other.y + z * other.z;
+	}
+
+	vec3 vec3::Cross(const vec3& other) const
+	{
+		return {
+			y * other.z - z * other.y,
+			z * other.x - x * other.z,
+			x * other.y - y * other.x,
+		};
 	}
 
 	KREngine::vec3 vec3::operator-(const glm::vec3& vec) const

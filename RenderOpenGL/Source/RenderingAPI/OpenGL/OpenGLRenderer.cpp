@@ -27,9 +27,9 @@ namespace KREngine
 	{
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
-	//	glEnable(GL_DEPTH_TEST);
-	//	glEnable(GL_DEPTH_CLAMP);
-	//	glEnable(GL_STENCIL_TEST);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_DEPTH_CLAMP);
+		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glEnable(GL_CULL_FACE);
@@ -38,8 +38,8 @@ namespace KREngine
 		glEnable(GL_MULTISAMPLE);
 	//	glLineWidth()
 	//	glEnable(GL_LINE_SMOOTH);
-		//glFrontFace(GL_CCW);
-		//glEnable(GL_FRONT);
+	/*	glFrontFace(GL_CCW);
+		glEnable(GL_FRONT);*/
 	}
 
 	void OpenGLRenderer::ClearColor()
@@ -52,19 +52,35 @@ namespace KREngine
 	void OpenGLRenderer::SetClearColor(FColor color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
+		
 	}
 
 	void OpenGLRenderer::SetViewPort(FViewPort viewport)
 	{
 		glViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
 	}
-
+	
 	void OpenGLRenderer::DrawLine(const uint32 count) const
 	{
 		//glEnable(GL_POINT_SMOOTH);
 	//	glEnable(GL_LINE_SMOOTH);
 		//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 		glDrawArrays(GL_LINES, 0, count);
+		
+	}
+
+	void OpenGLRenderer::SetDepthBuffer(const bool bDepthBuffer)
+	{
+		if(bDepthBuffer)
+		{
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_DEPTH_CLAMP);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_DEPTH_CLAMP);
+		}
 	}
 
 	void OpenGLRenderer::EnableWireFrameMode() const

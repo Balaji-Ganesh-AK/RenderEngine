@@ -7,6 +7,7 @@
 
 namespace KREngine
 {
+	class FColliderRenderer;
 	class FGizmoSystem;
 	class FLineSystem;
 	class FFoliageSystem;
@@ -29,7 +30,7 @@ namespace KREngine
 		~FRenderingSystem()= default;
 		void Init();
 		void Run(const FCameraComponent& mainCamera, FEntityHandle& currentSelectedEntity);
-		void Stop();
+		void Run();
 
 		void GUIInit();
 		void GUIStop();
@@ -57,7 +58,7 @@ namespace KREngine
 		std::shared_ptr<FFoliageSystem> FoliageSystem;
 		std::shared_ptr<FLineSystem> LineSystem;
 		std::shared_ptr<FGizmoSystem> GizmoSystem;
-
+		std::shared_ptr<FColliderRenderer>	SphereSystem ;
 		std::shared_ptr<FRenderer> Renderer;
 
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";

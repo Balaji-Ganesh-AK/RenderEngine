@@ -27,6 +27,12 @@
 #include "Systems/TextureSystem/TextureManager.h"
 #include <Runtime/Line/Ray.h>
 
+#include "Physics/PhysicsSystem.h"
+#include "RenderOpenGL/Utility/Source/Time.h"
+#include "thread"
+#include "RenderOpenGL/Source/Physics/Rigidbody.h"
+#include "Runtime/Sphere/Collider.h"
+
 //#define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label); ImGui::NextColumn(); ImGui::SetNextItemWidth(-1); if(func) { code } ImGui::NextColumn();
 
 namespace KREngine
@@ -47,10 +53,15 @@ namespace KREngine
 	{
 		while(WindowWindow->IsActive())
 		{
-			EngineGUIRun();
+			auto x = Time::GetTimeInMS();
+			auto y = Time::GetDeltaTime();
+
+			Logger::SameLine("%f , %f", x, y);
+			
 			EngineRun();
 #ifdef  GUI
 		
+			EngineGUIRun();
 #endif
 		}
 	
@@ -287,8 +298,13 @@ namespace KREngine
 		EditorTagSystem->GUIInit();
 
 		//StaticMeshSystem->GUIInit();
+		PhysicsSystem->GUIInit();
 		RenderingSystem->GUIInit();
 		EditorPanelSystem->GUIInit();
+
+
+		FileIconTexture = GetTextureManager().GetTexture(FileIcon);
+		FolderIconTexture = GetTextureManager().GetTexture(FolderIcon);
 	}
 
 	void FApplication::EngineGUIRun()
@@ -383,7 +399,23 @@ namespace KREngine
 
 				ImGui::EndMenu();
 			}
-			
+			if (ImGui::BeginMenu("Editor Settings"))
+			{
+
+
+				if (ImGui::MenuItem("Show Content Browser", "", (bShowContentBrowser) != 0))
+				{
+					bShowContentBrowser = !bShowContentBrowser;
+				}
+
+				if (ImGui::MenuItem("Enable depth buffers", "", (bDepthBuffer) != 0))
+				{
+					bDepthBuffer = !bDepthBuffer;
+					RenderingSystem->GetRenderer()->SetDepthBuffer(bDepthBuffer);
+				}
+				ImGui::Separator();
+				ImGui::EndMenu();
+			}
 
 			if (ImGui::BeginMenu("Settings"))
 			{
@@ -425,10 +457,13 @@ namespace KREngine
 
 			ImGui::Begin("Properties Panel");
 			EditorPanelSystem->GUIRun();
+			ImGui::End();
 
-			ImGui::End();
-			ImGui::Begin("Content Browser");
-			ImGui::End();
+			if(bShowContentBrowser)
+			{
+				
+				ControlPanelGUI();
+			}
 
 			//DefaultLitShaderSystem->GUIRun();
 
@@ -444,7 +479,7 @@ namespace KREngine
 
 
 		}
-
+		PhysicsSystem->GUIRun();
 
 		/*Post Update*/
 		if (bShowDebugProfiler)
@@ -475,10 +510,87 @@ namespace KREngine
 
 	void FApplication::EngineGUIStop()
 	{
+		PhysicsSystem->GUIEnd();
 		ImGui::SaveIniSettingsToDisk("../Config/Imgui.ini");
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	void FApplication::ControlPanelGUI()
+	{
+
+		;
+		ImGui::Begin("Content Browser");
+		ImGui::SetNextWindowSize({10,10});
+
+		if(CurrentDirectory != std::filesystem::path(ContentBrowser))
+		{
+			if(ImGui::Button("<--"))
+			{
+				CurrentDirectory = CurrentDirectory.parent_path();
+			}
+		}
+
+		bool bDisplayContent = false;
+	
+		for(auto& path: std::filesystem::directory_iterator(CurrentDirectory))
+		{
+			std::string path_name = path.path().filename().string();
+			
+			
+			if(path.is_directory())
+			{
+				ImGui::ImageButton(reinterpret_cast<ImTextureID>(FolderIconTexture->RendererID), { ImageSize,ImageSize }, { 0,1 }, { 1,0 });
+				if(ImGui::IsItemHovered() && Input->IsMouseKeyPressed(Input::MouseCode::Button1))
+				{
+					CurrentDirectory /= path.path().filename();
+					
+				}
+				ImGui::TextWrapped(path_name.c_str());
+				
+				/*if(ImGui::Button(path_name.c_str()))
+				{
+					CurrentDirectory /= path.path().filename();
+				}*/
+			}
+
+			else
+			{
+				bDisplayContent = true;
+				AssetList.insert(path_name);
+			}
+			
+			
+
+
+
+		}
+
+
+		ImGui::Begin("Detailed Tab");
+		ImGui::Columns(4, 0, false);
+
+		for (auto& path_name : AssetList)
+		{
+
+			if (bDisplayContent)
+			{
+
+				ImGui::ImageButton(reinterpret_cast<ImTextureID>(FileIconTexture->RendererID), { AssetImageSize,AssetImageSize }, { 0,1 }, { 1,0 });
+				if (ImGui::IsItemHovered() && Input->IsMouseKeyPressed(Input::MouseCode::Button1))
+				{
+
+				}
+				ImGui::TextWrapped(path_name.c_str());
+				ImGui::NextColumn();
+
+			}
+		}
+		AssetList.clear();
+		ImGui::End();
+
+		ImGui::End();
 	}
 #endif
 
@@ -542,14 +654,14 @@ namespace KREngine
 
 	void FApplication::GUIRun()
 	{
-		if (CurrentLevel)
+		/*if (CurrentLevel)
 		{
 			CurrentLevel->GUIRun();
 			for (auto& system : CurrentLevel->Systems)
 			{
 				system->GUIRun();
 			}
-		}
+		}*/
 	}
 
 	void FApplication::SetActiveLevel(FLevel* level)
@@ -572,6 +684,11 @@ namespace KREngine
 		Input->OnEvent(event);
 	}
 
+	void FApplication::TestThread()
+	{
+		PhysicsSystem->Run();
+	}
+
 	void FApplication::EngineInit()
 	{
 		Properties = std::make_unique<WindowsProperties>(WindowsProperties(ERenderingAPI::OpenGL, 1020, 1440, "Kaar Engine V 0.0.0.1"));
@@ -589,6 +706,7 @@ namespace KREngine
 			ShaderManager->Init();
 			AssetManager.reset(FAssetManager::Create());
 			AssetManager->Init();
+			
 		}
 
 		Input.reset(FInput::Create(WindowWindow.get()));
@@ -605,9 +723,10 @@ namespace KREngine
 		EntityManager::RegisterComponent<FStaticMesh>();
 		EntityManager::RegisterComponent<FPointLight>();
 		EntityManager::RegisterComponent<FFoliageInstance>();
-		
+		EntityManager::RegisterComponent<FRigidBody>();
 		EntityManager::RegisterComponent<FGizmo>();
 		EntityManager::RegisterComponent<FRay>();
+		EntityManager::RegisterComponent<FSphereCollider>();
 
 
 
@@ -616,6 +735,8 @@ namespace KREngine
 		CameraSystem = EntityManager::RegisterSystem<FCameraSystem>();
 		EditorPanelSystem = EntityManager::RegisterSystem<FEditorComponentPanelSystem>();
 
+		PhysicsSystem.reset(FPhysicsSystem::Create());
+		
 
 		{
 			ComponentUID UID;
@@ -692,32 +813,60 @@ namespace KREngine
 			EntityManager::SetSystemComponents<FGizmoSystem>(UID);
 		}
 
+		{
+			ComponentUID UID;
+			UID.set(EntityManager::GetComponentType<FTransformComponent>());
+			UID.set(EntityManager::GetComponentType<FRigidBody>());
+			EntityManager::SetSystemComponents<FRigidBodySystem>(UID);
+		}
+		/*Sphere system*/
 		
 
 		Init();
-		CameraSystem->Init();
 		RenderingSystem->Init();
+		PhysicsSystem->Init();
+		CameraSystem->Init();
 		
+	
 
 	}
 
 	void FApplication::EngineRun()
 	{
+		{
+			SCOPED_TIMER("Game Loop");
+
+			
+				
+			
+		/*	std::thread physicsthread(&FApplication::RenderRun, this);
+			physicsthread.join();*/
+
+			Run();
+		}
 
 		{
 			SCOPED_TIMER("Engine Loop");
 			EditorTagSystem->Run();
 			CameraSystem->Run();
+			PhysicsSystem->Run();
 			RenderingSystem->Run(CameraSystem->GetMainCamera(), EditorPanelSystem->GetCurrentSelectedEntityMutable());
+			
+			//f = PhysicsSystem->RenderRun();
+			//std::thread physicsthread(&FApplication::TestThread, this);
+			//physicsthread.join();
+
+		//	
+
+			//
 		}
-		{
-			SCOPED_TIMER("Game Loop");
-			Run();
-		}
+		
 	}
 
 	void FApplication::EngineEnd()
 	{
+		RenderingSystem->Run();
+		PhysicsSystem->End();
 		End();
 
 

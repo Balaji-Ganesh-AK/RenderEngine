@@ -38,6 +38,7 @@ namespace KREngine
 		void GUIRun() ;
 		void GUIStop();
 #endif
-
+	private:
+		void TransformRun(FEntityHandle entity) ;
 	};
 }

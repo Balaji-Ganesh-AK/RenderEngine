@@ -158,7 +158,7 @@ namespace KREngine
 							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].x);
 							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].y);
 							static_mesh.VertexBuffer.push_back(static_mesh.Model->NormalBuffer[i].z);
-							static_mesh.VertexBuffer.push_back(Entity);
+							static_mesh.VertexBuffer.push_back(static_cast<float>(Entity));
 							
 
 						}
@@ -194,7 +194,7 @@ namespace KREngine
 		glStencilFunc(GL_ALWAYS, 1, 0xFF); // all fragments should pass the stencil test
 		glStencilMask(0xFF);
 
-		const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
+		const glm::mat4 WorldProjection = FApplication::Get().GetWorldProjection();
 
 			for (const FEntityHandle Entity : EntityHandles)
 			{

@@ -30,6 +30,8 @@ namespace  KREngine
 		static vec3 Up();
 		static vec3 Right();
 		static vec3 Left();
+		static vec3 Cross(const vec3 a, const vec3 b);
+		static float Dot(const vec3 a, const vec3 b);
 
 		vec3& Add( const vec3& other );
 		vec3& Subtract( const vec3& other );
@@ -84,6 +86,7 @@ namespace  KREngine
 		
 		vec3 Normalize() const;
 		float Dot( const vec3& other )const;
+		vec3 Cross(const vec3& other) const ;
 
 		
 		//void Serialize(Writer<StringBuffer>& writer)
@@ -106,9 +109,11 @@ namespace  KREngine
 		friend std::ostream& operator<<( std::ostream& stream, const vec3& other );
 		const char* ToPrint() const
 		{
+			
 			std::string return_string;
 			return_string += "(" +  std::to_string(x) + "," + std::to_string(y)+ "," + std::to_string(z) + ")";
-			return return_string.c_str();
+			auto* return_data = return_string.c_str();
+			return return_data;
 		}
 		std::string ToString() const
 		{

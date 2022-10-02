@@ -84,6 +84,8 @@ private:
 
 	KREngine::FEntity* entity{};
 	KREngine::FEntity* entity1{};
+	KREngine::FEntity* entity2{};
+	KREngine::FEntity* entity3{};
 	KREngine::FEntity* CameraEntity{};
 };
 

@@ -7,12 +7,19 @@
 
 // ReSharper disable once IdentifierTypo
 #define IMGUI_LEFT_LABEL(func, label, code) ImGui::TextUnformatted(label);ImGui::NextColumn(); ImGui::SameLine(); ImGui::SetNextItemWidth(-1);if(func) { code } ImGui::NextColumn()
+#include <filesystem>
 #include <memory>
+#include <unordered_set>
 
+#include "glm/gtx/transform.hpp"
+#include "RenderingSystem/Textures.h"
+#include "RenderingSystem/WindowsWindow.h"
 #include "RenderOpenGL/Utility/Source/Defines.h"
 
 namespace KREngine
 {
+
+	class FPhysicsSystem;
 
 	class FLevel;
 	class FAssetManager;
@@ -95,8 +102,18 @@ namespace KREngine
 		{
 			Get().LoadLevelInternal();
 		}
+
+		static FPhysicsSystem& GetPhysicsSystem()
+		{
+			return *Get().PhysicsSystem;
+			
+		}
+		static glm::mat4 GetWorldProjection()
+		{
+			return glm::perspective(glm::radians(45.0f), Get().GetWindowsWindow()->Properties->GetWidth() /Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
+		}
+		void TestThread();
 	private:
-		
 		static FApplication* Instance;
 		
 		void EngineInit();
@@ -117,6 +134,8 @@ namespace KREngine
 		void EngineGUIInit();
 		void EngineGUIRun();
 		void EngineGUIStop();
+
+		void ControlPanelGUI();
 #endif
 
 
@@ -139,11 +158,28 @@ namespace KREngine
 
 
 
+		/*Content Browser*/
+		bool bShowContentBrowser{ true };
+		bool bDepthBuffer{ true };
+		std::filesystem::path ContentBrowser = "../Content";
+		std::filesystem::path CurrentDirectory = "../Content";
+
+		const std::string FileIcon = "FileIcon.png";
+		std::shared_ptr<FTexture2D> FileIconTexture;
+		std::shared_ptr<FTexture2D> FolderIconTexture;
+
+ 		const std::string FolderIcon = "FolderIcon.png";
+		float ImageSize = 50;
+		float AssetImageSize = 30;
+		std::unordered_set<std::string> AssetList;
+
 		std::shared_ptr<FEditorTagSystem> EditorTagSystem;
 		std::shared_ptr<FRenderingSystem> RenderingSystem;
+		std::unique_ptr<FPhysicsSystem> PhysicsSystem;
 		std::shared_ptr<FDefaultUnLitMaterialSystem> DefaultShaderSystem;
 		std::shared_ptr<FDefaultLitMaterialSystem> DefaultLitShaderSystem;
 		std::shared_ptr<FStaticMeshSystem> StaticMeshSystem;
+	
 		//std::shared_ptr<FTransformSystem> TransformSystem;
 		std::shared_ptr<FCameraSystem> CameraSystem;
 		std::shared_ptr<FEditorComponentPanelSystem> EditorPanelSystem;

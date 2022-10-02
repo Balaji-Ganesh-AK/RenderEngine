@@ -1,0 +1,146 @@
+{
+    "LevelData": {
+        "Entities": [
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "normal.png"
+                        }
+                    }
+                },
+                "EntityID": 0,
+                "Name": "Floor",
+                "TransformComponent": {
+                    "Location": [
+                        -59.0,
+                        -96.0,
+                        619.0
+                    ],
+                    "Rotation": [
+                        -0.9432702660560608,
+                        0.0006409371271729469,
+                        1.2653650045394897
+                    ],
+                    "Scale": [
+                        1000.0,
+                        1.0,
+                        1000.0
+                    ]
+                }
+            },
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "Rifle.png"
+                        }
+                    }
+                },
+                "EntityID": 1,
+                "Name": "Cube 1",
+                "TransformComponent": {
+                    "Location": [
+                        -30.695280075073242,
+                        5.249370098114014,
+                        -180.9969940185547
+                    ],
+                    "Rotation": [
+                        0.14833460748195648,
+                        0.00025930182891897857,
+                        1.5847244262695313
+                    ],
+                    "Scale": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ]
+                }
+            },
+            {
+                "DefaultUnLitMaterialComponent": {
+                    "Material": {
+                        "TextureDetail": {
+                            "Material.BaseTexture": "Rifle.png"
+                        }
+                    }
+                },
+                "EntityID": 2,
+                "Name": "Cube 2",
+                "TransformComponent": {
+                    "Location": [
+                        -28.449560165405273,
+                        1.7137800455093384,
+                        -204.7209930419922
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -17.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        10.0,
+                        10.0,
+                        5.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 3,
+                "Name": "Sphere",
+                "TransformComponent": {
+                    "Location": [
+                        -73.0,
+                        68.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        10.0,
+                        10.0,
+                        10.0
+                    ]
+                }
+            },
+            {
+                "EntityID": 4,
+                "FCameraComponent": {
+                    "CameraFront": [
+                        0.6208204030990601,
+                        -0.6060419082641602,
+                        0.49728792905807495
+                    ],
+                    "CameraPosition": [
+                        -376.3746032714844,
+                        289.4215393066406,
+                        -414.28662109375
+                    ],
+                    "CameraUp": [
+                        0.0,
+                        -1.0,
+                        0.0
+                    ],
+                    "Direction": [
+                        0.7467441558837891,
+                        -0.7289680242538452,
+                        0.5981550216674805
+                    ],
+                    "MainCamera": true,
+                    "Rotator": [
+                        60.90279769897461,
+                        -46.799949645996094,
+                        0.0
+                    ]
+                },
+                "Name": "Camera"
+            }
+        ],
+        "EntityCount": 5,
+        "FormatVersion": 1,
+        "LevelName": "Physics"
+    }
+}
