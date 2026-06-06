@@ -65,7 +65,7 @@
     in vec3 f_Normal;
     in vec2 f_Texture;
     in vec3 f_FragPos;
-    in float f_ID;
+    flat in int f_ID;
 
     uniform vec4 u_LightColor;
     uniform vec4 u_ObjectColor;
@@ -98,7 +98,7 @@
 
 
         color =   vec4(Result, 1.0);
-        id =int(f_ID);
+        id = f_ID;
         
     }
     vec3 CalulateDirectionLight(FDirectionalLight DirectionalLight, vec3 Normal, vec3 ViewDirection, FMaterial material)

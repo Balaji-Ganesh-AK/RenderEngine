@@ -38,8 +38,9 @@ namespace KREngine
 	{
 		auto* window = WindowWindow->GetCurrentWindow();
 		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
-		auto viewport = MaxBounds - MinBounds;
-		if (window &&  mouse_x > viewport.x /*&& mouse_x < MaxBounds.x *//*&& mouse_y > MinBounds.x && mouse_x < MaxBounds.x*/)
+		const bool insideViewport = mouse_x >= MinBounds.x && mouse_x <= MaxBounds.x &&
+									mouse_y >= MinBounds.y && mouse_y <= MaxBounds.y;
+		if (window && insideViewport)
 		{
 			const int state = glfwGetMouseButton(window, static_cast<int>(mouseCode));
 			return state == GLFW_PRESS;
@@ -49,15 +50,16 @@ namespace KREngine
 
 	Vec2 WindowsInput::GetMousePosition()
 	{
-		auto viewport = MaxBounds - MinBounds;
+		/*Return the cursor position in framebuffer texel space (origin bottom-left, for glReadPixels).
+		 *The scene image is drawn at the window/framebuffer resolution, so the panel-relative position
+		 *maps 1:1 to framebuffer texels; only Y must be flipped, and by the FRAMEBUFFER height (not the
+		 *ImGui panel height, which is what the previous code used).*/
 		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
 		mouse_x -= MinBounds.x;
 		mouse_y -= MinBounds.y;
-		mouse_y = viewport.y - mouse_y;
-		//return MousePos;
-
-		return Vec2(mouse_x,mouse_y);
-		
+		const float frameBufferHeight = WindowWindow->Properties->GetHeight();
+		mouse_y = frameBufferHeight - mouse_y;
+		return Vec2(mouse_x, mouse_y);
 	}
 
 	void WindowsInput::GetMousePosition(Vec2& mousePos)

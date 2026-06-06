@@ -97,7 +97,9 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			
 			LineSystem->Run(mainCamera, Renderer);
 			//GizmoSystem->RenderRun(mainCamera, Renderer);
-		//	OutLine(mainCamera, Renderer, 0);
+#if GUI
+			OutLine(mainCamera, Renderer, static_cast<uint32>(currentSelectedEntity));
+#endif
 		}
 		else
 		{
@@ -105,19 +107,26 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		}
 
 
-		//if(FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
-		//{
-		//	//Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
-		//	Vec2 Test = FApplication::Get().GetInputSystem().GetMousePosition();
-
-		//	//Logger::Warning("Mouse pos %s", Test.Print());
-		//	//Logger::Warning("min bounds %s", min_bounds.Print());
-		//	//auto x = Framebuffer->ReadPixel(1, int(Test.x), int(Test.y));
-		//	//currentSelectedEntity = x;
-		////	Logger::Warning(" max bounds %s", Test.Print());
-		////	Logger::Warning(" max bounds %d", x);
-		//}
-		
+		// --- Mouse picking: read the entity id under the cursor from the framebuffer's id attachment (attachment 1) ---
+#if GUI
+		if (FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
+		{
+			const Vec2 mousePos = FApplication::Get().GetInputSystem().GetMousePosition();
+			const int pickX = static_cast<int>(mousePos.x);
+			const int pickY = static_cast<int>(mousePos.y);
+			const int fbWidth = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth());
+			const int fbHeight = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight());
+			if (pickX >= 0 && pickY >= 0 && pickX < fbWidth && pickY < fbHeight)
+			{
+				const int picked = Framebuffer->ReadPixel(1, pickX, pickY);
+				Logger::Warning("Pick read=(%d,%d) fb=(%dx%d) id=%d", pickX, pickY, fbWidth, fbHeight, picked);
+				if (picked >= 0)
+				{
+					currentSelectedEntity = static_cast<FEntityHandle>(picked);
+				}
+			}
+		}
+#endif
 
 		Framebuffer->UnBindBuffer();
 

@@ -38,8 +38,9 @@ namespace KREngine
 
 			/*Needs to go when we have mouse picking.*/
 			
-			IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", &tempID), "Entity ID", );
-			CurrentSelectedEntity = tempID;
+			/*Keep the field in sync with the current selection (incl. mouse picking); only write back when the user edits it.*/
+			tempID = static_cast<int>(CurrentSelectedEntity);
+			IMGUI_LEFT_LABEL(ImGui::InputInt("##Entity ID", &tempID), "Entity ID", CurrentSelectedEntity = tempID;);
 
 
 

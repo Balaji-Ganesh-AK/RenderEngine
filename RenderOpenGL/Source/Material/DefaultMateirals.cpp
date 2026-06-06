@@ -133,7 +133,7 @@ namespace KREngine
 						BufferElement{"v_Pos", EShaderDataType::FVec3, true},
 						BufferElement{"v_Texture", EShaderDataType::FVec2, true},
 						BufferElement{"v_Normal", EShaderDataType::FVec3, true},
-						BufferElement{"v_ID", EShaderDataType::Int, true},
+						BufferElement{"v_ID", EShaderDataType::Float, false},
 		};
 
 		for (const FEntityHandle Entity : EntityHandles)
