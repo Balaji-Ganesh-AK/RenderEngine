@@ -1,6 +1,7 @@
 #include "Gizmo.h"
 
 #include <cmath>
+#include <glm/glm.hpp>
 
 #include "GameManager.h"
 #include "Entity/Components/TransformComponent.h"
@@ -69,6 +70,16 @@ namespace KREngine
 			pushLine(0, 0, 0, L, 0, 0, red);
 			pushLine(0, 0, 0, 0, L, 0, green);
 			pushLine(0, 0, 0, 0, 0, L, blue);
+			{
+				/*Arrowheads at the axis tips (Unreal-style move handles).*/
+				const float h = 2.0f, w = 0.7f;
+				pushLine(L - h,  w,  w, L, 0, 0, red);   pushLine(L - h, -w,  w, L, 0, 0, red);
+				pushLine(L - h,  w, -w, L, 0, 0, red);   pushLine(L - h, -w, -w, L, 0, 0, red);
+				pushLine( w, L - h,  w, 0, L, 0, green); pushLine(-w, L - h,  w, 0, L, 0, green);
+				pushLine( w, L - h, -w, 0, L, 0, green); pushLine(-w, L - h, -w, 0, L, 0, green);
+				pushLine( w,  w, L - h, 0, 0, L, blue);  pushLine(-w,  w, L - h, 0, 0, L, blue);
+				pushLine( w, -w, L - h, 0, 0, L, blue);  pushLine(-w, -w, L - h, 0, 0, L, blue);
+			}
 			gizmo.ModeVertexCount[static_cast<int>(EGizmoMode::Translate)] =
 				vertexCount() - gizmo.ModeVertexOffset[static_cast<int>(EGizmoMode::Translate)];
 
@@ -149,12 +160,189 @@ namespace KREngine
 				gizmo.Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
 
 				gizmo.VertexArray->BindBuffer();
+				glLineWidth(2.0f);
 				const int m = static_cast<int>(gizmo.Mode);
 				glDrawArrays(GL_LINES, gizmo.ModeVertexOffset[m], gizmo.ModeVertexCount[m]);
+				glLineWidth(1.0f);
 				gizmo.VertexArray->UnBindBuffer();
 				gizmo.Shader->UnBindShader();
 			}
 		}
+	}
+
+	bool FGizmoSystem::UpdateInteraction(const FCameraComponent& mainCamera, FEntityHandle selectedEntity)
+	{
+		/*Nothing selected (or no transform) -> no gizmo interaction.*/
+		if (EntityHandles.empty() || !EntityManager::HasComponent<FTransformComponent>(selectedEntity))
+		{
+			for (const auto e : EntityHandles)
+				EntityManager::GetComponent<FGizmo>(e).ActiveAxis = -1;
+			return false;
+		}
+
+		FGizmo& gizmo = EntityManager::GetComponent<FGizmo>(*EntityHandles.begin());
+		FTransform& targetTransform = EntityManager::GetComponent<FTransformComponent>(selectedEntity).Transform;
+		FInput& input = FApplication::Get().GetInputSystem();
+
+		const glm::mat4 viewProj = FApplication::GetWorldProjection() * mainCamera.ViewProjection;
+		const float fbW = FApplication::Get().GetWindowsWindow()->Properties->GetWidth();
+		const float fbH = FApplication::Get().GetWindowsWindow()->Properties->GetHeight();
+
+		const FVector loc = targetTransform.GetLocation();
+		const glm::vec3 origin(loc.x, loc.y, loc.z);
+		/*Axis space: world axes (Global) or the object's rotated axes (Local), matching the rendered gizmo.*/
+		glm::mat4 spaceRot(1.0f);
+		if (FApplication::Get().IsGizmoLocalSpace())
+		{
+			const FVector rotEuler = targetTransform.GetRotation();
+			spaceRot = glm::rotate(spaceRot, glm::radians(rotEuler.x), glm::vec3(1, 0, 0));
+			spaceRot = glm::rotate(spaceRot, glm::radians(rotEuler.y), glm::vec3(0, 1, 0));
+			spaceRot = glm::rotate(spaceRot, glm::radians(rotEuler.z), glm::vec3(0, 0, 1));
+		}
+		const glm::vec3 axisDir[3] = {
+			glm::normalize(glm::vec3(spaceRot * glm::vec4(1, 0, 0, 0))),
+			glm::normalize(glm::vec3(spaceRot * glm::vec4(0, 1, 0, 0))),
+			glm::normalize(glm::vec3(spaceRot * glm::vec4(0, 0, 1, 0)))
+		};
+		/*World length of the handles, matched to the rendered gizmo (constant screen size).*/
+		const float axisLen = glm::length(mainCamera.CameraPosition - origin) * 0.1f;
+
+		/*Project a world point to framebuffer pixel coords (same space as GetMousePosition()).*/
+		auto worldToScreen = [&](const glm::vec3& p, glm::vec2& out) -> bool
+		{
+			const glm::vec4 clip = viewProj * glm::vec4(p, 1.0f);
+			if (clip.w <= 0.0001f) return false;
+			const glm::vec3 ndc = glm::vec3(clip) / clip.w;
+			out.x = (ndc.x * 0.5f + 0.5f) * fbW;
+			out.y = (ndc.y * 0.5f + 0.5f) * fbH;
+			return true;
+		};
+
+		const Vec2 mouseRaw = input.GetMousePosition();
+		const glm::vec2 mouse(mouseRaw.x, mouseRaw.y);
+		const bool lmbDown = input.IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft);
+
+		glm::vec2 screenOrigin;
+		const bool originVisible = worldToScreen(origin, screenOrigin);
+
+		/*--- Already dragging a handle: apply the manipulation ---*/
+		if (gizmo.ActiveAxis >= 0)
+		{
+			if (!lmbDown)
+			{
+				gizmo.ActiveAxis = -1;
+				gizmo.bWasMouseDown = lmbDown;
+				return false;
+			}
+
+			const int a = gizmo.ActiveAxis;
+			const glm::vec2 lastMouse(gizmo.LastDragX, gizmo.LastDragY);
+
+			glm::vec2 sO, sTip;
+			if (worldToScreen(origin, sO) && worldToScreen(origin + axisDir[a] * axisLen, sTip))
+			{
+				if (gizmo.Mode == EGizmoMode::Rotate)
+				{
+					/*Rotate by how far the cursor swept around the gizmo centre.*/
+					const float angNow = atan2f(mouse.y - sO.y, mouse.x - sO.x);
+					const float angLast = atan2f(lastMouse.y - sO.y, lastMouse.x - sO.x);
+					float deltaRad = angNow - angLast;
+					if (deltaRad > 3.14159265f) deltaRad -= 6.28318531f;       // unwrap across the atan2 seam
+					else if (deltaRad < -3.14159265f) deltaRad += 6.28318531f;
+					const float deltaDeg = deltaRad * 57.2957795f;
+					FVector rot = targetTransform.GetRotation();
+					if (a == 0) rot.x += deltaDeg; else if (a == 1) rot.y += deltaDeg; else rot.z += deltaDeg;
+					targetTransform.SetRotation(rot);
+				}
+				else
+				{
+					const glm::vec2 sDir = sTip - sO;
+					const float sLen = glm::length(sDir);
+					if (sLen > 0.001f)
+					{
+						const glm::vec2 sDirN = sDir / sLen;
+						const float pixelsAlong = glm::dot(mouse - lastMouse, sDirN);
+						const float worldDelta = (pixelsAlong / sLen) * axisLen;
+
+						if (gizmo.Mode == EGizmoMode::Translate)
+						{
+							const glm::vec3 p = origin + axisDir[a] * worldDelta;
+							targetTransform.SetLocation(FVector(p.x, p.y, p.z));
+						}
+						else /* Scale */
+						{
+							FVector sc = targetTransform.GetScale();
+							if (a == 0) sc.x += worldDelta; else if (a == 1) sc.y += worldDelta; else sc.z += worldDelta;
+							targetTransform.SetScale(sc);
+						}
+					}
+				}
+			}
+
+			gizmo.LastDragX = mouseRaw.x;
+			gizmo.LastDragY = mouseRaw.y;
+			gizmo.bWasMouseDown = lmbDown;
+			return true;
+		}
+
+		/*--- Not dragging: on a fresh click, grab the nearest axis handle (if any) ---*/
+		if (lmbDown && !gizmo.bWasMouseDown && originVisible)
+		{
+			int best = -1;
+			float bestDist = 14.0f; // pixel threshold to grab a handle
+
+			if (gizmo.Mode == EGizmoMode::Rotate)
+			{
+				/*Rotate handles are RINGS, not axis lines: find the ring (around X/Y/Z) whose
+				 *projected outline is closest to the cursor.*/
+				const int samples = 64;
+				const float twoPi = 6.28318531f;
+				for (int a = 0; a < 3; ++a)
+				{
+					for (int i = 0; i < samples; ++i)
+					{
+						const float ang = (static_cast<float>(i) / samples) * twoPi;
+						const float c = cosf(ang) * axisLen, s = sinf(ang) * axisLen;
+						glm::vec3 localOffset;
+						if (a == 0) localOffset = glm::vec3(0.0f, c, s);     // ring around X (YZ plane)
+						else if (a == 1) localOffset = glm::vec3(c, 0.0f, s); // ring around Y (XZ plane)
+						else localOffset = glm::vec3(c, s, 0.0f);            // ring around Z (XY plane)
+						const glm::vec3 ringPoint = origin + glm::vec3(spaceRot * glm::vec4(localOffset, 0.0f));
+
+						glm::vec2 sp;
+						if (!worldToScreen(ringPoint, sp)) continue;
+						const float d = glm::length(mouse - sp);
+						if (d < bestDist) { bestDist = d; best = a; }
+					}
+				}
+			}
+			else
+			{
+				/*Translate/Scale handles run along the axes: distance to the origin->tip segment.*/
+				for (int a = 0; a < 3; ++a)
+				{
+					glm::vec2 sTip;
+					if (!worldToScreen(origin + axisDir[a] * axisLen, sTip)) continue;
+					const glm::vec2 ab = sTip - screenOrigin;
+					const float ab2 = glm::dot(ab, ab);
+					const float t = ab2 > 0.0001f ? glm::clamp(glm::dot(mouse - screenOrigin, ab) / ab2, 0.0f, 1.0f) : 0.0f;
+					const glm::vec2 closest = screenOrigin + ab * t;
+					const float d = glm::length(mouse - closest);
+					if (d < bestDist) { bestDist = d; best = a; }
+				}
+			}
+			if (best >= 0)
+			{
+				gizmo.ActiveAxis = best;
+				gizmo.LastDragX = mouseRaw.x;
+				gizmo.LastDragY = mouseRaw.y;
+				gizmo.bWasMouseDown = lmbDown;
+				return true; // grabbed a handle -> consume the click (don't change selection)
+			}
+		}
+
+		gizmo.bWasMouseDown = lmbDown;
+		return false;
 	}
 
 	void FGizmoSystem::End()

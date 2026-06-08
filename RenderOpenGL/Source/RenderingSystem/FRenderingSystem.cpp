@@ -110,8 +110,10 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			// over the id buffer and break picking wherever they overlap a mesh.
 			// Fire only on a fresh left-click (rising edge) so one click selects exactly one entity.
 #if GUI
+			/*Gizmo drag takes priority: if it grabs/uses a handle this frame, skip click-to-select.*/
+			const bool gizmoUsingMouse = GizmoSystem->UpdateInteraction(mainCamera, currentSelectedEntity);
 			const bool bLeftDownInViewport = FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft);
-			if (bLeftDownInViewport && !PreviousLeftMouseDown)
+			if (!gizmoUsingMouse && bLeftDownInViewport && !PreviousLeftMouseDown)
 			{
 				const Vec2 mousePos = FApplication::Get().GetInputSystem().GetMousePosition();
 				const int pickX = static_cast<int>(mousePos.x);
@@ -289,7 +291,11 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 				FTransformComponent& transform_gizmo = EntityManager::GetComponent<FTransformComponent>(Gizmo);
 				gizmo.bNeedsToRender = true;
 				transform_gizmo.Transform.SetLocation(transform.GetLocation());
-				transform_gizmo.Transform.SetRotation(FVector(0.0f, 0.0f, 0.0f)); // world-aligned gizmo
+				/*Gizmo orientation follows the object in Local space; stays world-aligned in Global space.*/
+				if (FApplication::Get().IsGizmoLocalSpace())
+					transform_gizmo.Transform.SetRotation(transform.GetRotation());
+				else
+					transform_gizmo.Transform.SetRotation(FVector(0.0f, 0.0f, 0.0f));
 
 				/*Constant screen size: scale proportional to camera distance, set fresh each frame (not accumulated).*/
 				const float gizmoDistance = glm::length(FVectorHelper::AsGLMVec3(transform.GetLocation()) - mainCamera.CameraPosition);

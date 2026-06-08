@@ -115,6 +115,7 @@ namespace KREngine
 		{
 			return glm::perspective(glm::radians(45.0f), Get().GetWindowsWindow()->Properties->GetWidth() /Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 		}
+		bool IsGizmoLocalSpace() const { return bGizmoLocalSpace; }
 		void TestThread();
 	private:
 		static FApplication* Instance;
@@ -159,6 +160,9 @@ namespace KREngine
 
 		/*Current editor play state; gates whether the level logic + physics simulate.*/
 		EPlayState PlayState = EPlayState::Editor;
+
+		/*Gizmo axis space: false = world/global axes, true = the selected object's local axes.*/
+		bool bGizmoLocalSpace = false;
 		bool bShowDebugProfiler{ false };
 
 

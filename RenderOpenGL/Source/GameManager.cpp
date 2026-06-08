@@ -463,6 +463,23 @@ namespace KREngine
 			ImGui::SameLine();
 			ImGui::TextDisabled(PlayState == EPlayState::Playing ? "[PLAYING]" : (PlayState == EPlayState::Paused ? "[PAUSED]" : "[EDITOR]"));
 
+			/*Gizmo axis space toggle (Unreal-style World/Local). The active one is tinted blue.
+			 *Capture the state first and always push+pop exactly once per button: a click flips the
+			 *flag mid-frame, and a conditional push/pop would unbalance ImGui's style stack and crash.*/
+			ImGui::Separator();
+			ImGui::TextUnformatted("Gizmo Axis:");
+			ImGui::SameLine();
+			const bool gizmoIsLocal = bGizmoLocalSpace;
+			const ImVec4 activeCol(0.26f, 0.59f, 0.98f, 1.0f);
+			const ImVec4 normalCol = ImGui::GetStyle().Colors[ImGuiCol_Button];
+			ImGui::PushStyleColor(ImGuiCol_Button, gizmoIsLocal ? normalCol : activeCol);
+			if (ImGui::Button("Global")) bGizmoLocalSpace = false;
+			ImGui::PopStyleColor();
+			ImGui::SameLine();
+			ImGui::PushStyleColor(ImGuiCol_Button, gizmoIsLocal ? activeCol : normalCol);
+			if (ImGui::Button("Local")) bGizmoLocalSpace = true;
+			ImGui::PopStyleColor();
+
 			ImGui::EndMenuBar();
 		}
 
