@@ -82,6 +82,15 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 		Framebuffer->BindBuffer();
 #endif
 		Renderer->ClearColor();
+#if GUI
+		/*Renderer->ClearColor()'s glClear wipes the integer id attachment to 0; re-clear it to -1
+		 *("no entity") AFTER that, so clicking empty space reads -1 and clears the selection instead
+		 *of selecting entity 0.*/
+		{
+			const int clearEntityId[4] = { -1, 0, 0, 0 };
+			glClearBufferiv(GL_COLOR, 1, clearEntityId);
+		}
+#endif
 
 
 
@@ -93,12 +102,48 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			FoliageSystem->Run(mainCamera, Renderer);
 			DefaultShaderSystem->Run(mainCamera, Renderer);
 			DefaultLitShaderSystem->Run(mainCamera, Renderer);
+
+			// --- Mouse picking ---
+			// Read the entity id under the cursor from the id attachment HERE: right after the
+			// pickable mesh passes and BEFORE the sphere/line/outline overlays. Those overlay
+			// shaders don't write the id output, so drawing them first would scribble garbage
+			// over the id buffer and break picking wherever they overlap a mesh.
+			// Fire only on a fresh left-click (rising edge) so one click selects exactly one entity.
+#if GUI
+			const bool bLeftDownInViewport = FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft);
+			if (bLeftDownInViewport && !PreviousLeftMouseDown)
+			{
+				const Vec2 mousePos = FApplication::Get().GetInputSystem().GetMousePosition();
+				const int pickX = static_cast<int>(mousePos.x);
+				const int pickY = static_cast<int>(mousePos.y);
+				const int fbWidth = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth());
+				const int fbHeight = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight());
+				if (pickX >= 0 && pickY >= 0 && pickX < fbWidth && pickY < fbHeight)
+				{
+					const int picked = Framebuffer->ReadPixel(1, pickX, pickY);
+					if (picked >= 0)
+					{
+						currentSelectedEntity = static_cast<FEntityHandle>(picked);
+					}
+					else
+					{
+						/*Clicked empty space (the id attachment reads -1 there): clear the selection.*/
+						currentSelectedEntity = INVALID_ENTITY;
+					}
+				}
+			}
+			PreviousLeftMouseDown = bLeftDownInViewport;
+#endif
+
 			SphereSystem->RenderRun(mainCamera, Renderer);
 			
 			LineSystem->Run(mainCamera, Renderer);
 			//GizmoSystem->RenderRun(mainCamera, Renderer);
 #if GUI
 			OutLine(mainCamera, Renderer, static_cast<uint32>(currentSelectedEntity));
+			glDisable(GL_DEPTH_TEST);
+			GizmoSystem->Run(mainCamera, Renderer);
+			glEnable(GL_DEPTH_TEST);
 #endif
 		}
 		else
@@ -106,27 +151,6 @@ void FRenderingSystem::Run(const FCameraComponent& mainCamera, FEntityHandle& cu
 			Logger::Error("No main camera found! ");
 		}
 
-
-		// --- Mouse picking: read the entity id under the cursor from the framebuffer's id attachment (attachment 1) ---
-#if GUI
-		if (FApplication::Get().GetInputSystem().IsMouseKeyPressedInViewPort(Input::MouseCode::ButtonLeft))
-		{
-			const Vec2 mousePos = FApplication::Get().GetInputSystem().GetMousePosition();
-			const int pickX = static_cast<int>(mousePos.x);
-			const int pickY = static_cast<int>(mousePos.y);
-			const int fbWidth = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetWidth());
-			const int fbHeight = static_cast<int>(FApplication::Get().GetWindowsWindow()->Properties->GetHeight());
-			if (pickX >= 0 && pickY >= 0 && pickX < fbWidth && pickY < fbHeight)
-			{
-				const int picked = Framebuffer->ReadPixel(1, pickX, pickY);
-				Logger::Warning("Pick read=(%d,%d) fb=(%dx%d) id=%d", pickX, pickY, fbWidth, fbHeight, picked);
-				if (picked >= 0)
-				{
-					currentSelectedEntity = static_cast<FEntityHandle>(picked);
-				}
-			}
-		}
-#endif
 
 		Framebuffer->UnBindBuffer();
 
@@ -206,8 +230,8 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 	const glm::mat4 WorldProjection = glm::perspective(glm::radians(45.0f), FApplication::Get().GetWindowsWindow()->Properties->GetWidth() / FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.1f, 10000.0f);
 
 	
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilMask(0x00);
+	/*Selection outline. Depth test off so the highlight is always visible; the stencil funcs are
+	 *configured per-pass in the draw below.*/
 	glDisable(GL_DEPTH_TEST);
 	if (EntityManager::HasComponent<FTransformComponent>(currentSelectedEntity) && EntityManager::HasComponent<FStaticMesh>(currentSelectedEntity) &&
 		(EntityManager::HasComponent<DefaultLitMaterialComponent>(currentSelectedEntity) || EntityManager::HasComponent<DefaultUnLitMaterialComponent>(currentSelectedEntity)))
@@ -216,23 +240,45 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 
 
 		FTransform& transform = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).Transform;
-		auto& model_projection = EntityManager::GetComponent<FTransformComponent>(currentSelectedEntity).ModelProjection;
-		model_projection = glm::mat4(1.0f);
+		/*Build the model matrix from the actual transform. No fixed 1.005 scale-up: the outline
+		 *thickness is produced in screen space by the outline vertex shader, so it stays the same
+		 *size on screen for every object regardless of the object's size or distance.*/
+		glm::mat4 model_projection = glm::mat4(1.0f);
 		model_projection = glm::translate(model_projection, FVectorHelper::AsGLMVec3(transform.GetLocation()));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model_projection = glm::rotate(model_projection, glm::radians(transform.GetRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale() * 1.005f));
+		model_projection = glm::scale(model_projection, FVectorHelper::AsGLMVec3(transform.GetScale()));
 
 		
 
 		auto& static_mesh = EntityManager::GetComponent<FStaticMesh>(currentSelectedEntity);
+			const glm::mat4 mvp = WorldProjection * ViewProjection * model_projection;
+			const KREngine::vec3 viewportSize(FApplication::Get().GetWindowsWindow()->Properties->GetWidth(), FApplication::Get().GetWindowsWindow()->Properties->GetHeight(), 0.0f);
+			const int indexCount = static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount());
+
 			Shader->BindShader();
-			Shader->SetUniformMat4("u_WorldProjection", WorldProjection * ViewProjection * model_projection);
-			Shader->SetUniformMat4("u_Model",model_projection);
+			Shader->SetUniformMat4("u_MVP", mvp);
+			Shader->SetUniform3f("u_ViewportSize", viewportSize);
 			static_mesh.VertexArray->BindBuffer();
-			
-			renderer->Draw(static_cast<int>(static_mesh.IndexBufferData->GetIndexBufferCount()));
+
+			/*Pass 1: stamp ONLY this object's silhouette into the stencil buffer with a unique value
+			 *(2), writing no colour and no extrusion. Every object in the main pass shares stencil=1,
+			 *so without this the outline gets clipped wherever the object meets the floor/another mesh.*/
+			Shader->SetUniformF("u_OutlinePixels", 0.0f);
+			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+			glStencilFunc(GL_ALWAYS, 2, 0xFF);
+			glStencilMask(0xFF);
+			renderer->Draw(indexCount);
+
+			/*Pass 2: draw the screen-space-expanded mesh in yellow everywhere the stencil is NOT this
+			 *object (the silhouette border), giving a complete, uniform outline all the way around.*/
+			Shader->SetUniformF("u_OutlinePixels", 4.0f);
+			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			glStencilFunc(GL_NOTEQUAL, 2, 0xFF);
+			glStencilMask(0x00);
+			renderer->Draw(indexCount);
+
 			static_mesh.VertexArray->UnBindBuffer();
 			Shader->UnBindShader();
 
@@ -243,10 +289,12 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 				FTransformComponent& transform_gizmo = EntityManager::GetComponent<FTransformComponent>(Gizmo);
 				gizmo.bNeedsToRender = true;
 				transform_gizmo.Transform.SetLocation(transform.GetLocation());
-				transform_gizmo.Transform.SetRotation(transform.GetRotation());
-				
-				const KREngine::vec3 distance = transform.GetLocation() - mainCamera.CameraPosition;
-				transform_gizmo.Transform.SetScale(transform_gizmo.Transform.GetScale() * distance * GizmoScreenSize);
+				transform_gizmo.Transform.SetRotation(FVector(0.0f, 0.0f, 0.0f)); // world-aligned gizmo
+
+				/*Constant screen size: scale proportional to camera distance, set fresh each frame (not accumulated).*/
+				const float gizmoDistance = glm::length(FVectorHelper::AsGLMVec3(transform.GetLocation()) - mainCamera.CameraPosition);
+				const float gizmoScale = gizmoDistance * GizmoScreenSize;
+				transform_gizmo.Transform.SetScale(FVector(gizmoScale, gizmoScale, gizmoScale));
 
 			}
 	}
@@ -259,6 +307,7 @@ void FRenderingSystem::OutLine(const FCameraComponent& mainCamera, const std::sh
 		}
 		
 	}
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glStencilMask(0xFF);
 	glStencilFunc(GL_ALWAYS, 0, 0xFF);
 	glEnable(GL_DEPTH_TEST);

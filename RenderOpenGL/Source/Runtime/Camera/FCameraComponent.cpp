@@ -2,6 +2,7 @@
 
 
 #include "GameManager.h"
+#include "ImGUI/imgui.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
 #include "Systems/Input/Input.h"
@@ -215,6 +216,28 @@ namespace KREngine
 
 	 void FCameraSystem::GUIRun()
 	 {
+		 if (!bHasValid)
+		 {
+			 ImGui::TextUnformatted("Camera: no main camera in the level.");
+			 return;
+		 }
+
+		 FCameraComponent& camera = EntityManager::GetComponent<FCameraComponent>(MainCameraEntity);
+		 if (ImGui::CollapsingHeader("Camera Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		 {
+			 ImGui::DragFloat3("Position", &camera.CameraPosition.x, 0.1f);
+			 const bool bRotationEdited = ImGui::DragFloat3("Rotation (Yaw/Pitch/Roll)", &camera.Rotator.x, 0.5f);
+			 ImGui::Text("Front  : %.2f, %.2f, %.2f", camera.CameraFront.x, camera.CameraFront.y, camera.CameraFront.z);
+
+			 /*If the rotation is edited from the panel, recompute the view direction (same math as FCameraSystem::Run).*/
+			 if (bRotationEdited)
+			 {
+				 camera.Direction.x = cos(glm::radians(camera.Rotator.x) * cos(glm::radians(camera.Rotator.y)));
+				 camera.Direction.y = sin(glm::radians(camera.Rotator.y));
+				 camera.Direction.z = sin(glm::radians(camera.Rotator.x)) * cos(glm::radians(camera.Rotator.y));
+				 camera.CameraFront = glm::normalize(camera.Direction);
+			 }
+		 }
 	 }
 #endif
 

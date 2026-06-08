@@ -20,6 +20,10 @@ namespace KREngine
 	/*MAX ENTITY COUNT this also in engine ini*/
 	constexpr FEntityHandle MAX_ENTITIES = 10000;
 
+	/*Sentinel handle meaning "no entity / nothing selected". Never a valid entity
+	 *(valid ids are 0..MAX_ENTITIES-1), so HasComponent<>() is always false for it.*/
+	constexpr FEntityHandle INVALID_ENTITY = static_cast<FEntityHandle>(-1);
+
 
 
 	/*We can set all in the engine ini file*/

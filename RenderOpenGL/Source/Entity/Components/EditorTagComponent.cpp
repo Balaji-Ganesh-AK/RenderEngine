@@ -15,7 +15,7 @@ namespace KREngine
 	{
 	}
 
-	void FEditorTagSystem::GUIRun() const
+	void FEditorTagSystem::GUIRun(FEntityHandle& currentSelectedEntity) const
 	{
 		{
 			SCOPED_TIMER("Editor Gui ");
@@ -24,10 +24,18 @@ namespace KREngine
 			{
 				auto& fName = EntityManager::GetComponent<FName>(entity);
 
-				ImGui::BulletText("%s", fName.Name.c_str());
+				/*ImGui::Selectable gives a hover highlight for free, returns true when clicked, and
+				 *draws the row highlighted while it is the selected entity. The id in the label keeps
+				 *the row unique (entities often share the default name) and is informative.*/
+				const bool bSelected = (entity == currentSelectedEntity);
+				const std::string label = fName.Name + " (id " + std::to_string(entity) + ")";
+				if (ImGui::Selectable(label.c_str(), bSelected))
+				{
+					currentSelectedEntity = entity;
+				}
 			}
 		}
-		
+
 	}
 
 	void FName::FromJson(FJson json)

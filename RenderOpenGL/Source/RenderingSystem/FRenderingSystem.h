@@ -46,6 +46,9 @@ namespace KREngine
 
 		float GizmoScreenSize = 0.01f;
 
+		/*Tracks last frame's left-button state so a pick fires once per click (rising edge).*/
+		bool PreviousLeftMouseDown = false;
+
 	private:
 
 	
@@ -61,7 +64,7 @@ namespace KREngine
 		std::shared_ptr<FColliderRenderer>	SphereSystem ;
 		std::shared_ptr<FRenderer> Renderer;
 
-		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
+		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/OutlineVertexShader.GLSL";
 		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";
 		std::shared_ptr<FShader> Shader;
 

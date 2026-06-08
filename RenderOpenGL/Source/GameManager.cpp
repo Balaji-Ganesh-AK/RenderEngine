@@ -443,6 +443,26 @@ namespace KREngine
 
 				ImGui::EndMenu();
 			}
+
+			/*Play-In-Editor controls (Unreal-style): Play enters play mode, Pause/Resume freezes it,
+			 *Stop returns to the editor and restores the scene to its pre-play state.*/
+			ImGui::Separator();
+			if (PlayState == EPlayState::Editor)
+			{
+				if (ImGui::Button("Play"))
+					StartPlay();
+			}
+			else
+			{
+				if (ImGui::Button(PlayState == EPlayState::Paused ? "Resume" : "Pause"))
+					TogglePlayPause();
+				ImGui::SameLine();
+				if (ImGui::Button("Stop"))
+					StopPlay();
+			}
+			ImGui::SameLine();
+			ImGui::TextDisabled(PlayState == EPlayState::Playing ? "[PLAYING]" : (PlayState == EPlayState::Paused ? "[PAUSED]" : "[EDITOR]"));
+
 			ImGui::EndMenuBar();
 		}
 
@@ -452,7 +472,12 @@ namespace KREngine
 			RenderingSystem->GUIRun();
 
 			ImGui::Begin("World Outliner");
-			EditorTagSystem->GUIRun();
+			EditorTagSystem->GUIRun(EditorPanelSystem->GetCurrentSelectedEntityMutable());
+			ImGui::End();
+
+			/*Camera details live in their own dockable/resizable window.*/
+			ImGui::Begin("Camera");
+			CameraSystem->GUIRun();
 			ImGui::End();
 
 			ImGui::Begin("Properties Panel");
@@ -833,6 +858,12 @@ namespace KREngine
 
 	void FApplication::EngineRun()
 	{
+#if GUI
+		const bool bSimulate = (PlayState == EPlayState::Playing);
+#else
+		const bool bSimulate = true; // player build always simulates
+#endif
+
 		{
 			SCOPED_TIMER("Game Loop");
 
@@ -842,14 +873,20 @@ namespace KREngine
 		/*	std::thread physicsthread(&FApplication::RenderRun, this);
 			physicsthread.join();*/
 
-			Run();
+			if (bSimulate)
+			{
+				Run();
+			}
 		}
 
 		{
 			SCOPED_TIMER("Engine Loop");
 			EditorTagSystem->Run();
 			CameraSystem->Run();
-			PhysicsSystem->Run();
+			if (bSimulate)
+			{
+				PhysicsSystem->Run();
+			}
 			RenderingSystem->Run(CameraSystem->GetMainCamera(), EditorPanelSystem->GetCurrentSelectedEntityMutable());
 			
 			//f = PhysicsSystem->RenderRun();
@@ -862,6 +899,53 @@ namespace KREngine
 		}
 		
 	}
+
+#if GUI
+	/*Transforms captured when entering Play, so Stop can restore the scene (Unreal-style PIE).*/
+	static std::unordered_map<FEntityHandle, FTransform> GPlayTransformSnapshot;
+
+	void FApplication::StartPlay()
+	{
+		if (PlayState != EPlayState::Editor)
+			return;
+
+		/*Snapshot every named scene entity's transform so Stop can restore them.*/
+		GPlayTransformSnapshot.clear();
+		for (const FEntityHandle entity : EditorTagSystem->EntityHandles)
+		{
+			if (EntityManager::HasComponent<FTransformComponent>(entity))
+				GPlayTransformSnapshot[entity] = EntityManager::GetComponent<FTransformComponent>(entity).Transform;
+		}
+
+		PlayState = EPlayState::Playing;
+		Logger::Warning("Play: entering play mode");
+	}
+
+	void FApplication::StopPlay()
+	{
+		if (PlayState == EPlayState::Editor)
+			return;
+
+		/*Restore the snapshot so the scene returns to its pre-play state.*/
+		for (const auto& entry : GPlayTransformSnapshot)
+		{
+			if (EntityManager::HasComponent<FTransformComponent>(entry.first))
+				EntityManager::GetComponent<FTransformComponent>(entry.first).Transform = entry.second;
+		}
+		GPlayTransformSnapshot.clear();
+
+		PlayState = EPlayState::Editor;
+		Logger::Warning("Play: returned to editor");
+	}
+
+	void FApplication::TogglePlayPause()
+	{
+		if (PlayState == EPlayState::Playing)
+			PlayState = EPlayState::Paused;
+		else if (PlayState == EPlayState::Paused)
+			PlayState = EPlayState::Playing;
+	}
+#endif
 
 	void FApplication::EngineEnd()
 	{

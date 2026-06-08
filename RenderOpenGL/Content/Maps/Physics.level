@@ -5,7 +5,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "normal.png"
+                            "Material.BaseTexture": "wall.jpg"
                         }
                     }
                 },
@@ -13,9 +13,9 @@
                 "Name": "Floor",
                 "TransformComponent": {
                     "Location": [
-                        -59.0,
-                        -96.0,
-                        619.0
+                        -68.0,
+                        -315.0,
+                        -1095.0
                     ],
                     "Rotation": [
                         -0.9432702660560608,
@@ -33,7 +33,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "Rifle.png"
+                            "Material.BaseTexture": "roughness.jpg"
                         }
                     }
                 },
@@ -41,19 +41,19 @@
                 "Name": "Cube 1",
                 "TransformComponent": {
                     "Location": [
-                        -30.695280075073242,
-                        5.249370098114014,
-                        -180.9969940185547
+                        162.00599670410156,
+                        22.0,
+                        -1089.9959716796875
                     ],
                     "Rotation": [
-                        0.14833460748195648,
-                        0.00025930182891897857,
-                        1.5847244262695313
+                        3.1415927410125732,
+                        2.6846494674682617,
+                        0.004363323096185923
                     ],
                     "Scale": [
-                        10.0,
-                        10.0,
-                        10.0
+                        48.0,
+                        33.0,
+                        17.0
                     ]
                 }
             },
@@ -61,7 +61,7 @@
                 "DefaultUnLitMaterialComponent": {
                     "Material": {
                         "TextureDetail": {
-                            "Material.BaseTexture": "Rifle.png"
+                            "Material.BaseTexture": "RedColor.jpg"
                         }
                     }
                 },
@@ -69,19 +69,19 @@
                 "Name": "Cube 2",
                 "TransformComponent": {
                     "Location": [
-                        -28.449560165405273,
-                        1.7137800455093384,
-                        -204.7209930419922
+                        218.0590057373047,
+                        0.0,
+                        0.0
                     ],
                     "Rotation": [
-                        0.0,
-                        -17.0,
+                        -8.0,
+                        -7.0,
                         0.0
                     ],
                     "Scale": [
                         10.0,
                         10.0,
-                        5.0
+                        10.0
                     ]
                 }
             },
@@ -110,14 +110,14 @@
                 "EntityID": 4,
                 "FCameraComponent": {
                     "CameraFront": [
-                        0.6208204030990601,
-                        -0.6060419082641602,
-                        0.49728792905807495
+                        -0.5929653644561768,
+                        -0.18227766454219818,
+                        -0.7843257784843445
                     ],
                     "CameraPosition": [
-                        -376.3746032714844,
-                        289.4215393066406,
-                        -414.28662109375
+                        373.1366882324219,
+                        0.5350813269615173,
+                        139.318603515625
                     ],
                     "CameraUp": [
                         0.0,
@@ -125,14 +125,14 @@
                         0.0
                     ],
                     "Direction": [
-                        0.7467441558837891,
-                        -0.7289680242538452,
-                        0.5981550216674805
+                        -0.5593058466911316,
+                        -0.1719307154417038,
+                        -0.7398037314414978
                     ],
                     "MainCamera": true,
                     "Rotator": [
-                        60.90279769897461,
-                        -46.799949645996094,
+                        -491.3240966796875,
+                        -9.900094032287598,
                         0.0
                     ]
                 },

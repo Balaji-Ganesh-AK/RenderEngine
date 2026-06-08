@@ -28,7 +28,7 @@ namespace KREngine
 		std::filesystem::path DefaultVertexShaderPath = "../Content/Shaders/Source/DefaultVertexShader.GLSL";
 		std::filesystem::path DefaultFragmentShaderPath = "../Content/Shaders/Source/DefaultFragmentShaderOutliner.GLSL";
 		std::shared_ptr<FShader> Shader;
-		FEntityHandle CurrentSelectedEntity {0};
+		FEntityHandle CurrentSelectedEntity {INVALID_ENTITY};
 		int tempID = 0;
 		std::string CurrentDisplayedTexture;
 	};

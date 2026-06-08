@@ -11,7 +11,7 @@ namespace KREngine
 			void Init() override;
 			void GUIInit() override;
 			void Run() override;
-			void GUIRun() const;
+			void GUIRun(FEntityHandle& currentSelectedEntity) const;
 			
 		private:
 

@@ -50,15 +50,14 @@ namespace KREngine
 
 	Vec2 WindowsInput::GetMousePosition()
 	{
-		/*Return the cursor position in framebuffer texel space (origin bottom-left, for glReadPixels).
-		 *The scene image is drawn at the window/framebuffer resolution, so the panel-relative position
-		 *maps 1:1 to framebuffer texels; only Y must be flipped, and by the FRAMEBUFFER height (not the
-		 *ImGui panel height, which is what the previous code used).*/
+		/*Cursor position in framebuffer texel coords, ready for glReadPixels.
+		 *The scene texture is shown through ImGui::Image WITHOUT a uv flip, and the camera renders
+		 *with up = -Y, so the displayed image's top-left already lines up with glReadPixels (0,0).
+		 *Therefore NO Y flip is needed here: flipping mirrors picks vertically, which only looks
+		 *correct near the vertical centre and breaks once an object moves off-centre.*/
 		auto [mouse_x, mouse_y] = ImGui::GetMousePos();
 		mouse_x -= MinBounds.x;
 		mouse_y -= MinBounds.y;
-		const float frameBufferHeight = WindowWindow->Properties->GetHeight();
-		mouse_y = frameBufferHeight - mouse_y;
 		return Vec2(mouse_x, mouse_y);
 	}
 

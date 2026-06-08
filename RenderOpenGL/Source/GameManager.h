@@ -39,6 +39,9 @@ namespace KREngine
 	class FStaticMeshSystem;
 	class FEditorTagSystem;
 
+	/*Editor play state (Unreal-style Play-In-Editor): Editor = simulation paused; Playing =
+	 *level logic + physics run; Paused = play session frozen.*/
+	enum class EPlayState { Editor, Playing, Paused };
 
 	class FApplication
 	{
@@ -136,6 +139,11 @@ namespace KREngine
 		void EngineGUIStop();
 
 		void ControlPanelGUI();
+
+		/*Editor Play-In-Editor controls.*/
+		void StartPlay();
+		void StopPlay();
+		void TogglePlayPause();
 #endif
 
 
@@ -148,6 +156,9 @@ namespace KREngine
 		std::unique_ptr<FAssetManager> AssetManager;
 
 		FLevel* CurrentLevel = nullptr;
+
+		/*Current editor play state; gates whether the level logic + physics simulate.*/
+		EPlayState PlayState = EPlayState::Editor;
 		bool bShowDebugProfiler{ false };
 
 
